@@ -1,13 +1,15 @@
 'use client'
 import React, {useState} from 'react'
-import { BentoGridItem, BentoGrid } from './bento-grid'
-import ENTRYL from './ENTRYL.png'
+import { BentoGridItem, BentoGrid } from '@/components/ui/bento-grid'
+import ENTRYL from '@/components/ui/ENTRYL.png'
 import LetterLogo from "./LetterLogo.png"
 import Image from 'next/image';
-import {Sidebar, SidebarBody, SidebarLink} from './sidebar'
+import {Sidebar, SidebarBody, SidebarLink} from '@/components/ui/sidebar'
 import { motion } from 'framer-motion'
 import Link from "next/link";
 import { cn } from "@/lib/utils"
+import { LogoIcon } from '@/components/ui/LogoIcon'
+import { Logo } from '@/components/ui/Logo'
 import {
   IconArrowWaveRightUp,
   IconBoxAlignRightFilled,
@@ -22,33 +24,7 @@ import {
   IconUserBolt,
 } from "@tabler/icons-react";
 
-export const LogoIcon = () => {
-  return (
-    <Link
-      href="#"
-      className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20"
-    >
-      <div className="h-5 w-6 bg-black dark:bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0" />
-    </Link>
-  );
-};
-export const Logo = () => {
-  return (
-    <Link
-      href="#"
-      className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20"
-    >
-      <Image src={LetterLogo} alt='logo'/>
-      <motion.span
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="font-medium text-text0 dark:text-white whitespace-pre"
-      >
-        ENTRYL
-      </motion.span>
-    </Link>
-  );
-};
+
 const Dashboard = () => {
   const [open, setOpen] = useState(false);
   return (
@@ -85,7 +61,7 @@ const Dashboard = () => {
         </SidebarBody>
       </Sidebar>
       <div className='flex max-h-screen w-full'>
-      <BentoGrid className='max-w-500 ml-40 mr-0 md:auto-rows-[15rem]  '>
+      <BentoGrid className='max-w-2/3 ml-40 mr-0 md:auto-rows-[15rem]  '>
         {items.map((item, i) => (
           <BentoGridItem
             key={i}
@@ -97,7 +73,7 @@ const Dashboard = () => {
           />
         ))}
       </BentoGrid>
-      <Image src={ENTRYL} width={900} height={300} alt="logo" className='rotate-90 w-300 items-center justify-center flex-col w-1/2 h-1/2 m-auto mx-50 flex'/> 
+      <Image src={ENTRYL} width={900} height={300} alt="logo" className='rotate-90 items-center justify-center h-100 w-50 my-auto flex'/> 
       </div>
     </div>
   )
@@ -130,7 +106,7 @@ const items = [
     className: "md:row-span-2 md:col-span-2"
   },
   {
-    title: "The Pursuit of Knowledge",
+    title: "Knowledge",
     description: "Something is going on here",
     header: <Skeleton />,
     icon: <IconArrowWaveRightUp className="h-4 w-4 text-neutral-500" />,
@@ -138,7 +114,7 @@ const items = [
   },
   {
     title: "The Joy of Creation",
-    description: "Experience the thrill of bringing ideas to life.",
+    description: "Experience the",
     header: <Skeleton />,
     icon: <IconBoxAlignTopLeft className="h-4 w-4 text-neutral-500" />,
   },
@@ -180,7 +156,7 @@ const links = [
   },
   {
     label: "Logout",
-    href: "#",
+    href: "/",
     icon: (
       <IconArrowLeft className="text-text0 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
     ),
