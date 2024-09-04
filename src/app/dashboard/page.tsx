@@ -1,32 +1,129 @@
 'use client'
-import React, {useState} from 'react'
+import React, { useState, useEffect } from 'react'
+import { invoke } from '@tauri-apps/api/tauri'
 import { BentoGridItem, BentoGrid } from '@/components/ui/bento-grid'
 import ENTRYL from '@/components/ui/ENTRYL.png'
-import LetterLogo from "./LetterLogo.png"
-import Image from 'next/image';
-import {Sidebar, SidebarBody, SidebarLink} from '@/components/ui/sidebar'
-import { motion } from 'framer-motion'
-import Link from "next/link";
-import { cn } from "@/lib/utils"
-import { LogoIcon } from '@/components/ui/LogoIcon'
+import Image from 'next/image'
+import { Sidebar, SidebarBody, SidebarLink } from '@/components/ui/sidebar'
 import { Logo } from '@/components/ui/Logo'
 import {
-  IconArrowWaveRightUp,
-  IconBoxAlignRightFilled,
-  IconBoxAlignTopLeft,
-  IconClipboardCopy,
-  IconFileBroken,
-  IconSignature,
-  IconTableColumn,
+  IconCpu,
+  IconDeviceDesktop,
+  IconMeteor,
+  IconMap,
   IconArrowLeft,
   IconBrandTabler,
   IconSettings,
   IconUserBolt,
-} from "@tabler/icons-react";
+} from "@tabler/icons-react"
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent
+} from "@/components/ui/chart" // Assuming you saved the chart components in a file named ChartComponents.tsx
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
 
+// Define interfaces for our data structures
+interface SystemInfo {
+  cpu_usage: number;
+  total_memory: number;
+  used_memory: number;
+  total_swap: number;
+  used_swap: number;
+}
+
+interface Process {
+  pid: string;
+  name: string;
+  cpu_usage: number;
+  memory_usage: number;
+}
 
 const Dashboard = () => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
+  const [systemInfo, setSystemInfo] = useState<SystemInfo | null>(null)
+  const [processes, setProcesses] = useState<Process[]>([])
+  const [cpuData, setCpuData] = useState<{ time: string, usage: number }[]>([])
+
+  useEffect(() => {
+    const fetchSystemInfo = async () => {
+      try {
+        const info = await invoke<string>('get_system_info')
+        const parsedInfo = JSON.parse(info)
+        setSystemInfo(parsedInfo)
+        updateCpuData(parsedInfo.cpu_usage)
+      } catch (error) {
+        console.error('Error fetching system info:', error)
+      }
+    }
+
+    const fetchProcesses = async () => {
+      try {
+        const processesData = await invoke<string>('get_processes')
+        setProcesses(JSON.parse(processesData))
+      } catch (error) {
+        console.error('Error fetching processes:', error)
+      }
+    }
+
+    fetchSystemInfo()
+    fetchProcesses()
+
+    const infoInterval = setInterval(fetchSystemInfo, 1000)
+    const processInterval = setInterval(fetchProcesses, 5000)
+
+    return () => {
+      clearInterval(infoInterval)
+      clearInterval(processInterval)
+    }
+  }, [])
+
+  // Function to update CPU data with time stamps for chart
+  const updateCpuData = (cpuUsage: number) => {
+    const currentTime = new Date().toLocaleTimeString()
+    setCpuData((prevData) => [
+      ...prevData.slice(-10), // Keep only the last 10 entries for performance
+      { time: currentTime, usage: cpuUsage },
+    ])
+  }
+
+  const items = [
+    {
+      
+      title: "CPU Usage",
+      description: systemInfo ? `${systemInfo.cpu_usage.toFixed(2)}%` : "Loading...",
+      icon: <IconCpu className="h-4 w-4 text-neutral-500" />,
+      className: "md:col-span-1",
+      
+    },
+    {
+      title: "Memory Usage",
+      description: systemInfo 
+        ? `${((systemInfo.used_memory / systemInfo.total_memory) * 100).toFixed(2)}%`
+        : "Loading...",
+      icon: <IconMeteor className="h-4 w-4 text-neutral-500" />,
+      className: "md:col-span-1",
+    },
+    {
+      title: "Total Memory",
+      description: systemInfo 
+        ? `${(systemInfo.total_memory / 1024 / 1024 / 1024).toFixed(2)} GB`
+        : "Loading...",
+      icon: <IconDeviceDesktop className="h-4 w-4 text-neutral-500" />,
+      className: "md:col-span-1",
+    },
+    {
+      title: "Top Processes",
+      description: processes.length > 0 
+        ? processes.slice(0, 5).map(p => `${p.name}: ${p.cpu_usage.toFixed(2)}%`).join(', ')
+        : "Loading...",
+      icon: <IconCpu className="h-4 w-4 text-neutral-500" />,
+      className: "md:col-span-2",
+    },
+  ];
+
   return (
     <div className='bg-base flex items-center w-full h-screen'>
       <Sidebar open={open} setOpen={setOpen}>
@@ -61,77 +158,33 @@ const Dashboard = () => {
         </SidebarBody>
       </Sidebar>
       <div className='flex max-h-screen w-full'>
-      <BentoGrid className='max-w-2/3 ml-40 mr-0 md:auto-rows-[15rem]  '>
-        {items.map((item, i) => (
-          <BentoGridItem
-            key={i}
-            title={item.title}
-            description={item.description}
-            header={item.header}
-            icon={item.icon}
-            className={item.className}
-          />
-        ))}
-      </BentoGrid>
-      <Image src={ENTRYL} width={900} height={300} alt="logo" className='rotate-90 items-center justify-center h-100 w-50 my-auto flex'/> 
+        <BentoGrid className='grow max-w-2/3 ml-40 mr-0 md:auto-rows-[30rem]'>
+          {items.map((item, i) => (
+            <BentoGridItem
+              key="CPU USAGE CHART"
+              title={item.title}
+              description={item.description}
+              icon={item.icon}
+              className="md:col-span-2"
+            />
+          ))}
+          <ChartContainer config={{ cpu: { label: "CPU Usage" } }}>
+            <LineChart data={cpuData}>
+              <CartesianGrid strokeDasharray="6 6" />
+              <XAxis dataKey="time" />
+              <YAxis />
+              <Tooltip content={<ChartTooltipContent />} />
+              <Legend content={<ChartLegendContent />} />
+              <Line type="monotone" dataKey="usage" stroke="#8884d8" />
+            </LineChart>
+          </ChartContainer>
+        </BentoGrid>
+        <Image src={ENTRYL} width={900} height={300} alt="logo" className='rotate-90 items-right justify-right h-20 w-50 my-auto flex'/> 
       </div>
     </div>
   )
 }
-const Skeleton = () => (
-  <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-surface1 to-surface2"></div>
-);
-const items = [
-  {
-    title: "The Dawn of Innovation",
-    description: "Explore the birth of groundbreaking ideas and inventions.",
-    header: <Skeleton />,
-    icon: <IconClipboardCopy className="h-4 w-4 text-neutral-500" />,
-    className: "md:row-span-1 md:col-span-2",
-  },
-  {
-    title: "The Digital Revolution",
-    description: "Dive into the transformative power of technology.",
-    header: <Skeleton />,
-    icon: <IconFileBroken className="h-4 w-4 text-neutral-500" />,
-    className: "md:row-span-2 md:col-span-4",
-  },
- 
-  {
-    title: "The Power of Communication",
-    description:
-      "Understand the impact of effective communication in our lives.",
-    header: <Skeleton />,
-    icon: <IconTableColumn className="h-4 w-4 text-neutral-500" />, 
-    className: "md:row-span-2 md:col-span-2"
-  },
-  {
-    title: "Knowledge",
-    description: "Something is going on here",
-    header: <Skeleton />,
-    icon: <IconArrowWaveRightUp className="h-4 w-4 text-neutral-500" />,
-    
-  },
-  {
-    title: "The Joy of Creation",
-    description: "Experience the",
-    header: <Skeleton />,
-    icon: <IconBoxAlignTopLeft className="h-4 w-4 text-neutral-500" />,
-  },
-  {
-    title: "The Spirit of Adventure",
-    description: "Embark on exciting journeys and thrilling discoveries.",
-    header: <Skeleton />,
-    icon: <IconBoxAlignRightFilled className="h-4 w-4 text-neutral-500" />,
-    className: 'md:col-span-2'
-  },{
-    title: "The Spirit of Adventure",
-    description: "Embark on exciting journeys and thrilling discoveries.",
-    header: <Skeleton />,
-    icon: <IconBoxAlignRightFilled className="h-4 w-4 text-neutral-500" />,
-    className: 'md:row-span-2 md:col-span-6'
-  },
-];
+
 const links = [
   {
     label: "Dashboard",
