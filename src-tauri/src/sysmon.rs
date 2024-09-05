@@ -11,7 +11,7 @@ pub struct AppState {
 pub fn start_cpu_refresh(system: Arc<Mutex<System>>) {
     thread::spawn(move || {
         loop {
-            thread::sleep(Duration::from_millis(100));
+            thread::sleep(Duration::from_millis(1));
             let mut system = system.lock().unwrap();
             system.refresh_cpu();
         }
