@@ -211,7 +211,7 @@ const Dashboard = () => {
           </BentoGrid>
           <div className="max-w-full grid md:grid-cols-2 gap-6 m-6 ">
             <div className='aspect-ratio p-5 bg-surface0 rounded-xl'>
-              <motion.h1 className='text-white'>
+              <motion.h1 className='text-text0 font-bold my-3'>
                 CPU Usage
               </motion.h1>
               <ChartContainer config={{ cpu: { label: "CPU Usage" } }} className="">
@@ -228,7 +228,7 @@ const Dashboard = () => {
               </ChartContainer>
             </div>
             <div className="w-full h-full p-5 bg-surface0 rounded-xl">
-              <motion.h1 className='text-white'>
+              <motion.h1 className='text-text0 font-bold my-3'>
                 Memory Usage
               </motion.h1>
               <ChartContainer config={{ memory: { label: "Memory Usage" } }} >
