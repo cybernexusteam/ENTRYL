@@ -3,18 +3,19 @@ import React, { useState, useEffect } from 'react'
 import { invoke } from '@tauri-apps/api/tauri'
 import { BentoGridItem, BentoGrid } from '@/components/ui/bento-grid'
 import ENTRYL from '@/components/ui/ENTRYL.png'
+import LetterLogo from '@/components/ui/LetterLogo.png'
 import Image from 'next/image'
 import { Sidebar, SidebarBody, SidebarLink } from '@/components/ui/sidebar'
-import { Logo } from '@/components/ui/Logo'
+import Link from 'next/link'
+import { motion } from 'framer-motion'
 import {
   IconCpu,
   IconDeviceDesktop,
   IconMeteor,
-  IconMap,
-  IconArrowLeft,
   IconBrandTabler,
   IconSettings,
   IconUserBolt,
+  IconArrowLeft,
 } from "@tabler/icons-react"
 import {
   ChartContainer,
@@ -22,10 +23,9 @@ import {
   ChartTooltipContent,
   ChartLegend,
   ChartLegendContent
-} from "@/components/ui/chart" // Assuming you saved the chart components in a file named ChartComponents.tsx
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
+} from "@/components/ui/chart"
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 
-// Define interfaces for our data structures
 interface SystemInfo {
   cpu_usage: number;
   total_memory: number;
@@ -46,6 +46,7 @@ const Dashboard = () => {
   const [systemInfo, setSystemInfo] = useState<SystemInfo | null>(null)
   const [processes, setProcesses] = useState<Process[]>([])
   const [cpuData, setCpuData] = useState<{ time: string, usage: number }[]>([])
+  const [memoryData, setMemoryData] = useState<{ time: string, usage: number }[]>([])
 
   useEffect(() => {
     const fetchSystemInfo = async () => {
@@ -54,6 +55,7 @@ const Dashboard = () => {
         const parsedInfo = JSON.parse(info)
         setSystemInfo(parsedInfo)
         updateCpuData(parsedInfo.cpu_usage)
+        updateMemoryData(parsedInfo.used_memory, parsedInfo.total_memory)
       } catch (error) {
         console.error('Error fetching system info:', error)
       }
@@ -71,7 +73,7 @@ const Dashboard = () => {
     fetchSystemInfo()
     fetchProcesses()
 
-    const infoInterval = setInterval(fetchSystemInfo, 1000)
+    const infoInterval = setInterval(fetchSystemInfo, 10) // Update every 10ms
     const processInterval = setInterval(fetchProcesses, 5000)
 
     return () => {
@@ -80,23 +82,39 @@ const Dashboard = () => {
     }
   }, [])
 
-  // Function to update CPU data with time stamps for chart
   const updateCpuData = (cpuUsage: number) => {
-    const currentTime = new Date().toLocaleTimeString()
+    const currentTime = new Date().toLocaleTimeString('en-US', { hour12: false, 
+      hour: "2-digit", 
+      minute: "2-digit", 
+      second: "2-digit",
+      fractionalSecondDigits: 3 
+    })
     setCpuData((prevData) => [
-      ...prevData.slice(-10), // Keep only the last 10 entries for performance
+      ...prevData.slice(-100), // Keep last 100 entries for a smoother graph
       { time: currentTime, usage: cpuUsage },
+    ])
+  }
+
+  const updateMemoryData = (usedMemory: number, totalMemory: number) => {
+    const currentTime = new Date().toLocaleTimeString('en-US', { hour12: false, 
+      hour: "2-digit", 
+      minute: "2-digit", 
+      second: "2-digit",
+      fractionalSecondDigits: 3 
+    })
+    const memoryUsage = (usedMemory / totalMemory) * 100
+    setMemoryData((prevData) => [
+      ...prevData.slice(-100), // Keep last 100 entries for a smoother graph
+      { time: currentTime, usage: memoryUsage },
     ])
   }
 
   const items = [
     {
-      
       title: "CPU Usage",
       description: systemInfo ? `${systemInfo.cpu_usage.toFixed(2)}%` : "Loading...",
       icon: <IconCpu className="h-4 w-4 text-neutral-500" />,
       className: "md:col-span-1",
-      
     },
     {
       title: "Memory Usage",
@@ -116,9 +134,17 @@ const Dashboard = () => {
     },
     {
       title: "Top Processes",
-      description: processes.length > 0 
-        ? processes.slice(0, 5).map(p => `${p.name}: ${p.cpu_usage.toFixed(2)}%`).join(', ')
-        : "Loading...",
+      description: (
+        <ul className="list-disc list-inside">
+          {processes.length > 0
+            ? processes.slice(0, 5).map((p) => (
+                <li key={p.pid}>
+                  {p.name}: {p.cpu_usage.toFixed(2)}%
+                </li>
+              ))
+            : "Loading..."}
+        </ul>
+      ),
       icon: <IconCpu className="h-4 w-4 text-neutral-500" />,
       className: "md:col-span-2",
     },
@@ -130,7 +156,19 @@ const Dashboard = () => {
         <SidebarBody className="justify-between gap-10">
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
             <>
-              <Logo />
+            <Link
+              href="#"
+              className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20"
+            >
+              <Image src={LetterLogo} alt='logo'/>
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="font-medium text-text0 dark:text-white whitespace-pre"
+              >
+                ENTRYL
+              </motion.span>
+            </Link>
             </>
             <div className="mt-8 flex flex-col gap-2">
               {links.map((link, idx) => (
@@ -157,28 +195,44 @@ const Dashboard = () => {
           </div>
         </SidebarBody>
       </Sidebar>
-      <div className='flex max-h-screen w-full'>
-        <BentoGrid className='grow max-w-2/3 ml-40 mr-0 md:auto-rows-[30rem]'>
+      <div className='flex flex-col max-h-screen w-full ml-40'>
+        <BentoGrid className='grow max-w-full mr-0 md:auto-rows-[10rem]'>
           {items.map((item, i) => (
             <BentoGridItem
-              key="CPU USAGE CHART"
+              key={i}
               title={item.title}
               description={item.description}
               icon={item.icon}
-              className="md:col-span-2"
+              className={item.className}
             />
           ))}
-          <ChartContainer config={{ cpu: { label: "CPU Usage" } }}>
-            <LineChart data={cpuData}>
-              <CartesianGrid strokeDasharray="6 6" />
-              <XAxis dataKey="time" />
-              <YAxis />
-              <Tooltip content={<ChartTooltipContent />} />
-              <Legend content={<ChartLegendContent />} />
-              <Line type="monotone" dataKey="usage" stroke="#8884d8" />
-            </LineChart>
-          </ChartContainer>
         </BentoGrid>
+        <div className="flex flex-row w-full h-[calc(100vh-20rem)]">
+          <ChartContainer config={{ cpu: { label: "CPU Usage" } }} className="w-1/2 h-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={cpuData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="time" />
+                <YAxis domain={[0, 100]} />
+                <Tooltip content={<ChartTooltipContent />} />
+                <Legend content={<ChartLegendContent />} />
+                <Line type="monotone" dataKey="usage" stroke="#8884d8" dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          </ChartContainer>
+          <ChartContainer config={{ memory: { label: "Memory Usage" } }} className="w-1/2 h-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={memoryData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="time" />
+                <YAxis domain={[0, 100]} />
+                <Tooltip content={<ChartTooltipContent />} />
+                <Legend content={<ChartLegendContent />} />
+                <Line type="monotone" dataKey="usage" stroke="#82ca9d" dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          </ChartContainer>
+        </div>
         <Image src={ENTRYL} width={900} height={300} alt="logo" className='rotate-90 items-right justify-right h-20 w-50 my-auto flex'/> 
       </div>
     </div>
