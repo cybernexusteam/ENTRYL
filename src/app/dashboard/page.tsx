@@ -146,7 +146,7 @@ const Dashboard = () => {
         </ul>
       ),
       icon: <IconCpu className="h-4 w-4 text-neutral-500" />,
-      className: "md:col-span-2",
+      className: "md:col-span-1",
     },
   ];
 
@@ -195,45 +195,64 @@ const Dashboard = () => {
           </div>
         </SidebarBody>
       </Sidebar>
-      <div className='flex flex-col max-h-screen w-full ml-40'>
-        <BentoGrid className='grow max-w-full mr-0 md:auto-rows-[10rem]'>
-          {items.map((item, i) => (
-            <BentoGridItem
-              key={i}
-              title={item.title}
-              description={item.description}
-              icon={item.icon}
-              className={item.className}
-            />
-          ))}
-        </BentoGrid>
-        <div className="flex flex-row w-full h-[calc(100vh-20rem)]">
-          <ChartContainer config={{ cpu: { label: "CPU Usage" } }} className="w-1/2 h-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={cpuData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="time" />
-                <YAxis domain={[0, 100]} />
-                <Tooltip content={<ChartTooltipContent />} />
-                <Legend content={<ChartLegendContent />} />
-                <Line type="monotone" dataKey="usage" stroke="#8884d8" dot={false} />
-              </LineChart>
-            </ResponsiveContainer>
-          </ChartContainer>
-          <ChartContainer config={{ memory: { label: "Memory Usage" } }} className="w-1/2 h-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={memoryData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="time" />
-                <YAxis domain={[0, 100]} />
-                <Tooltip content={<ChartTooltipContent />} />
-                <Legend content={<ChartLegendContent />} />
-                <Line type="monotone" dataKey="usage" stroke="#82ca9d" dot={false} />
-              </LineChart>
-            </ResponsiveContainer>
-          </ChartContainer>
+      <div className='w-full flex justify-between mx-10'>
+        <div className='w-full flex flex-col items-center justify-center'>
+          <div className='flex flex-col max-h-screen w-full'>
+          <BentoGrid className='min-w-1/2 max-w-full md:auto-rows-[10rem] mx-6'>
+            {items.map((item, i) => (
+              <BentoGridItem
+                key={i}
+                title={item.title}
+                description={item.description}
+                icon={item.icon}
+                className={item.className}
+              />
+            ))}
+          </BentoGrid>
+          <div className="max-w-full grid md:grid-cols-2 gap-6 m-6 ">
+            <div className='aspect-ratio p-5 bg-surface0 rounded-xl'>
+              <motion.h1 className='text-white'>
+                CPU Usage
+              </motion.h1>
+              <ChartContainer config={{ cpu: { label: "CPU Usage" } }} className="">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={cpuData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="time" />
+                    <YAxis domain={[0, 100]} />
+                    <Tooltip content={<ChartTooltipContent />} />
+                    <Legend content={<ChartLegendContent />} />
+                    <Line type="monotone" dataKey="usage" stroke="#8884d8" dot={false} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            </div>
+            <div className="w-full h-full p-5 bg-surface0 rounded-xl">
+              <motion.h1 className='text-white'>
+                Memory Usage
+              </motion.h1>
+              <ChartContainer config={{ memory: { label: "Memory Usage" } }} >
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={memoryData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="time" />
+                    <YAxis domain={[0, 100]} />
+                    <Tooltip content={<ChartTooltipContent />} />
+                    <Legend content={<ChartLegendContent />} />
+                    <Line type="monotone" dataKey="usage" stroke="#82ca9d" dot={false} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            </div>
+              
+
+          </div>
+          
         </div>
-        <Image src={ENTRYL} width={900} height={300} alt="logo" className='rotate-90 items-right justify-right h-20 w-50 my-auto flex'/> 
+      </div>
+    
+      
+      <Image src={ENTRYL} width={900} height={300} alt="logo" className='rotate-90 items-right justify-right   my-auto flex'/> 
       </div>
     </div>
   )
