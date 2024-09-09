@@ -73,8 +73,8 @@ const Dashboard = () => {
     fetchSystemInfo()
     fetchProcesses()
 
-    const infoInterval = setInterval(fetchSystemInfo, 10) // Update every 10ms
-    const processInterval = setInterval(fetchProcesses, 5000)
+    const infoInterval = setInterval(fetchSystemInfo, 80) // Update every 150ms
+    const processInterval = setInterval(fetchProcesses, 2000)
 
     return () => {
       clearInterval(infoInterval)
@@ -90,7 +90,7 @@ const Dashboard = () => {
       fractionalSecondDigits: 3 
     })
     setCpuData((prevData) => [
-      ...prevData.slice(-100), // Keep last 100 entries for a smoother graph
+      ...prevData.slice(-40), // Keep last 10 entries for a smoother graph
       { time: currentTime, usage: cpuUsage },
     ])
   }
@@ -104,7 +104,7 @@ const Dashboard = () => {
     })
     const memoryUsage = (usedMemory / totalMemory) * 100
     setMemoryData((prevData) => [
-      ...prevData.slice(-100), // Keep last 100 entries for a smoother graph
+      ...prevData.slice(-40), // Keep last 10 entries for a smoother graph
       { time: currentTime, usage: memoryUsage },
     ])
   }
@@ -217,8 +217,6 @@ const Dashboard = () => {
               <ChartContainer config={{ cpu: { label: "CPU Usage" } }} className="">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={cpuData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="time" />
                     <YAxis domain={[0, 100]} />
                     <Tooltip content={<ChartTooltipContent />} />
                     <Legend content={<ChartLegendContent />} />
@@ -234,8 +232,6 @@ const Dashboard = () => {
               <ChartContainer config={{ memory: { label: "Memory Usage" } }} >
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={memoryData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="time" />
                     <YAxis domain={[0, 100]} />
                     <Tooltip content={<ChartTooltipContent />} />
                     <Legend content={<ChartLegendContent />} />
