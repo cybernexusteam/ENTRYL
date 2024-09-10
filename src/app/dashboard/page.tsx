@@ -24,7 +24,7 @@ import {
   ChartLegend,
   ChartLegendContent
 } from "@/components/ui/chart"
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area } from 'recharts'
 
 interface SystemInfo {
   cpu_usage: number;
@@ -73,8 +73,8 @@ const Dashboard = () => {
     fetchSystemInfo()
     fetchProcesses()
 
-    const infoInterval = setInterval(fetchSystemInfo, 80) // Update every 150ms
-    const processInterval = setInterval(fetchProcesses, 2000)
+    const infoInterval = setInterval(fetchSystemInfo, 65) // Update every 65ms
+    const processInterval = setInterval(fetchProcesses, 1000)
 
     return () => {
       clearInterval(infoInterval)
@@ -90,7 +90,7 @@ const Dashboard = () => {
       fractionalSecondDigits: 3 
     })
     setCpuData((prevData) => [
-      ...prevData.slice(-40), // Keep last 10 entries for a smoother graph
+      ...prevData.slice(-40), // Keep last 40 entries for a smoother graph
       { time: currentTime, usage: cpuUsage },
     ])
   }
@@ -104,26 +104,12 @@ const Dashboard = () => {
     })
     const memoryUsage = (usedMemory / totalMemory) * 100
     setMemoryData((prevData) => [
-      ...prevData.slice(-40), // Keep last 10 entries for a smoother graph
+      ...prevData.slice(-40), // Keep last 40 entries for a smoother graph
       { time: currentTime, usage: memoryUsage },
     ])
   }
 
   const items = [
-    {
-      title: "CPU Usage",
-      description: systemInfo ? `${systemInfo.cpu_usage.toFixed(2)}%` : "Loading...",
-      icon: <IconCpu className="h-4 w-4 text-neutral-500" />,
-      className: "md:col-span-1",
-    },
-    {
-      title: "Memory Usage",
-      description: systemInfo 
-        ? `${((systemInfo.used_memory / systemInfo.total_memory) * 100).toFixed(2)}%`
-        : "Loading...",
-      icon: <IconMeteor className="h-4 w-4 text-neutral-500" />,
-      className: "md:col-span-1",
-    },
     {
       title: "Total Memory",
       description: systemInfo 
@@ -213,6 +199,9 @@ const Dashboard = () => {
             <div className='aspect-ratio p-5 bg-surface0 rounded-xl'>
               <motion.h1 className='text-text0 font-bold my-3'>
                 CPU Usage
+                <div className='justify-right'>
+                  {systemInfo ? `${systemInfo.cpu_usage.toFixed(2)}%` : "Loading..."}
+                </div>
               </motion.h1>
               <ChartContainer config={{ cpu: { label: "CPU Usage" } }} className="">
                 <ResponsiveContainer width="100%" height="100%">
@@ -221,6 +210,7 @@ const Dashboard = () => {
                     <Tooltip content={<ChartTooltipContent />} />
                     <Legend content={<ChartLegendContent />} />
                     <Line type="monotone" dataKey="usage" stroke="#8884d8" dot={false} />
+                    <Area name="CPU Usage" type="monotone" dataKey="usage" stroke="#8884d8" fillOpacity={1} fill="url(#CPU Usage)" />
                   </LineChart>
                 </ResponsiveContainer>
               </ChartContainer>
@@ -228,6 +218,11 @@ const Dashboard = () => {
             <div className="w-full h-full p-5 bg-surface0 rounded-xl">
               <motion.h1 className='text-text0 font-bold my-3'>
                 Memory Usage
+                <div className='justify-right'>
+                  {systemInfo 
+                    ? `${((systemInfo.used_memory / systemInfo.total_memory) * 100).toFixed(2)}%`
+                    : "Loading..."}
+                </div>
               </motion.h1>
               <ChartContainer config={{ memory: { label: "Memory Usage" } }} >
                 <ResponsiveContainer width="100%" height="100%">
