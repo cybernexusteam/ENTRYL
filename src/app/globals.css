@@ -67,3 +67,11 @@
     @apply bg-background text-foreground;
   }
 }
+
+.text-animation {
+  transition: transform 0.5s ease-in-out;
+}
+
+.hover-up {
+  transform: translateY(-20px); /* Adjust as needed */
+}
