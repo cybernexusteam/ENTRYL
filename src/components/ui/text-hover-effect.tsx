@@ -6,11 +6,17 @@ export const TextHoverEffect = ({
   text,
   duration,
   className = "",
+  rotate = 0,
+  x = 0,
+  y = 0,
 }: {
   text: string;
   duration?: number;
   automatic?: boolean;
   className?: string;
+  rotate?: number;
+  x?: number | string;
+  y?: number | string;
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [cursor, setCursor] = useState({ x: 0, y: 0 });
@@ -28,9 +34,12 @@ export const TextHoverEffect = ({
       });
     }
   }, [cursor]);
-
   return (
-    <div className={`w-full h-full ${className}`}>
+    <motion.div 
+      className={`w-full h-full ${className}`}
+      style={{ rotate, x, y }}
+      transition={{ duration: 0.5, ease: "easeInOut" }}
+    >
       <svg
         ref={svgRef}
         width="100%"
@@ -92,7 +101,7 @@ export const TextHoverEffect = ({
           textAnchor="middle"
           dominantBaseline="middle"
           strokeWidth="1"
-          className="font-[helvetica] font-bold stroke-neutral-200 dark:stroke-neutral-800 fill-transparent"
+          className="font-[montserrat] font-bold stroke-neutral-200 dark:stroke-neutral-800 fill-transparent"
           style={{ fontSize: "200px", opacity: hovered ? 0.7 : 0 }}
         >
           {text}
@@ -103,7 +112,7 @@ export const TextHoverEffect = ({
           textAnchor="middle"
           dominantBaseline="middle"
           strokeWidth="1"
-          className="font-[helvetica] font-bold fill-transparent stroke-neutral-200 dark:stroke-neutral-800"
+          className="font-[montserrat] font-bold fill-transparent stroke-neutral-200 dark:stroke-neutral-800"
           initial={{ strokeDashoffset: 2000, strokeDasharray: 2000 }}
           animate={{
             strokeDashoffset: 0,
@@ -125,12 +134,12 @@ export const TextHoverEffect = ({
           stroke="url(#textGradient)"
           strokeWidth="1"
           mask="url(#textMask)"
-          className="font-[helvetica] font-bold fill-transparent"
+          className="font-[montserrat] font-bold fill-transparent"
           style={{ fontSize: "200px" }}
         >
           {text}
         </text>
       </svg>
-    </div>
+    </motion.div>
   );
 };

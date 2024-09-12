@@ -4,6 +4,7 @@ import { invoke } from '@tauri-apps/api/tauri'
 import { BentoGridItem, BentoGrid } from '@/components/ui/bento-grid'
 import ENTRYL from '@/components/ui/ENTRYL.png'
 import LetterLogo from '@/components/ui/LetterLogo.png'
+import TransitionLayout from '@/components/ui/ltod_transition'
 import Image from 'next/image'
 import { Sidebar, SidebarBody, SidebarLink } from '@/components/ui/sidebar'
 import Link from 'next/link'
@@ -137,7 +138,8 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className='bg-base flex items-center w-full h-screen'>
+   //</TransitionLayout>  <=== TODO figure out how to implement this
+   <div className='bg-base flex items-center w-full h-screen'>
       <Sidebar open={open} setOpen={setOpen}>
         <SidebarBody className="justify-between gap-10">
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
@@ -246,6 +248,7 @@ const Dashboard = () => {
       <Image src={ENTRYL} width={900} height={300} alt="logo" className='rotate-90 items-right justify-right   my-auto flex'/> 
       </div>
     </div>
+   //</TransitionLayout>  <=== TODO figure out how to implement this
   )
 }
 

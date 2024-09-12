@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { TextHoverEffect } from "@/components/ui/text-hover-effect";
 import Link from "next/link";
-
+import TransitionLayout from '../components/ui/ltod_transition';
 export default function Home() {
   const [showButton, setShowButton] = useState(false);
   const [slideUp, setSlideUp] = useState(false);
@@ -18,6 +18,7 @@ export default function Home() {
   }, []);
 
   return (
+       //</TransitionLayout>  <=== TODO figure out how to implement this
     <div className="bg-black min-h-screen flex flex-col items-center justify-center">
       <div className={`w-full h-[70vh] transition-transform duration-300 ${slideUp ? '-translate-y-8' : ''}`}>
         <TextHoverEffect text='ENTRYL' className="w-full h-full" />
@@ -30,5 +31,7 @@ export default function Home() {
         </Link>
       </div>
     </div>
+    //</TransitionLayout>  <=== TODO figure out how to implement this
+
   );
 }
