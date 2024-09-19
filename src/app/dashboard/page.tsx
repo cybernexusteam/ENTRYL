@@ -26,6 +26,7 @@ import {
   ChartLegendContent
 } from "@/components/ui/chart"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area } from 'recharts'
+import { FlipWords } from '@/components/ui/flip-words'
 
 interface SystemInfo {
   cpu_usage: number;
@@ -48,6 +49,8 @@ const Dashboard = () => {
   const [processes, setProcesses] = useState<Process[]>([])
   const [cpuData, setCpuData] = useState<{ time: string, usage: number }[]>([])
   const [memoryData, setMemoryData] = useState<{ time: string, usage: number }[]>([])
+
+  const welcome = ["Welcome", "Bienvenue","Herzlich willkommen", "Benvenuto", "Bienvenido", "欢迎", "ようこそ", "환영합니다", "आपका स्वागत है", "Xin Chào", "Selamat Datang", "مرحباً"]
 
   useEffect(() => {
     const fetchSystemInfo = async () => {
@@ -139,10 +142,10 @@ const Dashboard = () => {
 
   return (
    //</TransitionLayout>  <=== TODO figure out how to implement this
-   <div className='bg-base flex items-center w-full h-screen'>
+   <div className='bg-black flex items-center w-full h-screen'>
       <Sidebar open={open} setOpen={setOpen}>
         <SidebarBody className="justify-between gap-10">
-          <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+          <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden mt-3">
             <>
             <Link
               href="#"
@@ -183,71 +186,77 @@ const Dashboard = () => {
           </div>
         </SidebarBody>
       </Sidebar>
-      <div className='w-full flex justify-between mx-10'>
-        <div className='w-full flex flex-col items-center justify-center'>
-          <div className='flex flex-col max-h-screen w-full'>
-          <BentoGrid className='min-w-1/2 max-w-full md:auto-rows-[10rem] mx-6'>
-            {items.map((item, i) => (
-              <BentoGridItem
-                key={i}
-                title={item.title}
-                description={item.description}
-                icon={item.icon}
-                className={item.className}
-              />
-            ))}
-          </BentoGrid>
-          <div className="max-w-full grid md:grid-cols-2 gap-6 m-6 ">
-            <div className='aspect-ratio p-5 bg-surface0 rounded-xl'>
-              <motion.h1 className='text-text0 font-bold my-3'>
-                CPU Usage
-                <div className='justify-right'>
-                  {systemInfo ? `${systemInfo.cpu_usage.toFixed(2)}%` : "Loading..."}
-                </div>
-              </motion.h1>
-              <ChartContainer config={{ cpu: { label: "CPU Usage" } }} className="">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={cpuData}>
-                    <YAxis domain={[0, 100]} />
-                    <Tooltip content={<ChartTooltipContent />} />
-                    <Legend content={<ChartLegendContent />} />
-                    <Line type="monotone" dataKey="usage" stroke="#8884d8" dot={false} />
-                    <Area name="CPU Usage" type="monotone" dataKey="usage" stroke="#8884d8" fillOpacity={1} fill="url(#CPU Usage)" />
-                  </LineChart>
-                </ResponsiveContainer>
-              </ChartContainer>
-            </div>
-            <div className="w-full h-full p-5 bg-surface0 rounded-xl">
-              <motion.h1 className='text-text0 font-bold my-3'>
-                Memory Usage
-                <div className='justify-right'>
-                  {systemInfo 
-                    ? `${((systemInfo.used_memory / systemInfo.total_memory) * 100).toFixed(2)}%`
-                    : "Loading..."}
-                </div>
-              </motion.h1>
-              <ChartContainer config={{ memory: { label: "Memory Usage" } }} >
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={memoryData}>
-                    <YAxis domain={[0, 100]} />
-                    <Tooltip content={<ChartTooltipContent />} />
-                    <Legend content={<ChartLegendContent />} />
-                    <Line type="monotone" dataKey="usage" stroke="#82ca9d" dot={false} />
-                  </LineChart>
-                </ResponsiveContainer>
-              </ChartContainer>
-            </div>
-              
+      <div className='flex flex-col h-[70vh]'>
+        <div className='ml-14 my-auto'>
+          <span className='text-text0 dark:text-white text-8xl'> <FlipWords words={welcome}/>, User.</span>
+        </div>
+        <div className='w-full flex justify-between mx-10'>
+          <div className='w-full flex flex-col items-center justify-center'>
+            <div className='flex flex-col max-h-screen w-full'>
+            <BentoGrid className='min-w-1/2 max-w-full md:auto-rows-[10rem] mx-6'>
+              {items.map((item, i) => (
+                <BentoGridItem
+                  key={i}
+                  title={item.title}
+                  description={item.description}
+                  icon={item.icon}
+                  className={item.className}
+                />
+              ))}
+            </BentoGrid>
+            <div className="max-w-full grid md:grid-cols-2 gap-6 m-6 ">
+              <div className='aspect-ratio p-5 bg-opacity-20 bg-surface0 border-2 border-opacity-20 border-text0 rounded-xl'>
+                <motion.h1 className='text-text0 font-bold my-3'>
+                  CPU Usage: 
+                  <span className='text-text0 dark:text-white font-normal'> {systemInfo ? `${systemInfo.cpu_usage.toFixed(2)}%` : "Loading..."}</span>
+                    
 
+                </motion.h1>
+                <ChartContainer config={{ cpu: { label: "CPU Usage" } }} className="">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={cpuData}>
+                      <YAxis domain={[0, 100]} />
+                      <Tooltip content={<ChartTooltipContent />} />
+                      <Legend content={<ChartLegendContent />} />
+                      <Line type="monotone" dataKey="usage" stroke="#8884d8" dot={false} />
+                      <Area name="CPU Usage" type="monotone" dataKey="usage" stroke="#8884d8" fillOpacity={1} fill="url(#CPU Usage)" />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
+              </div>
+              <div className="w-full h-full p-5 bg-opacity-20 bg-surface0 border-2 border-opacity-20 border-text0 rounded-xl">
+                <motion.h1 className='text-text0 font-bold my-3'>
+                  Memory Usage: 
+                  <span className='text-text0 dark:text-white font-normal'> 
+                    {systemInfo 
+                      ? `${((systemInfo.used_memory / systemInfo.total_memory) * 100).toFixed(2)}%`
+                      : "Loading..."}
+                  </span>
+                </motion.h1>
+                <ChartContainer config={{ memory: { label: "Memory Usage" } }} >
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={memoryData}>
+                      <YAxis domain={[0, 100]} />
+                      <Tooltip content={<ChartTooltipContent />} />
+                      <Legend content={<ChartLegendContent />} />
+                      <Line type="monotone" dataKey="usage" stroke="#82ca9d" dot={false} />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
+              </div>
+                
+
+            </div>
+            
           </div>
-          
+        </div>
+      
+        
+        <Image src={ENTRYL} width={900} height={300} alt="logo" className='rotate-90 items-right justify-right   my-auto flex'/> 
         </div>
       </div>
-    
-      
-      <Image src={ENTRYL} width={900} height={300} alt="logo" className='rotate-90 items-right justify-right   my-auto flex'/> 
       </div>
-    </div>
+      
    //</TransitionLayout>  <=== TODO figure out how to implement this
   )
 }
@@ -282,5 +291,6 @@ const links = [
     ),
   },
 ];
+
 
 export default Dashboard

@@ -42,15 +42,15 @@ export const TextHoverEffect = ({
     >
       <svg
         ref={svgRef}
-        width="100%"
-        height="100%"
+        width="70%"
+        height="70%"
         viewBox="0 0 800 400"
         preserveAspectRatio="xMidYMid meet"
         xmlns="http://www.w3.org/2000/svg"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         onMouseMove={(e) => setCursor({ x: e.clientX, y: e.clientY })}
-        className="select-none"
+        className="select-none m-auto "
       >
         <defs>
           <linearGradient
@@ -101,7 +101,7 @@ export const TextHoverEffect = ({
           textAnchor="middle"
           dominantBaseline="middle"
           strokeWidth="1"
-          className="font-[montserrat] font-bold stroke-neutral-200 dark:stroke-neutral-800 fill-transparent"
+          className="font-[lexend-zetta] font-bold stroke-text0 dark:stroke-surface0 fill-transparent"
           style={{ fontSize: "200px", opacity: hovered ? 0.7 : 0 }}
         >
           {text}
@@ -112,7 +112,7 @@ export const TextHoverEffect = ({
           textAnchor="middle"
           dominantBaseline="middle"
           strokeWidth="1"
-          className="font-[montserrat] font-bold fill-transparent stroke-neutral-200 dark:stroke-neutral-800"
+          className="font-[montserrat] font-bold fill-transparent stroke-text0 dark:stroke-surface0"
           initial={{ strokeDashoffset: 2000, strokeDasharray: 2000 }}
           animate={{
             strokeDashoffset: 0,
