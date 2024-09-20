@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { SparklesCore } from "@/components/ui/sparkles";
 
 export default function Home() {
   const [showButton, setShowButton] = useState(false);
@@ -40,9 +41,29 @@ export default function Home() {
           }
           className="w-full h-50vh flex flex-col justify-center items-center"
           >
+          
+          <div className="w-[40rem] h-40 relative">
+
+              <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-text0 to-transparent h-[2px] w-3/4 blur-sm" />
+              <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-surface1 to-transparent h-px w-3/4" />
+              <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-surface0 to-transparent h-[5px] w-1/4 blur-sm" />
+              <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-text0 to-transparent h-px w-1/4" />
+
+              <SparklesCore
+                background="transparent"
+                minSize={0.4}
+                maxSize={1}
+                particleDensity={1200}
+                className="w-full h-full"
+                particleColor="#FFFFFF"
+              />
+      
+              <div className="absolute inset-0 w-full h-full bg-black [mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)]"></div>
+            </div>
             <div className={`w-full h-[60vh] transition-transform duration-300 ${slideUp ? '-translate-y-8' : ''}`}>
               <TextHoverEffect text='ENTRYL' className="w-full h-full" />
             </div>
+            
             <div className={`mt-8 transition-opacity duration-300 ${showButton ? 'opacity-100' : 'opacity-0'}`}>
               <Button 
               type="button" 
