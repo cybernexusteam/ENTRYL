@@ -16,6 +16,9 @@ import { z } from "zod";
 import { VscArrowRight } from "react-icons/vsc";
 import { motion } from "framer-motion";
 import Link from 'next/link';
+import { AnimatePresence } from 'framer-motion';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 const formSchema = z.object({
   username: z.string().min(2).max(50),
@@ -28,69 +31,94 @@ const Name = () => {
       username: '', // This will be populated with the value from localStorage later
     },
   });
-
-  // Populate the form with the username from localStorage when the component mounts
-  useEffect(() => {
-    const storedUsername = localStorage.getItem('username');
-    if (storedUsername) {
-      form.setValue('username', storedUsername); // Set the form value from localStorage
-    }
-  }, [form]);
+  
+  const router = useRouter();
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [showContent, setShowContent] = useState(true);
 
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
     console.log(values.username);
-    // Store the username in local storage
     localStorage.setItem('username', values.username);
+
+    // Trigger the animation and set a flag
+    setIsAnimating(true);
+    setShowContent(false);
   };
 
+  // Use useEffect to navigate after the animation completes
+  useEffect(() => {
+    if (isAnimating) {
+      const timeoutId = setTimeout(() => {
+        router.push('/dashboard'); // Navigate after animation duration
+      }, 1000); // Adjust delay to match your animation duration
+
+      return () => clearTimeout(timeoutId); // Clear timeout if component unmounts early
+    }
+  }, [isAnimating, router]); 
+
   return (
-    <div className='bg-black text-text0 w-full h-screen'> 
-      <div className='flex flex-col justify-center items-center h-full'>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="flex justify-between items-center">
-            <div className='flex flex-col justify-center' id='name'>
-              <motion.div 
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 3, type: "spring" }}
-                exit={{ opacity: 0, y: -20 }}
-                className='space-x-5 my-2'
-              >
-                What's your name
-              </motion.div>
-              <motion.div 
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1, duration: 3, type: "spring" }}
-                exit={{ opacity: 0, y: -20 }}
-                className='flex justify-between items-center'
-              >
-                <FormField
-                  control={form.control}
-                  name="username"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input 
-                          placeholder="Enter your name" 
-                          {...field} // This is controlled by react-hook-form
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button type="submit" className='ml-10 mt-0'>
-                  <Link href={"/dashboard"}>
-                    <VscArrowRight />
-                  </Link>
-                </Button>         
-              </motion.div>
-            </div>        
-          </form>
-        </Form>
-      </div>
-    </div>
+    
+        <motion.div 
+          className='bg-black text-text0 w-full h-screen'
+        > 
+          <div className='flex flex-col justify-center items-center h-full'>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(handleSubmit)} className="flex justify-between items-center">
+              <AnimatePresence>
+              {showContent && (
+                  <>
+                <motion.div 
+                onSubmit={form.handleSubmit(handleSubmit)} 
+                exit={{opacity: 0, y: -20}}
+                transition={{ duration: 1, type: "spring" }}
+                className='flex flex-col justify-center' id='name'
+                >
+                <motion.div
+                    key="form-component"
+                    
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 3, type: "spring" }}
+                    className='space-x-5 my-2'
+                  >
+                    What's your name
+                  </motion.div>
+                  <motion.div
+                    key="form-component"
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1, duration: 2, type: "spring" }}
+
+                    className='flex justify-between items-center'
+                  >
+                      <FormField
+                        control={form.control}
+                        name="username"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                placeholder="Enter your name"
+                                {...field} // This is controlled by react-hook-form
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )} />
+                      <Button type="submit" className='ml-10 mt-0' disabled={isAnimating}>
+                        <VscArrowRight />
+                      </Button>
+                    </motion.div>
+                </motion.div> 
+                </> )}
+                </AnimatePresence>       
+              </form>
+            </Form>
+          </div>
+        </motion.div>
+      
+    
+    
   );
 };
 

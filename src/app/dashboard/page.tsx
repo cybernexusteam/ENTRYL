@@ -8,7 +8,7 @@ import TransitionLayout from '@/components/ui/ltod_transition'
 import Image from 'next/image'
 import { Sidebar, SidebarBody, SidebarLink } from '@/components/ui/sidebar'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import {
   IconCpu,
   IconDeviceDesktop,
@@ -27,6 +27,8 @@ import {
 } from "@/components/ui/chart"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area } from 'recharts'
 import { FlipWords } from '@/components/ui/flip-words'
+import { useRouter } from 'next/navigation'
+import { Button } from '@/components/ui/button'
 
 interface SystemInfo {
   cpu_usage: number;
@@ -51,7 +53,8 @@ const Dashboard = () => {
   const [memoryData, setMemoryData] = useState<{ time: string, usage: number }[]>([])
   const storedUsername = localStorage.getItem('username');
   const welcome = ["Welcome", "Bienvenue","Herzlich willkommen", "Benvenuto", "Bienvenido", "欢迎", "ようこそ", "환영합니다", "आपका स्वागत है", "Xin Chào", "Selamat Datang", "مرحباً"]
-
+  const [showContent, setShowContent] = useState(true); // Controls visibility
+  const router = useRouter();
   useEffect(() => {
     const fetchSystemInfo = async () => {
       try {
@@ -140,13 +143,20 @@ const Dashboard = () => {
     },
   ];
 
+  const handleButtonClick = () => {
+    setShowContent(false);
+    setTimeout(() => {
+      router.push("/page");
+    }, 1000);
+  }
   return (
-   //</TransitionLayout>  <=== TODO figure out how to implement this
-   <div className='bg-black flex items-center w-full h-screen'>
+    <AnimatePresence >
+      {showContent && (
+      <motion.div className='bg-black flex items-center w-full h-screen overflow-hidden'>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
+        exit={{ opacity: 0, x: -20 }}
         transition={{ duration: 1, delay: 1 }}
         className='h-screen'
         >
@@ -169,15 +179,18 @@ const Dashboard = () => {
               </Link>
               </>
               <div className="mt-8 flex flex-col gap-2">
-                {links.map((link, idx) => (
-                  <SidebarLink key={idx} link={link} />
-                ))}
+                  {links.map((link, idx) => (
+                    <Button key={idx} onClick={handleButtonClick} className='bg-surface1'>
+                      <SidebarLink link={link} />
+                    </Button>
+                  ))}
+                
               </div>
             </div>
             <div>
               <SidebarLink
                 link={{
-                  label: "Test",
+                  label: storedUsername ? storedUsername : 'User',
                   href: "#",
                   icon: (
                     <Image
@@ -195,7 +208,7 @@ const Dashboard = () => {
         </Sidebar>
       </motion.div>
       
-      <div className='flex flex-col h-[70vh]'>
+      <div className='flex flex-col h-[70vh] mr-10'>
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -203,7 +216,7 @@ const Dashboard = () => {
           exit={{ opacity: 0, y: -20 }}
           className='ml-14 my-auto'
         >
-          <span className='text-text0 dark:text-white text-8xl'> <FlipWords words={welcome}/>, {storedUsername ? storedUsername : 'User'} .</span>
+          <span className='text-text0 dark:text-white text-8xl'> <FlipWords words={welcome}/>, {storedUsername ? storedUsername : 'User'}.</span>
         </motion.div>
         <motion.div 
         initial={{ opacity: 0, y: 20 }}
@@ -271,14 +284,12 @@ const Dashboard = () => {
             
           </div>
         </div>
-      
-        
-        <Image src={ENTRYL} width={900} height={300} alt="logo" className='rotate-90 items-right justify-right   my-auto flex'/> 
         </motion.div>
       </div>
-      </div>
-      
-   //</TransitionLayout>  <=== TODO figure out how to implement this
+      </motion.div>
+    )}
+    </AnimatePresence>
+   
   )
 }
 
