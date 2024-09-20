@@ -144,7 +144,7 @@ const Dashboard = () => {
    //</TransitionLayout>  <=== TODO figure out how to implement this
    <div className='bg-black flex items-center w-full h-screen'>
       <Sidebar open={open} setOpen={setOpen}>
-        <SidebarBody className="justify-between gap-10">
+        <SidebarBody className="justify-between gap-10 ">
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden mt-3">
             <>
             <Link
