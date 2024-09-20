@@ -7,6 +7,7 @@ import TransitionLayout from '../components/ui/ltod_transition';
 export default function Home() {
   const [showButton, setShowButton] = useState(false);
   const [slideUp, setSlideUp] = useState(false);
+  
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -25,7 +26,7 @@ export default function Home() {
           <TextHoverEffect text='ENTRYL' className="w-full h-full" />
         </div>
         <div className={`mt-8 transition-opacity duration-300 ${showButton ? 'opacity-100' : 'opacity-0'}`}>
-          <Link href="/dashboard">
+          <Link href="/name">
           <button className="mt-2 px-8 py-3 bg-transparent border border-surface1 dark:border-white dark:text-white text-text0 rounded-lg font-bold text-lg transform hover:-translate-y-1 transition duration-400">
           Get Started
             </button>

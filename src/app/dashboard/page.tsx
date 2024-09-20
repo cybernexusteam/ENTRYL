@@ -49,7 +49,7 @@ const Dashboard = () => {
   const [processes, setProcesses] = useState<Process[]>([])
   const [cpuData, setCpuData] = useState<{ time: string, usage: number }[]>([])
   const [memoryData, setMemoryData] = useState<{ time: string, usage: number }[]>([])
-
+  const storedUsername = localStorage.getItem('username');
   const welcome = ["Welcome", "Bienvenue","Herzlich willkommen", "Benvenuto", "Bienvenido", "欢迎", "ようこそ", "환영합니다", "आपका स्वागत है", "Xin Chào", "Selamat Datang", "مرحباً"]
 
   useEffect(() => {
@@ -143,54 +143,75 @@ const Dashboard = () => {
   return (
    //</TransitionLayout>  <=== TODO figure out how to implement this
    <div className='bg-black flex items-center w-full h-screen'>
-      <Sidebar open={open} setOpen={setOpen}>
-        <SidebarBody className="justify-between gap-10 ">
-          <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden mt-3">
-            <>
-            <Link
-              href="#"
-              className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20"
-            >
-              <Image src={LetterLogo} alt='logo'/>
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="font-medium text-text0 dark:text-white whitespace-pre"
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 1, delay: 1 }}
+        className='h-screen'
+        >
+        <Sidebar open={open} setOpen={setOpen}>
+          <SidebarBody className="justify-between gap-10 ">
+            <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden mt-3">
+              <>
+              <Link
+                href="#"
+                className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20"
               >
-                ENTRYL
-              </motion.span>
-            </Link>
-            </>
-            <div className="mt-8 flex flex-col gap-2">
-              {links.map((link, idx) => (
-                <SidebarLink key={idx} link={link} />
-              ))}
+                <Image src={LetterLogo} alt='logo'/>
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="font-medium text-text0 dark:text-white whitespace-pre"
+                >
+                  ENTRYL
+                </motion.span>
+              </Link>
+              </>
+              <div className="mt-8 flex flex-col gap-2">
+                {links.map((link, idx) => (
+                  <SidebarLink key={idx} link={link} />
+                ))}
+              </div>
             </div>
-          </div>
-          <div>
-            <SidebarLink
-              link={{
-                label: "Test",
-                href: "#",
-                icon: (
-                  <Image
-                    src=""
-                    className="h-7 w-7 flex-shrink-0 rounded-full border-black border-2"
-                    width={50}
-                    height={50}
-                    alt="Avatar"
-                  />
-                ),
-              }}
-            />
-          </div>
-        </SidebarBody>
-      </Sidebar>
+            <div>
+              <SidebarLink
+                link={{
+                  label: "Test",
+                  href: "#",
+                  icon: (
+                    <Image
+                      src=""
+                      className="h-7 w-7 flex-shrink-0 rounded-full border-black border-2"
+                      width={50}
+                      height={50}
+                      alt="Avatar"
+                    />
+                  ),
+                }}
+              />
+            </div>
+          </SidebarBody>
+        </Sidebar>
+      </motion.div>
+      
       <div className='flex flex-col h-[70vh]'>
-        <div className='ml-14 my-auto'>
-          <span className='text-text0 dark:text-white text-8xl'> <FlipWords words={welcome}/>, User.</span>
-        </div>
-        <div className='w-full flex justify-between mx-10'>
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 3, type: "spring" }}
+          exit={{ opacity: 0, y: -20 }}
+          className='ml-14 my-auto'
+        >
+          <span className='text-text0 dark:text-white text-8xl'> <FlipWords words={welcome}/>, {storedUsername ? storedUsername : 'User'} .</span>
+        </motion.div>
+        <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.7, duration: 3, type: "spring" }}
+        exit={{ opacity: 0, y: -20 }}
+        className='w-full flex justify-between mx-10'
+        >
           <div className='w-full flex flex-col items-center justify-center'>
             <div className='flex flex-col max-h-screen w-full'>
             <BentoGrid className='min-w-1/2 max-w-full md:auto-rows-[10rem] mx-6'>
@@ -253,7 +274,7 @@ const Dashboard = () => {
       
         
         <Image src={ENTRYL} width={900} height={300} alt="logo" className='rotate-90 items-right justify-right   my-auto flex'/> 
-        </div>
+        </motion.div>
       </div>
       </div>
       
