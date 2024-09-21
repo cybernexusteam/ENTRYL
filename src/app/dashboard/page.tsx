@@ -2,9 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import { invoke } from '@tauri-apps/api/tauri'
 import { BentoGridItem, BentoGrid } from '@/components/ui/bento-grid'
-import ENTRYL from '@/components/ui/ENTRYL.png'
 import LetterLogo from '@/components/ui/LetterLogo.png'
-import TransitionLayout from '@/components/ui/ltod_transition'
 import Image from 'next/image'
 import { Sidebar, SidebarBody, SidebarLink } from '@/components/ui/sidebar'
 import Link from 'next/link'
@@ -12,7 +10,6 @@ import { AnimatePresence, motion } from 'framer-motion'
 import {
   IconCpu,
   IconDeviceDesktop,
-  IconMeteor,
   IconBrandTabler,
   IconSettings,
   IconUserBolt,
@@ -20,12 +17,10 @@ import {
 } from "@tabler/icons-react"
 import {
   ChartContainer,
-  ChartTooltip,
   ChartTooltipContent,
-  ChartLegend,
   ChartLegendContent
 } from "@/components/ui/chart"
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area } from 'recharts'
+import { LineChart, Line, YAxis, Tooltip, Legend, ResponsiveContainer, Area } from 'recharts'
 import { FlipWords } from '@/components/ui/flip-words'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
@@ -52,7 +47,7 @@ const Dashboard = () => {
   const [cpuData, setCpuData] = useState<{ time: string, usage: number }[]>([])
   const [memoryData, setMemoryData] = useState<{ time: string, usage: number }[]>([])
   const storedUsername = localStorage.getItem('username');
-  const welcome = ["Welcome", "Bienvenue","Herzlich willkommen", "Benvenuto", "Bienvenido", "欢迎", "ようこそ", "환영합니다", "आपका स्वागत है", "Xin Chào", "Selamat Datang", "مرحباً"]
+  const welcome = ["Hi"]
   const [showContent, setShowContent] = useState(true); // Controls visibility
   const router = useRouter();
   useEffect(() => {
@@ -216,8 +211,8 @@ const Dashboard = () => {
           exit={{ opacity: 0, y: -20 }}
           className='ml-14 my-auto'
         >
-          <span className='text-text0 dark:text-white text-8xl'> <FlipWords words={welcome}/>, {storedUsername ? storedUsername : 'User'}.</span>
-        </motion.div>
+        <span className='text-text0 dark:text-white text-8xl relative top-[-90px]'> Hi, {storedUsername ? storedUsername + "   👋" : 'User'}.</span>
+      </motion.div>
         <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
