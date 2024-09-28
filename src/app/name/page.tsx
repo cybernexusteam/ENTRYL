@@ -28,7 +28,7 @@ const Name = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: '', // This will be populated with the value from localStorage later
+      username: '',
     },
   });
   
@@ -40,19 +40,17 @@ const Name = () => {
     console.log(values.username);
     localStorage.setItem('username', values.username);
 
-    // Trigger the animation and set a flag
     setIsAnimating(true);
     setShowContent(false);
   };
 
-  // Use useEffect to navigate after the animation completes
   useEffect(() => {
     if (isAnimating) {
       const timeoutId = setTimeout(() => {
-        router.push('/dashboard'); // Navigate after animation duration
-      }, 1000); // Adjust delay to match your animation duration
+        router.push('/dashboard');
+      }, 1000);
 
-      return () => clearTimeout(timeoutId); // Clear timeout if component unmounts early
+      return () => clearTimeout(timeoutId);
     }
   }, [isAnimating, router]); 
 
@@ -99,7 +97,7 @@ const Name = () => {
                             <FormControl>
                               <Input
                                 placeholder="Enter your name"
-                                {...field} // This is controlled by react-hook-form
+                                {...field}
                               />
                             </FormControl>
                             <FormMessage />
