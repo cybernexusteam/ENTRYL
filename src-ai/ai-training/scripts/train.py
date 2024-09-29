@@ -1,135 +1,89 @@
-import numpy as np # linear algebra
-import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
-import matplotlib.pyplot as plt # data visualization
-import seaborn as sns # statistical data visualization
-from sklearn.model_selection import train_test_split
-import category_encoders as ce
+import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
-import os
-for dirname, _, filenames in os.walk('/kaggle/input'):
-    for filename in filenames:
-        print(os.path.join(dirname, filename))
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import classification_report
+import json
 
-import warnings
+# Load Data from JSON
+data_file = '/home/pengu/ENTRYL/src-ai/ai-training/scripts/extracted_data.json'  # Path to your JSON file (PASTE UR OWN PATH TESTING ONLY)
 
-warnings.filterwarnings('ignore')
+# Load the JSON data into a DataFrame
+with open(data_file, 'r') as f:
+    data = json.load(f)
+    df = pd.DataFrame(data)
 
-data = 'src-ai/ai-training/labels/malware.csv'
+# Check for Missing Values
+print("\nChecking for missing values...")
+missing_values = df.isnull().sum()
+print(missing_values[missing_values > 0])  # Print only columns with missing values
 
-df = pd.read_csv(data, header=None)
+# Handle missing values
+df.dropna(subset=['Label'], inplace=True)
 
-col_names = ['type','hash','malice','generic','trojan','ransomware','worm','backdoor','spyware','rootkit','encrypter','downloader']
+# Drop columns with excessive missing values
+threshold = 0.5  # 50% threshold
+df.dropna(thresh=int(threshold * len(df)), axis=1, inplace=True)
 
+# Check shape after handling missing values
+print(f"Data shape after handling missing values: {df.shape}")
 
-df.columns = col_names
-col_names
+# Ensure the Label column exists
+if 'Label' not in df.columns:
+    raise ValueError("Error: 'Label' column is missing from the data.")
 
-df.head()
+# Separate Features and Labels
+X = df.drop(columns=['Label'])  # Features
+y = df['Label']  # Labels
 
-df.info()
+# Convert columns to numeric where possible and catch exceptions
+def convert_to_numeric(series):
+    # Attempt to convert and return a numeric series; if fails, return original
+    try:
+        return pd.to_numeric(series)
+    except (ValueError, TypeError):
+        return series  # Return original series if it cannot be converted
 
-for col in col_names:
-    
-    print(df[col].value_counts())   
+# Apply conversion function to all columns
+for col in X.columns:
+    X[col] = convert_to_numeric(X[col])
 
-df['worm'].value_counts()
+# Identify categorical columns that are of type object
+categorical_cols = X.select_dtypes(include=['object']).columns.tolist()
 
-df.isnull().sum()
+# Check for lists in categorical columns and flatten them
+for col in categorical_cols:
+    if X[col].apply(lambda x: isinstance(x, list)).any():
+        print(f"Warning: Column '{col}' contains lists. Flattening the values.")
+        # Convert list values to a string (or any appropriate representation)
+        X[col] = X[col].apply(lambda x: ', '.join(map(str, x)) if isinstance(x, list) else x)
 
+# One-hot encode categorical features
+X = pd.get_dummies(X, columns=categorical_cols, drop_first=True)
 
-X = df.drop(['ransomware'], axis=1)
+# Check if there are any samples available
+if X.shape[0] == 0:
+    raise ValueError("Error: No data samples found in features after processing.")
 
-y = df['ransomware']
-
+# Train-Test Split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-print(X_train.dtypes)
-print(X_train.head())
+# Feature Scaling
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)  # Fit and transform training data
+X_test_scaled = scaler.transform(X_test)  # Transform test data
 
-encoder = ce.OrdinalEncoder(cols=['type','hash','malice','generic','trojan','worm','backdoor','spyware','rootkit','encrypter','downloader'])
+# Train Random Forest Classifier
+rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
+rf_model.fit(X_train_scaled, y_train)
 
+# Make Predictions
+y_pred = rf_model.predict(X_test_scaled)
 
-X_train = encoder.fit_transform(X_train)
-
-X_test = encoder.transform(X_test)
-
-print(X_train.head())
-
-print(X_test.head())
-
-rfc = RandomForestClassifier(n_estimators=100,criterion='entropy',random_state=0)
-
-
-
-# fit the model
-
-rfc.fit(X_train, y_train)
-
-
-
-# Predict the Test set results
-
-y_pred = rfc.predict(X_test)
-
-
-
-# Check accuracy score 
-
-from sklearn.metrics import accuracy_score
-
-print('Model accuracy score with 400 decision-trees : {0:0.9f}'. format(accuracy_score(y_test, y_pred)))
-
-clf = RandomForestClassifier(n_estimators=2000, random_state=32)
-
-# fit the model to the training set
-
-clf.fit(X_train, y_train)
-
-
-feature_scores = pd.Series(clf.feature_importances_, index=X_train.columns).sort_values(ascending=False)
-
-print(feature_scores)
-
-X = df.drop(['spyware', 'type', 'ransomware', 'rootkit'], axis=1)
-
-y = df['ransomware']
-
-from sklearn.model_selection import train_test_split
-
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.1, random_state = 100)
-
-encoder = ce.OrdinalEncoder(cols=['hash','malice','generic','trojan','worm','backdoor', 'encrypter','downloader'])
-
-
-X_train = encoder.fit_transform(X_train)
-
-X_test = encoder.transform(X_test)
-
-clf = RandomForestClassifier(random_state=0)
-
-
-
-# fit the model to the training set
-
-clf.fit(X_train, y_train)
-
-
-# Predict on the test set results
-
-y_pred = clf.predict(X_test)
-
-
-
-# Check accuracy score 
-
-print('Model accuracy score with ransomware, spyware, rootkit, type variable removed : {0:0.4f}'. format(accuracy_score(y_test, y_pred)))
-
-from sklearn.metrics import classification_report
-
+# Generate Classification Report
+print("\nClassification Report:")
 print(classification_report(y_test, y_pred))
 
-from sklearn.metrics import confusion_matrix
-
-cm = confusion_matrix(y_test, y_pred)
-
-print(cm)
+# Save the Model (optional)
+import joblib
+joblib.dump(rf_model, 'rf_model.pkl')  # Save the trained model

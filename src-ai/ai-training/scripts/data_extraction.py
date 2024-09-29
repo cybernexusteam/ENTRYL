@@ -3,16 +3,11 @@ import hashlib
 import pefile
 import json
 import csv
-from collections import defaultdict
 
 # Define directories PLEASE CHANGE TO YOUR OWN DIRECTORY (FOR TESTING PURPOSES ONLY)
 BENIGN_DIR = '/home/pengu/NTRL/src-ai/ai-training/data/benign'
 MALICIOUS_DIR = '/home/pengu/NTRL/src-ai/ai-training/data/malware'
 OUTPUT_DIR = '/home/pengu/NTRL/src-ai/ai-training/extracted'
-
-# Ensure output directory exists
-if not os.path.exists(OUTPUT_DIR):
-    print(f"NO OUTPUT DIRECTORY FOUND")
 
 def hash_file(file_path):
     """Calculates the SHA256 hash of a file."""
@@ -50,7 +45,7 @@ def extract_pe_features(file_path):
         features['Sections'] = []
         for section in pe.sections:
             section_info = {
-                # Decode using 'latin-1' to handle non-UTF-8 bytes
+                # Decode using latin-1 to handle anything thats not UTF-8 bytes (thanks stackoverflow)
                 'Name': section.Name.decode('latin-1', errors='replace').strip(),
                 'VirtualAddress': section.VirtualAddress,
                 'Misc_VirtualSize': section.Misc_VirtualSize,
