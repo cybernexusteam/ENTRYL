@@ -1,12 +1,14 @@
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report, roc_curve, auc
+import joblib
 import json
+import matplotlib.pyplot as plt
 
-
-data_file = '/home/pengu/ENTRYL/src-ai/ai-training/extracted/extracted_data.json'  # Path to your JSON file (PASTE UR OWN PATH TESTING ONLY)
+# Load data
+data_file = '/home/pengu/ENTRYL/src-ai/ai-training/extracted/extracted_data.json'  # Path to your JSON file
 
 with open(data_file, 'r') as f:
     data = json.load(f)
@@ -18,7 +20,6 @@ print(missing_values[missing_values > 0])  # Print only columns with missing val
 
 # Handle missing values
 df.dropna(subset=['Label'], inplace=True)
-
 threshold = 0.5  # 50% threshold
 df.dropna(thresh=int(threshold * len(df)), axis=1, inplace=True)
 
@@ -51,7 +52,7 @@ for col in categorical_cols:
         print(f"Warning: Column '{col}' contains lists. Flattening the values.")
         X[col] = X[col].apply(lambda x: ', '.join(map(str, x)) if isinstance(x, list) else x)
 
-# One-hot encode!!!
+# One-hot encode categorical columns
 X = pd.get_dummies(X, columns=categorical_cols, drop_first=True)
 
 # Check if there are any samples available
@@ -66,16 +67,43 @@ scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 
-# Train the RFC
-rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
-rf_model.fit(X_train_scaled, y_train)
+# Hyperparameter Tuning with GridSearchCV
+param_grid = {
+    'n_estimators': [100],
+    'max_depth': [None, 10, 20, 30],
+    'min_samples_split': [2, 5, 10],
+    'min_samples_leaf': [1, 2, 4],
+    'max_features': ['auto', 'sqrt', 'log2']
+}
 
-# predictions
+grid_search = GridSearchCV(RandomForestClassifier(random_state=42), param_grid, cv=5, scoring='f1_weighted', n_jobs=-1)
+grid_search.fit(X_train_scaled, y_train)
+
+# Best model from grid search
+rf_model = grid_search.best_estimator_
+print("Best parameters found: ", grid_search.best_params_)
+
+# Predictions
 y_pred = rf_model.predict(X_test_scaled)
 
-# report output
+# Report output
 print("\nClassification Report:")
 print(classification_report(y_test, y_pred))
 
-import joblib
+# ROC Curve
+y_probs = rf_model.predict_proba(X_test_scaled)[:, 1]
+fpr, tpr, thresholds = roc_curve(y_test, y_probs, pos_label='malicious')
+roc_auc = auc(fpr, tpr)
+
+# Plot ROC Curve
+plt.figure()
+plt.plot(fpr, tpr, color='blue', label='ROC curve (area = %0.2f)' % roc_auc)
+plt.plot([0, 1], [0, 1], color='red', linestyle='--')
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver Operating Characteristic')
+plt.legend(loc='lower right')
+plt.show()
+
+# Save model
 joblib.dump(rf_model, 'rf_model.pkl')
