@@ -67,10 +67,10 @@ scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 
-# Hyperparameter Tuning with GridSearchCV
+# Hyperparameter runing with GridSearchCV
 param_grid = {
     'n_estimators': [100],
-    'max_depth': [None, 10, 20, 30],
+    'max_depth': [None, 10, 20],
     'min_samples_split': [2, 5, 10],
     'min_samples_leaf': [1, 2, 4],
     'max_features': ['auto', 'sqrt', 'log2']

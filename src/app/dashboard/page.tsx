@@ -1,29 +1,28 @@
 'use client'
-import React, { useState, useEffect } from 'react'
-import { invoke } from '@tauri-apps/api/tauri'
-import { BentoGridItem, BentoGrid } from '@/components/ui/bento-grid'
-import LetterLogo from '@/components/ui/LetterLogo.png'
-import Image from 'next/image'
-import { Sidebar, SidebarBody, SidebarLink } from '@/components/ui/sidebar'
-import Link from 'next/link'
-import { AnimatePresence, motion } from 'framer-motion'
-import {
-  IconCpu,
-  IconDeviceDesktop,
-  IconBrandTabler,
-  IconSettings,
-  IconUserBolt,
-  IconArrowLeft,
-} from "@tabler/icons-react"
+import { BentoGrid, BentoGridItem } from '@/components/ui/bento-grid'
+import { Button } from '@/components/ui/button'
 import {
   ChartContainer,
-  ChartTooltipContent,
-  ChartLegendContent
+  ChartLegendContent,
+  ChartTooltipContent
 } from "@/components/ui/chart"
-import { LineChart, Line, YAxis, Tooltip, Legend, ResponsiveContainer, Area } from 'recharts'
-import { FlipWords } from '@/components/ui/flip-words'
+import LetterLogo from '@/components/ui/LetterLogo.png'
+import { Sidebar, SidebarBody, SidebarLink } from '@/components/ui/sidebar'
+import {
+  IconArrowLeft,
+  IconBrandTabler,
+  IconCpu,
+  IconDeviceDesktop,
+  IconSettings,
+  IconUserBolt,
+} from "@tabler/icons-react"
+import { invoke } from '@tauri-apps/api/tauri'
+import { AnimatePresence, motion } from 'framer-motion'
+import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Button } from '@/components/ui/button'
+import { useEffect, useState } from 'react'
+import { Area, Legend, Line, LineChart, ResponsiveContainer, Tooltip, YAxis } from 'recharts'
 
 interface SystemInfo {
   cpu_usage: number;
