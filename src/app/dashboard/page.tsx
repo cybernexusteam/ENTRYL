@@ -1,4 +1,6 @@
-"use client";
+"use client"
+
+import React, { useState, useEffect } from 'react';
 import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,44 +23,24 @@ import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import {
-  Area,
-  Legend,
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  Tooltip,
-  YAxis,
-} from "recharts";
-
-interface SystemInfo {
-  cpu_usage: number;
-  total_memory: number;
-  used_memory: number;
-  total_swap: number;
-  used_swap: number;
-}
-
-interface Process {
-  pid: string;
-  name: string;
-  cpu_usage: number;
-  memory_usage: number;
-}
+import { open } from '@tauri-apps/api/dialog';  // Import the open dialog function
+import { Area, Legend, Line, LineChart, ResponsiveContainer, Tooltip, YAxis } from 'recharts';
+import { Process } from 'tauri-plugin-system-info-api';
 
 const Dashboard = () => {
-  const [open, setOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [systemInfo, setSystemInfo] = useState<SystemInfo | null>(null);
   const [processes, setProcesses] = useState<Process[]>([]);
   const [cpuData, setCpuData] = useState<{ time: string; usage: number }[]>([]);
   const [memoryData, setMemoryData] = useState<
     { time: string; usage: number }[]
   >([]);
+  const [scanStatus, setScanStatus] = useState<string | null>(null); // Add state for scan status
   const storedUsername = localStorage.getItem("username");
   const welcome = ["Hi"];
   const [showContent, setShowContent] = useState(true); // Controls visibility
   const router = useRouter();
+
   useEffect(() => {
     const fetchSystemInfo = async () => {
       try {
@@ -149,12 +131,34 @@ const Dashboard = () => {
     },
   ];
 
+  // Function to handle scan button click
+  const handleScanClick = async () => {
+    const selectedDirectory = await open({
+      directory: true,
+      multiple: false,
+    });
+
+    if (selectedDirectory) {
+      setScanStatus("Scanning... Please wait.");
+      try {
+        const result = await invoke('run_ml_check', { directory: selectedDirectory });
+        setScanStatus(`Scan completed: ${result}`);
+      } catch (error) {
+        console.error('Error during scan:', error);
+        setScanStatus(`Error: ${error}`);
+      }
+    } else {
+      setScanStatus("No directory selected.");
+    }
+  };
+
   const handleButtonClick = () => {
     setShowContent(false);
     setTimeout(() => {
       router.push("/page");
     }, 1000);
   };
+
   return (
     <AnimatePresence>
       {showContent && (
@@ -166,7 +170,7 @@ const Dashboard = () => {
             transition={{ duration: 1, delay: 1 }}
             className="h-screen"
           >
-            <Sidebar open={open} setOpen={setOpen}>
+            <Sidebar open={isSidebarOpen} setOpen={setIsSidebarOpen}>
               <SidebarBody className="justify-between gap-10 ">
                 <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden mt-3">
                   <>
@@ -255,6 +259,12 @@ const Dashboard = () => {
                       <motion.h1 className="text-text0 font-extrabold text-4xl">
                         ANTIMALWARE CLEANING
                       </motion.h1>
+                      {/* Add button for scanning */}
+                      <Button onClick={handleScanClick} className="mt-4">
+                        Start Scan
+                      </Button>
+                      {/* Show scan status */}
+                      {scanStatus && <p className="mt-2 text-text0">{scanStatus}</p>}
                     </div>
                   </div>
                   
