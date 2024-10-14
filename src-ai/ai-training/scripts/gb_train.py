@@ -3,13 +3,11 @@ from lightgbm import LGBMClassifier
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
-from sklearn.metrics import classification_report, roc_curve, auc
+from sklearn.metrics import classification_report
 from sklearn.pipeline import Pipeline
-from sklearn.datasets import load_iris
 import joblib
 import pickle
 import json
-import matplotlib.pyplot as plt
 import os
 
 # Load data
@@ -67,7 +65,6 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 X_train_preprocessed = preprocessor.fit_transform(X_train)
 X_test_preprocessed = preprocessor.transform(X_test)
 
-
 # Define LightGBM model with default parameters for initial testing
 lgb_model = LGBMClassifier(
     boosting_type='gbdt',  # Gradient boosting decision tree
@@ -100,7 +97,7 @@ grid_search.fit(X_train_preprocessed, y_train)
 
 # Best model from grid search
 best_lgb_model = grid_search.best_estimator_
-print("Best parameters found: ", grid_search.best_params_)
+print("Best parameters found: ", grid_search.best_params_) 
 
 # Predictions
 y_pred = best_lgb_model.predict(X_test_preprocessed)
@@ -109,9 +106,16 @@ y_pred = best_lgb_model.predict(X_test_preprocessed)
 print("\nClassification Report:")
 print(classification_report(y_test, y_pred))
 
-# Assuming 'grid_search' is your trained model
-output_path = "C:/Users/26dwi/ENTRYL/src-ai/ai-training/models/gb_model02.pkl"
+# Save the model and preprocessor
+output_path_model = "C:/Users/26dwi/ENTRYL/src-ai/ai-training/models/gb_model02.pkl"
+output_path_preprocessor = "C:/Users/26dwi/ENTRYL/src-ai/ai-training/models/preprocessor.pkl"
 
 # Save the model
-with open(output_path, 'wb') as f:
+with open(output_path_model, 'wb') as f:
     pickle.dump(best_lgb_model, f)
+
+# Save the preprocessor
+with open(output_path_preprocessor, 'wb') as f:
+    pickle.dump(preprocessor, f)
+
+print("Model and preprocessor saved successfully.")
