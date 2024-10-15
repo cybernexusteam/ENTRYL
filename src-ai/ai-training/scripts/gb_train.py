@@ -4,8 +4,6 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.metrics import classification_report
-from sklearn.pipeline import Pipeline
-import joblib
 import pickle
 import json
 import os
@@ -75,7 +73,7 @@ lgb_model = LGBMClassifier(
 
 # Hyperparameter Tuning with GridSearchCV
 param_grid = {
-    'n_estimators': [100, 200, 500],
+    'n_estimators': [1000],  # Setting to 1000 as requested
     'learning_rate': [0.01, 0.1, 0.05],
     'max_depth': [-1, 10, 20],  # -1 for no limit on depth
     'num_leaves': [31, 50, 100],  # Control tree complexity
@@ -107,8 +105,8 @@ print("\nClassification Report:")
 print(classification_report(y_test, y_pred))
 
 # Save the model and preprocessor
-output_path_model = "C:/Users/26dwi/ENTRYL/src-ai/ai-training/models/gb_model02.pkl"
-output_path_preprocessor = "C:/Users/26dwi/ENTRYL/src-ai/ai-training/models/preprocessor.pkl"
+output_path_model = "C:/Users/26dwi/ENTRYL/src-ai/ai-training/models/gb_model04.pkl"
+output_path_preprocessor = "C:/Users/26dwi/ENTRYL/src-ai/ai-training/models/preprocessor02.pkl"
 
 # Save the model
 with open(output_path_model, 'wb') as f:

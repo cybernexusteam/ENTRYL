@@ -1,20 +1,40 @@
 import os
 import pickle
 import json
-import subprocess
-from tkinter import filedialog, Tk, messagebox, scrolledtext
 import hashlib
 import pefile
 import olefile
 import csv
 import traceback
 import numpy as np
+from tkinter import filedialog, Tk, messagebox, scrolledtext
 
 # Define global paths for temporary storage inside the ENTRYL folder
 TEMP_DIR = os.path.join(os.getenv('PROGRAMDATA'), 'ENTRYL', 'temp')  # Temporary folder path
 
 # Ensure the temp directory exists
-os.makedirs(TEMP_DIR, exist_ok=True)  # This will create the temp directory if it doesn't exist
+os.makedirs(TEMP_DIR, exist_ok=True)  # Create the temp directory if it doesn't exist
+print(f"Temporary directory created at: {TEMP_DIR}")
+
+def clear_temp_directory():
+    """Delete all files in the temporary directory."""
+    try:
+        for filename in os.listdir(TEMP_DIR):
+            file_path = os.path.join(TEMP_DIR, filename)
+            try:
+                if os.path.isfile(file_path):
+                    os.remove(file_path)
+                    print(f"Deleted file: {file_path}")
+                elif os.path.isdir(file_path):
+                    os.rmdir(file_path)  # Remove empty directories, if any
+                    print(f"Deleted directory: {file_path}")
+            except Exception as e:
+                print(f"Error deleting {file_path}: {str(e)}")
+    except Exception as e:
+        print(f"Error clearing temp directory: {str(e)}")
+
+# Clear any existing files in the temp directory
+clear_temp_directory()
 
 # Paths for extracted data and results within the temp directory
 EXTRACTED_DATA_PATH = os.path.join(TEMP_DIR, 'extracted_data.json')
@@ -153,6 +173,7 @@ def save_to_json(data):
     try:
         with open(EXTRACTED_DATA_PATH, 'w') as f:
             json.dump(data, f, indent=4)
+        print(f"Extracted data saved to {EXTRACTED_DATA_PATH}")
     except Exception as e:
         print(f"Error saving data to JSON: {str(e)}")
         traceback.print_exc()
@@ -172,6 +193,7 @@ def save_to_csv(data):
             for row in data:
                 filled_row = {field: row.get(field, 'N/A') for field in all_fieldnames}
                 writer.writerow(filled_row)
+        print(f"Extracted data saved to {os.path.join(TEMP_DIR, 'extracted_data.csv')}")
     except Exception as e:
         print(f"Error saving data to CSV: {str(e)}")
         traceback.print_exc()
@@ -189,11 +211,17 @@ def flatten_features(item):
     if 'Sections' in item:
         flattened['NumberOfSections'] = len(item['Sections'])
         flattened['TotalSectionSize'] = sum(sec.get('SizeOfRawData', 0) for sec in item['Sections'])
+    else:
+        flattened['NumberOfSections'] = 0
+        flattened['TotalSectionSize'] = 0
 
     # Flatten 'Imports': Count number of DLLs and total number of imported functions
     if 'Imports' in item:
         flattened['NumberOfDLLs'] = len(item['Imports'])
         flattened['TotalImportedFunctions'] = sum(len(dll.get('Functions', [])) for dll in item['Imports'])
+    else:
+        flattened['NumberOfDLLs'] = 0
+        flattened['TotalImportedFunctions'] = 0
 
     return flattened
 
@@ -215,17 +243,22 @@ def run_extraction_script(directory):
         print(f"Error during extraction script: {str(e)}")
         traceback.print_exc()
 
-def load_model(model_path='C:/Users/26dwi/ENTRYL/src-ai/gb_model02.pkl'):
-    """Load the trained machine learning model."""
+def load_model_and_preprocessor(model_path='C:/Users/26dwi/ENTRYL/src-ai/rf_model.pkl', preprocessor_path='C:/Users/26dwi/ENTRYL/src-ai/preprocessor02.pkl'):
+    """Load the trained machine learning model and preprocessor."""
     try:
         with open(model_path, 'rb') as model_file:
             model = pickle.load(model_file)
-        return model
+
+        with open(preprocessor_path, 'rb') as preprocessor_file:
+            preprocessor = pickle.load(preprocessor_file)
+
+        print("Model and preprocessor loaded successfully.")
+        return model, preprocessor
     except Exception as e:
-        show_error_popup(f"Error loading model: {str(e)}")
+        show_error_popup(f"Error loading model or preprocessor: {str(e)}")
         exit(1)
 
-def run_model_on_extracted_data(model):
+def run_model_on_extracted_data(model, preprocessor):
     """Run the model on the extracted data."""
     try:
         with open(EXTRACTED_DATA_PATH, 'r') as data_file:
@@ -249,18 +282,13 @@ def run_model_on_extracted_data(model):
         # Convert to a NumPy array for compatibility with LightGBM
         feature_matrix = np.array([list(vec.values()) for vec in feature_vectors])
 
-        # Check the number of features
-        num_features_model = model.n_features_  # Number of features expected by the model
-        num_features_input = feature_matrix.shape[1]  # Number of features in the input
+        print("Shape of feature matrix:", feature_matrix.shape)  # Debugging line
 
-        print(f"Number of features in the model: {num_features_model}")
-        print(f"Number of features in the input: {num_features_input}")
-
-        if num_features_model != num_features_input:
-            raise ValueError(f"Number of features of the model ({num_features_model}) must match the input ({num_features_input}).")
+        # Apply preprocessing to the feature matrix
+        feature_matrix_preprocessed = preprocessor.transform(feature_matrix)
 
         # Make predictions
-        predictions = model.predict(feature_matrix)
+        predictions = model.predict(feature_matrix_preprocessed)
 
         # Attach predictions to each extracted feature
         for i, item in enumerate(extracted_data):
@@ -270,8 +298,6 @@ def run_model_on_extracted_data(model):
     except Exception as e:
         show_error_popup(f"Error running model on extracted data: {str(e)}")
         traceback.print_exc()
-        exit(1)
-
 
 def save_results(results):
     """Save the results of the predictions to a global location."""
@@ -309,13 +335,13 @@ def main():
         print("Running the extraction script...")
         run_extraction_script(selected_directory)
 
-        # Step 3: Load the pre-trained model
-        print("Loading the machine learning model...")
-        model = load_model()
+        # Step 3: Load the pre-trained model and preprocessor
+        print("Loading the machine learning model and preprocessor...")
+        model, preprocessor = load_model_and_preprocessor()
 
         # Step 4: Run the model on the extracted data
         print("Running the model on the extracted data...")
-        results = run_model_on_extracted_data(model)
+        results = run_model_on_extracted_data(model, preprocessor)
 
         # Step 5: Save the results
         print("Saving the results...")
