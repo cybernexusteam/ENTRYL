@@ -291,9 +291,12 @@ def run_model_on_extracted_data(model):
         # Make predictions using the H2O model
         predictions = model.predict(df_h2o)
 
-        # Attach predictions to each extracted feature
+        # Store predictions and check for malicious files
+        results = []
+        any_malicious = False
         for i, item in enumerate(extracted_data):
             item['prediction'] = predictions[i, 0]  # Get the predicted class
+            results.append(item)
 
             # Print predictions four times
             print(f"Prediction for {item['SHA256']}: {item['prediction']} (1)")
@@ -301,7 +304,17 @@ def run_model_on_extracted_data(model):
             print(f"Prediction for {item['SHA256']}: {item['prediction']} (3)")
             print(f"Prediction for {item['SHA256']}: {item['prediction']} (4)")
 
-        return extracted_data
+            # Check if the prediction indicates malicious
+            if item['prediction'] == "malicious":  # Adjust according to your actual prediction values
+                any_malicious = True
+
+        # Final result
+        if any_malicious:
+            print("Some files were found to be malicious.")
+        else:
+            print("No malicious files found. All files are clean.")
+
+        return results
     except Exception as e:
         show_error_popup(f"Error running model on extracted data: {str(e)}")
         traceback.print_exc()
