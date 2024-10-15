@@ -1,14 +1,13 @@
 mod sysmon;
-mod runmlchck
+mod runmlchck;
+mod results; // Add this line to include the results module
 
 use sysinfo::System;
 use std::sync::{Arc, Mutex};
 use sysmon::{AppState, get_system_info, get_processes, start_cpu_refresh};
-use std::process::Command;
 use tauri::command;
-use runmlchck::{AppState, run_ml_check}
-
-
+use runmlchck::{AppState as MLAppState, run_ml_check};
+use results::get_results;
 
 fn main() {
     let system = Arc::new(Mutex::new(System::new_all()));
@@ -17,8 +16,8 @@ fn main() {
     start_cpu_refresh(Arc::clone(&system));
 
     tauri::Builder::default()
-        .manage(AppState { system })
-        .invoke_handler(tauri::generate_handler![get_system_info, get_processes, run_ml_check]) 
+        .manage(AppState { system }) // Adjust if necessary for the app state
+        .invoke_handler(tauri::generate_handler![get_system_info, get_processes, run_ml_check, get_results]) 
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
