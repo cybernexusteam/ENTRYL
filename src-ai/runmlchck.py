@@ -1,5 +1,4 @@
 import os
-import pickle
 import json
 import hashlib
 import pefile
@@ -8,6 +7,10 @@ import csv
 import traceback
 import numpy as np
 from tkinter import filedialog, Tk, messagebox, scrolledtext
+import h2o  # Import H2O library
+
+# Initialize H2O Cluster
+h2o.init()
 
 # Define global paths for temporary storage inside the ENTRYL folder
 TEMP_DIR = os.path.join(os.getenv('PROGRAMDATA'), 'ENTRYL', 'temp')  # Temporary folder path
@@ -243,23 +246,18 @@ def run_extraction_script(directory):
         print(f"Error during extraction script: {str(e)}")
         traceback.print_exc()
 
-def load_model_and_preprocessor(model_path='C:/Users/26dwi/ENTRYL/src-ai/rf_model.pkl', preprocessor_path='C:/Users/26dwi/ENTRYL/src-ai/preprocessor02.pkl'):
-    """Load the trained machine learning model and preprocessor."""
+def load_h2o_model(model_path):
+    """Load the trained H2O model."""
     try:
-        with open(model_path, 'rb') as model_file:
-            model = pickle.load(model_file)
-
-        with open(preprocessor_path, 'rb') as preprocessor_file:
-            preprocessor = pickle.load(preprocessor_file)
-
-        print("Model and preprocessor loaded successfully.")
-        return model, preprocessor
+        model = h2o.load_model(model_path)
+        print("H2O model loaded successfully.")
+        return model
     except Exception as e:
-        show_error_popup(f"Error loading model or preprocessor: {str(e)}")
+        show_error_popup(f"Error loading H2O model: {str(e)}")
         exit(1)
 
-def run_model_on_extracted_data(model, preprocessor):
-    """Run the model on the extracted data."""
+def run_model_on_extracted_data(model):
+    """Run the H2O model on the extracted data."""
     try:
         with open(EXTRACTED_DATA_PATH, 'r') as data_file:
             extracted_data = json.load(data_file)
@@ -267,32 +265,15 @@ def run_model_on_extracted_data(model, preprocessor):
         # Flatten the extracted data into feature vectors
         feature_vectors = [flatten_features(item) for item in extracted_data]
 
-        # Ensure all feature vectors have the same set of keys (columns)
-        all_keys = set().union(*(d.keys() for d in feature_vectors))
-        feature_vectors = [{key: vec.get(key, 0) for key in all_keys} for vec in feature_vectors]
+        # Convert feature vectors into an H2OFrame
+        df_h2o = h2o.H2OFrame(feature_vectors)
 
-        # Convert feature values to numeric, handling errors
-        for vec in feature_vectors:
-            for key in vec:
-                try:
-                    vec[key] = float(vec[key])  # Attempt to convert to float
-                except (ValueError, TypeError):
-                    vec[key] = 0.0  # Replace with a default value if conversion fails
-
-        # Convert to a NumPy array for compatibility with LightGBM
-        feature_matrix = np.array([list(vec.values()) for vec in feature_vectors])
-
-        print("Shape of feature matrix:", feature_matrix.shape)  # Debugging line
-
-        # Apply preprocessing to the feature matrix
-        feature_matrix_preprocessed = preprocessor.transform(feature_matrix)
-
-        # Make predictions
-        predictions = model.predict(feature_matrix_preprocessed)
+        # Make predictions using the H2O model
+        predictions = model.predict(df_h2o)
 
         # Attach predictions to each extracted feature
         for i, item in enumerate(extracted_data):
-            item['prediction'] = predictions[i]
+            item['prediction'] = predictions[i, 0]  # Get the predicted class
 
         return extracted_data
     except Exception as e:
@@ -335,13 +316,14 @@ def main():
         print("Running the extraction script...")
         run_extraction_script(selected_directory)
 
-        # Step 3: Load the pre-trained model and preprocessor
-        print("Loading the machine learning model and preprocessor...")
-        model, preprocessor = load_model_and_preprocessor()
+        # Step 3: Load the pre-trained H2O model
+        model_path = "C:/Users/26dwi/ENTRYL/src-ai/ai-training/models/StackedEnsemble_AllModels_1_AutoML_1_20241014_193144"  # Update this to your model's path
+        print("Loading the machine learning model...")
+        model = load_h2o_model(model_path)
 
         # Step 4: Run the model on the extracted data
         print("Running the model on the extracted data...")
-        results = run_model_on_extracted_data(model, preprocessor)
+        results = run_model_on_extracted_data(model)
 
         # Step 5: Save the results
         print("Saving the results...")
