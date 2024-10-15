@@ -268,12 +268,38 @@ def run_model_on_extracted_data(model):
         # Convert feature vectors into an H2OFrame
         df_h2o = h2o.H2OFrame(feature_vectors)
 
+        # Define expected feature columns based on your training data
+        expected_columns = [
+            'FileSize', 'SHA256', 'Machine', 'NumberOfSections', 
+            'TimeDateStamp', 'PointerToSymbolTable', 'Characteristics', 
+            'ImageBase', 'SizeOfImage', 'Subsystem', 
+            'DllCharacteristics', 'NumberOfSections', 'TotalSectionSize',
+            'NumberOfDLLs', 'TotalImportedFunctions'  # Adjust based on your training data
+        ]
+
+        # Check for missing columns and add them with default values
+        missing_cols = set(expected_columns) - set(df_h2o.columns)
+        if missing_cols:
+            print(f"Missing columns from input data: {missing_cols}")
+            for col in missing_cols:
+                df_h2o[col] = 0  # Add missing columns with default values
+
+        # Ensure the columns match the expected structure
+        df_h2o = df_h2o[expected_columns]  # Reorder to match expected columns
+        print("H2O Frame columns:", df_h2o.columns)
+
         # Make predictions using the H2O model
         predictions = model.predict(df_h2o)
 
         # Attach predictions to each extracted feature
         for i, item in enumerate(extracted_data):
             item['prediction'] = predictions[i, 0]  # Get the predicted class
+
+            # Print predictions four times
+            print(f"Prediction for {item['SHA256']}: {item['prediction']} (1)")
+            print(f"Prediction for {item['SHA256']}: {item['prediction']} (2)")
+            print(f"Prediction for {item['SHA256']}: {item['prediction']} (3)")
+            print(f"Prediction for {item['SHA256']}: {item['prediction']} (4)")
 
         return extracted_data
     except Exception as e:

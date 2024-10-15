@@ -1,13 +1,14 @@
 import os
 import hashlib
 import pefile
+import olefile
 import json
 import csv
 
 # Define directories PLEASE CHANGE TO YOUR OWN DIRECTORY (FOR TESTING PURPOSES ONLY)
-BENIGN_DIR = '/home/pengu/NTRL/src-ai/ai-training/data/benign'
-MALICIOUS_DIR = '/home/pengu/NTRL/src-ai/ai-training/data/malware'
-OUTPUT_DIR = '/home/pengu/NTRL/src-ai/ai-training/extracted'
+# BENIGN_DIR = '/home/pengu/NTRL/src-ai/ai-training/data/benign'
+MALICIOUS_DIR = 'C:/Users/26dwi/Downloads/ENTRYL TEST'
+OUTPUT_DIR = 'C:/Users/26dwi/ENTRYL/src-ai/ai-training/extracted'
 
 def hash_file(file_path):
     """Calculates the SHA256 hash of a file."""
@@ -45,7 +46,6 @@ def extract_pe_features(file_path):
         features['Sections'] = []
         for section in pe.sections:
             section_info = {
-                # Decode using latin-1 to handle anything thats not UTF-8 bytes (thanks stackoverflow)
                 'Name': section.Name.decode('latin-1', errors='replace').strip(),
                 'VirtualAddress': section.VirtualAddress,
                 'Misc_VirtualSize': section.Misc_VirtualSize,
@@ -75,6 +75,29 @@ def extract_pe_features(file_path):
     
     return features
 
+def extract_ole_features(file_path):
+    """Extract static features from an OLE file."""
+    features = {}
+    
+    try:
+        ole = olefile.OleFileIO(file_path)
+        
+        # Basic file information
+        features['FileSize'] = os.path.getsize(file_path)
+        features['SHA256'] = hash_file(file_path)
+        
+        # List all streams and storages in the OLE file
+        features['Streams'] = ole.listdir()
+        
+        # Optionally extract data from specific streams
+        for stream in ole.listdir():
+            if ole.exists(stream):
+                features['Stream Content'] = ole.openstream(stream).read()  # Read the content of the stream if needed
+                
+    except Exception as e:
+        features['Error'] = str(e)
+    
+    return features
 
 def process_directory(directory, label):
     """Process all files in a directory and extract features."""
@@ -84,7 +107,16 @@ def process_directory(directory, label):
         for file in files:
             file_path = os.path.join(root, file)
             print(f"Processing file: {file_path}")
-            features = extract_pe_features(file_path)
+            
+            # Check file extension to determine the type
+            if file.lower().endswith(('.exe', '.dll', '.sys', '.bin')):
+                features = extract_pe_features(file_path)
+            elif file.lower().endswith(('.xls', '.xlsx', '.doc', '.docx', '.ppt', '.pptx', '.vsd')):
+                features = extract_ole_features(file_path)
+            else:
+                print(f"Unsupported file type: {file_path}")
+                continue
+                
             features['Label'] = label  # Assign benign or malicious label
             extracted_data.append(features)
     
@@ -118,17 +150,17 @@ def save_to_csv(data, filename):
 if __name__ == '__main__':
     # Extract features from benign and malicious files
     print("Extracting features from benign files...")
-    benign_data = process_directory(BENIGN_DIR, label='benign')
+    # benign_data = process_directory(BENIGN_DIR, label='benign')
     
     print("Extracting features from malicious files...")
     malicious_data = process_directory(MALICIOUS_DIR, label='malicious')
     
     # Combine both datasets
-    all_data = benign_data + malicious_data
+    all_data = malicious_data
     
     # Save the extracted data
     print("Saving data to JSON and CSV...")
-    save_to_json(all_data, 'extracted_data.json')
-    save_to_csv(all_data, 'extracted_data.csv')
+    save_to_json(all_data, 'extracted_data2.json')
+    save_to_csv(all_data, 'extracted_data2.csv')
     
     print("Feature extraction completed successfully.")
