@@ -5,7 +5,7 @@ import olefile
 import json
 import csv
 
-# Define directories PLEASE CHANGE TO YOUR OWN DIRECTORY (FOR TESTING PURPOSES ONLY)
+# Define directories (PLEASE CHANGE TO YOUR OWN DIRECTORY)
 BENIGN_DIR = 'C:/Users/26dwi/ENTRYL/src-ai/ai-training/data/benign'
 MALICIOUS_DIR = 'C:/Users/26dwi/ENTRYL/src-ai/ai-training/data/malware'
 OUTPUT_DIR = 'C:/Users/26dwi/ENTRYL/src-ai/ai-training/extracted'
@@ -89,11 +89,28 @@ def extract_ole_features(file_path):
         # List all streams and storages in the OLE file
         features['Streams'] = ole.listdir()
         
-        # Optionally extract data from specific streams
-        for stream in ole.listdir():
+        # Extract metadata if the OLE file has document properties
+        metadata_streams = ["\x05SummaryInformation", "\x05DocumentSummaryInformation"]
+        metadata = {}
+        
+        for stream in metadata_streams:
             if ole.exists(stream):
-                features['Stream Content'] = ole.openstream(stream).read()  # Read the content of the stream if needed
-                
+                try:
+                    stream_data = ole.openstream(stream).read()
+                    metadata[stream] = stream_data.decode('utf-16', errors='replace')
+                except Exception as e:
+                    metadata[stream] = f"Error reading stream: {str(e)}"
+        
+        features['Metadata'] = metadata
+
+        # Extract macros if present
+        if ole.exists('Macros'):
+            try:
+                macro_stream = ole.openstream('Macros')
+                features['Macros'] = macro_stream.read().decode('utf-8', errors='replace')
+            except Exception as e:
+                features['Macros'] = f"Error reading macros: {str(e)}"
+        
     except Exception as e:
         features['Error'] = str(e)
     
@@ -111,7 +128,7 @@ def process_directory(directory, label):
             # Check file extension to determine the type
             if file.lower().endswith(('.exe', '.dll', '.sys', '.bin')):
                 features = extract_pe_features(file_path)
-            elif file.lower().endswith(('.xls', '.xlsx', '.doc', '.docx', '.ppt', '.pptx', '.vsd', "ole")):
+            elif file.lower().endswith(('.xls', '.xlsx', '.doc', '.docx', '.ppt', '.pptx', '.vsd', '.ole')):
                 features = extract_ole_features(file_path)
             else:
                 print(f"Unsupported file type: {file_path}")
@@ -136,15 +153,14 @@ def save_to_csv(data, filename):
 
     all_fieldnames = list(all_fieldnames)  # Convert to a list
 
-    # Write the CSV file
-    with open(os.path.join(OUTPUT_DIR, filename), 'w', newline='') as csvfile:
+    # Write the CSV file with UTF-8 encoding
+    with open(os.path.join(OUTPUT_DIR, filename), 'w', newline='', encoding='utf-8') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=all_fieldnames)
         writer.writeheader()  # Write the header row
         for row in data:
             # Fill missing keys with 'N/A' before writing
             filled_row = {field: row.get(field, 'N/A') for field in all_fieldnames}
             writer.writerow(filled_row)
-
 
 # Main execution
 if __name__ == '__main__':

@@ -7,7 +7,7 @@ import json
 h2o.init()
 
 # Load data
-data_file = 'C:/Users/26dwi/ENTRYL/src-ai/ai-training/extracted/extracted_data.json'
+data_file = 'C:/Users/26dwi/ENTRYL/src-ai/ai-training/extracted/extracted_data2.json'
 
 with open(data_file, 'r') as f:
     data = json.load(f)
@@ -18,7 +18,7 @@ df.dropna(subset=['Label'], inplace=True)
 threshold = 0.5  # 50% threshold for missing values in a column
 df.dropna(thresh=int(threshold * len(df)), axis=1, inplace=True)
 
-# Function to flatten sections and imports
+# Function to flatten nested data
 def flatten_features(row):
     # Flatten sections
     if 'Sections' in row and isinstance(row['Sections'], list):
@@ -30,9 +30,27 @@ def flatten_features(row):
     # Flatten imports
     if 'Imports' in row and isinstance(row['Imports'], list):
         for i, imp in enumerate(row['Imports']):
-            row[f'Import_{i}_DLL'] = imp['DLL']
-            row[f'Import_{i}_Functions'] = ', '.join(imp['Functions'])
+            row[f'Import_{i}_DLL'] = imp.get('DLL', 'N/A')
+            row[f'Import_{i}_Functions'] = ', '.join(imp.get('Functions', []))
         del row['Imports']  # Remove the original nested structure
+
+    # Flatten OLE streams
+    if 'Streams' in row and isinstance(row['Streams'], list):
+        for i, stream in enumerate(row['Streams']):
+            row[f'Stream_{i}'] = '/'.join(stream)
+        del row['Streams']
+
+    # Flatten OLE metadata
+    if 'Metadata' in row and isinstance(row['Metadata'], dict):
+        for key, value in row['Metadata'].items():
+            row[f'Metadata_{key}'] = value
+        del row['Metadata']
+
+    # Flatten Macros
+    if 'Macros' in row:
+        row['Macros'] = row['Macros'][:1000]  # Limit macro size to avoid excessive memory usage
+    else:
+        row['Macros'] = 'N/A'
     
     return row
 
@@ -52,7 +70,7 @@ for col in flattened_data.columns:
     flattened_data[col] = convert_to_numeric(flattened_data[col])
 
 # Combine X and y back into a single DataFrame for H2O
-flattened_data['Label'] = df['Label']
+flattened_data['Label'] = df['Label']  # Ensure Label column is retained
 df_h2o = h2o.H2OFrame(flattened_data)
 
 # Split the dataset
