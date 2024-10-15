@@ -300,9 +300,6 @@ def run_model_on_extracted_data(model):
 
             # Print predictions four times
             print(f"Prediction for {item['SHA256']}: {item['prediction']} (1)")
-            print(f"Prediction for {item['SHA256']}: {item['prediction']} (2)")
-            print(f"Prediction for {item['SHA256']}: {item['prediction']} (3)")
-            print(f"Prediction for {item['SHA256']}: {item['prediction']} (4)")
 
             # Check if the prediction indicates malicious
             if item['prediction'] == "malicious":  # Adjust according to your actual prediction values

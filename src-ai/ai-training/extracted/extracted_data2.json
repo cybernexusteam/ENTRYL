@@ -1,0 +1,3554 @@
+[
+    {
+        "FileSize": 400848,
+        "SHA256": "002ce0d28ec990aadbbc89df457189de37d8adaadc9c084b78eb7be9a9820c81",
+        "Machine": 34404,
+        "NumberOfSections": 6,
+        "TimeDateStamp": 1343337794,
+        "PointerToSymbolTable": 0,
+        "Characteristics": 34,
+        "ImageBase": 5368709120,
+        "SizeOfImage": 413696,
+        "Subsystem": 3,
+        "DllCharacteristics": 33120,
+        "Sections": [
+            {
+                "Name": ".text\u0000\u0000\u0000",
+                "VirtualAddress": 4096,
+                "Misc_VirtualSize": 260019,
+                "SizeOfRawData": 260096,
+                "PointerToRawData": 1024
+            },
+            {
+                "Name": ".rdata\u0000\u0000",
+                "VirtualAddress": 266240,
+                "Misc_VirtualSize": 94370,
+                "SizeOfRawData": 94720,
+                "PointerToRawData": 261120
+            },
+            {
+                "Name": ".data\u0000\u0000\u0000",
+                "VirtualAddress": 364544,
+                "Misc_VirtualSize": 23432,
+                "SizeOfRawData": 10240,
+                "PointerToRawData": 355840
+            },
+            {
+                "Name": ".pdata\u0000\u0000",
+                "VirtualAddress": 389120,
+                "Misc_VirtualSize": 11868,
+                "SizeOfRawData": 12288,
+                "PointerToRawData": 366080
+            },
+            {
+                "Name": ".rsrc\u0000\u0000\u0000",
+                "VirtualAddress": 401408,
+                "Misc_VirtualSize": 1488,
+                "SizeOfRawData": 1536,
+                "PointerToRawData": 378368
+            },
+            {
+                "Name": ".reloc\u0000\u0000",
+                "VirtualAddress": 405504,
+                "Misc_VirtualSize": 4836,
+                "SizeOfRawData": 5120,
+                "PointerToRawData": 379904
+            }
+        ],
+        "Imports": [
+            {
+                "DLL": "ADVAPI32.dll",
+                "Functions": [
+                    "GetAclInformation",
+                    "GetAce",
+                    "GetSecurityDescriptorDacl",
+                    "RegQueryValueExA",
+                    "RegOpenKeyExA",
+                    "GetSecurityInfo",
+                    "IsValidSid",
+                    "RegCloseKey",
+                    "GetExplicitEntriesFromAclA",
+                    "GetNamedSecurityInfoW",
+                    "ConvertStringSecurityDescriptorToSecurityDescriptorW",
+                    "IsValidSecurityDescriptor",
+                    "GetSecurityDescriptorGroup",
+                    "RegSetValueExW",
+                    "SetSecurityDescriptorSacl",
+                    "GetSecurityDescriptorSacl",
+                    "GetSecurityDescriptorOwner",
+                    "SetSecurityDescriptorOwner",
+                    "InitializeSecurityDescriptor",
+                    "RegCreateKeyExW",
+                    "MapGenericMask",
+                    "SetSecurityDescriptorGroup",
+                    "RegQueryValueExW",
+                    "RegOpenKeyExW",
+                    "AdjustTokenPrivileges",
+                    "LookupPrivilegeValueA",
+                    "GetTokenInformation",
+                    "OpenProcessToken",
+                    "GetTraceEnableLevel",
+                    "RegisterTraceGuidsA",
+                    "TraceEvent",
+                    "GetTraceLoggerHandle",
+                    "GetTraceEnableFlags",
+                    "IsTextUnicode",
+                    "MakeSelfRelativeSD",
+                    "GetSidLengthRequired",
+                    "SetSecurityInfo",
+                    "MakeAbsoluteSD",
+                    "LookupAccountSidW",
+                    "GetSecurityDescriptorLength",
+                    "SetNamedSecurityInfoW",
+                    "SetSecurityDescriptorDacl",
+                    "LookupAccountNameW",
+                    "GetSecurityDescriptorControl",
+                    "GetSidSubAuthorityCount",
+                    "SetEntriesInAclA",
+                    "GetSidSubAuthority",
+                    "IsValidAcl",
+                    "GetSidIdentifierAuthority",
+                    "ControlService",
+                    "QueryServiceConfigA",
+                    "OpenSCManagerA",
+                    "QueryServiceStatus",
+                    "ChangeServiceConfigA",
+                    "StartServiceA",
+                    "OpenServiceW",
+                    "DeleteService",
+                    "CloseServiceHandle",
+                    "CreateServiceW"
+                ]
+            },
+            {
+                "DLL": "KERNEL32.dll",
+                "Functions": [
+                    "SetThreadPriority",
+                    "TerminateThread",
+                    "VirtualAllocEx",
+                    "CreateRemoteThread",
+                    "Module32NextW",
+                    "CreateToolhelp32Snapshot",
+                    "Process32NextW",
+                    "Module32FirstW",
+                    "OpenThread",
+                    "Process32FirstW",
+                    "Thread32Next",
+                    "GetExitCodeProcess",
+                    "ReadProcessMemory",
+                    "Thread32First",
+                    "CreateFileA",
+                    "ResumeThread",
+                    "SuspendThread",
+                    "CreateMutexW",
+                    "CreateFileMappingW",
+                    "CreateEventW",
+                    "ReleaseMutex",
+                    "GetVersion",
+                    "ExpandEnvironmentStringsW",
+                    "WaitNamedPipeA",
+                    "SetNamedPipeHandleState",
+                    "LoadLibraryExA",
+                    "ReadConsoleW",
+                    "CreateMutexA",
+                    "OpenSemaphoreA",
+                    "CreateSemaphoreA",
+                    "HeapSetInformation",
+                    "SetUnhandledExceptionFilter",
+                    "LocalAlloc",
+                    "GetProcAddress",
+                    "SwitchToThread",
+                    "GetCurrentProcessId",
+                    "DeviceIoControl",
+                    "OpenEventA",
+                    "ProcessIdToSessionId",
+                    "OpenMutexA",
+                    "SetLastError",
+                    "MultiByteToWideChar",
+                    "CreateFileW",
+                    "GetModuleFileNameW",
+                    "Sleep",
+                    "GetLocaleInfoW",
+                    "WideCharToMultiByte",
+                    "OpenProcess",
+                    "GetTickCount",
+                    "GetModuleHandleW",
+                    "GetSystemDefaultLCID",
+                    "WaitForSingleObject",
+                    "GetFullPathNameW",
+                    "CloseHandle",
+                    "GetModuleHandleA",
+                    "LockResource",
+                    "RaiseException",
+                    "SizeofResource",
+                    "LoadResource",
+                    "FindResourceW",
+                    "FindResourceExW",
+                    "LocalFree",
+                    "GetVersionExA",
+                    "GetLastError",
+                    "CompareStringW",
+                    "VirtualFreeEx",
+                    "GetCommandLineW",
+                    "EncodePointer",
+                    "DecodePointer",
+                    "HeapFree",
+                    "IsDebuggerPresent",
+                    "IsProcessorFeaturePresent",
+                    "GetCurrentThreadId",
+                    "ExitProcess",
+                    "GetModuleHandleExW",
+                    "GetStdHandle",
+                    "WriteFile",
+                    "GetProcessHeap",
+                    "GetFileType",
+                    "InitializeCriticalSectionAndSpinCount",
+                    "DeleteCriticalSection",
+                    "InitOnceExecuteOnce",
+                    "GetStartupInfoW",
+                    "QueryPerformanceCounter",
+                    "GetSystemTimeAsFileTime",
+                    "GetTickCount64",
+                    "GetEnvironmentStringsW",
+                    "FreeEnvironmentStringsW",
+                    "RtlUnwindEx",
+                    "HeapSize",
+                    "HeapAlloc",
+                    "RtlPcToFileHeader",
+                    "IsValidCodePage",
+                    "GetACP",
+                    "GetOEMCP",
+                    "GetCPInfo",
+                    "GetStringTypeW",
+                    "HeapReAlloc",
+                    "EnterCriticalSection",
+                    "LeaveCriticalSection",
+                    "RtlCaptureContext",
+                    "RtlLookupFunctionEntry",
+                    "RtlVirtualUnwind",
+                    "UnhandledExceptionFilter",
+                    "FlsAlloc",
+                    "FlsGetValue",
+                    "FlsSetValue",
+                    "FlsFree",
+                    "GetCurrentProcess",
+                    "TerminateProcess",
+                    "FreeLibrary",
+                    "LoadLibraryExW",
+                    "OutputDebugStringW",
+                    "LoadLibraryW",
+                    "LCMapStringEx",
+                    "GetConsoleCP",
+                    "GetConsoleMode",
+                    "SetFilePointerEx",
+                    "SetStdHandle",
+                    "WriteConsoleW",
+                    "FlushFileBuffers",
+                    "InitializeCriticalSectionEx",
+                    "HeapDestroy",
+                    "FindFirstFileW",
+                    "InitializeCriticalSection",
+                    "FindClose",
+                    "FormatMessageA",
+                    "FormatMessageW",
+                    "WriteConsoleA",
+                    "GetConsoleScreenBufferInfo",
+                    "GetDriveTypeW",
+                    "GetFileAttributesW",
+                    "LoadLibraryA",
+                    "GetSystemInfo",
+                    "QueryPerformanceFrequency",
+                    "GetFileSize",
+                    "ReadFile",
+                    "MapViewOfFile",
+                    "UnmapViewOfFile",
+                    "VirtualUnlock",
+                    "VirtualAlloc",
+                    "CreateFileMappingA",
+                    "VirtualLock",
+                    "OpenFileMappingA",
+                    "PeekNamedPipe",
+                    "CreatePipe",
+                    "lstrlenW",
+                    "SetEvent",
+                    "CreateEventA",
+                    "ResetEvent",
+                    "FindFirstFileA",
+                    "GetModuleFileNameA",
+                    "GetUserDefaultUILanguage",
+                    "CreateProcessW",
+                    "WaitForMultipleObjects",
+                    "DuplicateHandle",
+                    "WriteProcessMemory"
+                ]
+            },
+            {
+                "DLL": "VSPMsg.dll",
+                "Functions": [
+                    "SetErrorMessageModule",
+                    "GetErrorMessageModule"
+                ]
+            },
+            {
+                "DLL": "ole32.dll",
+                "Functions": [
+                    "CoInitializeEx",
+                    "CoCreateInstance",
+                    "CLSIDFromString",
+                    "CoInitialize",
+                    "CoUninitialize"
+                ]
+            },
+            {
+                "DLL": "OLEAUT32.dll",
+                "Functions": [
+                    "SysFreeString",
+                    "SysAllocStringLen",
+                    "SysAllocString"
+                ]
+            },
+            {
+                "DLL": "PSAPI.DLL",
+                "Functions": [
+                    "GetModuleBaseNameW"
+                ]
+            },
+            {
+                "DLL": "SETUPAPI.dll",
+                "Functions": [
+                    "SetupDiGetClassRegistryPropertyA",
+                    "SetupDiSetClassRegistryPropertyA"
+                ]
+            },
+            {
+                "DLL": "SHLWAPI.dll",
+                "Functions": [
+                    "PathAddBackslashW",
+                    "PathAppendW",
+                    "SHCreateStreamOnFileW",
+                    "PathRemoveFileSpecW"
+                ]
+            },
+            {
+                "DLL": "pdh.dll",
+                "Functions": [
+                    "PdhLookupPerfNameByIndexW"
+                ]
+            },
+            {
+                "DLL": "XmlLite.dll",
+                "Functions": [
+                    "CreateXmlReader"
+                ]
+            }
+        ],
+        "Label": "benign"
+    },
+    {
+        "FileSize": 54264,
+        "SHA256": "003851675800dc05cdac1baa84cab8f68534b244906d97ced0c40f50da27df0a",
+        "Machine": 34404,
+        "NumberOfSections": 11,
+        "TimeDateStamp": 12671008,
+        "PointerToSymbolTable": 35328,
+        "Characteristics": 39,
+        "ImageBase": 4194304,
+        "SizeOfImage": 65536,
+        "Subsystem": 2,
+        "DllCharacteristics": 0,
+        "Sections": [
+            {
+                "Name": ".text\u0000\u0000\u0000",
+                "VirtualAddress": 4096,
+                "Misc_VirtualSize": 11896,
+                "SizeOfRawData": 12288,
+                "PointerToRawData": 1024
+            },
+            {
+                "Name": ".data\u0000\u0000\u0000",
+                "VirtualAddress": 16384,
+                "Misc_VirtualSize": 2248,
+                "SizeOfRawData": 2560,
+                "PointerToRawData": 13312
+            },
+            {
+                "Name": ".rdata\u0000\u0000",
+                "VirtualAddress": 20480,
+                "Misc_VirtualSize": 3680,
+                "SizeOfRawData": 4096,
+                "PointerToRawData": 15872
+            },
+            {
+                "Name": ".pdata\u0000\u0000",
+                "VirtualAddress": 24576,
+                "Misc_VirtualSize": 684,
+                "SizeOfRawData": 1024,
+                "PointerToRawData": 19968
+            },
+            {
+                "Name": ".xdata\u0000\u0000",
+                "VirtualAddress": 28672,
+                "Misc_VirtualSize": 600,
+                "SizeOfRawData": 1024,
+                "PointerToRawData": 20992
+            },
+            {
+                "Name": ".bss\u0000\u0000\u0000\u0000",
+                "VirtualAddress": 32768,
+                "Misc_VirtualSize": 2832,
+                "SizeOfRawData": 0,
+                "PointerToRawData": 0
+            },
+            {
+                "Name": ".idata\u0000\u0000",
+                "VirtualAddress": 36864,
+                "Misc_VirtualSize": 6368,
+                "SizeOfRawData": 6656,
+                "PointerToRawData": 22016
+            },
+            {
+                "Name": ".CRT\u0000\u0000\u0000\u0000",
+                "VirtualAddress": 45056,
+                "Misc_VirtualSize": 104,
+                "SizeOfRawData": 512,
+                "PointerToRawData": 28672
+            },
+            {
+                "Name": ".tls\u0000\u0000\u0000\u0000",
+                "VirtualAddress": 49152,
+                "Misc_VirtualSize": 104,
+                "SizeOfRawData": 512,
+                "PointerToRawData": 29184
+            },
+            {
+                "Name": ".rsrc\u0000\u0000\u0000",
+                "VirtualAddress": 53248,
+                "Misc_VirtualSize": 5000,
+                "SizeOfRawData": 5120,
+                "PointerToRawData": 29696
+            },
+            {
+                "Name": "/4\u0000\u0000\u0000\u0000\u0000\u0000",
+                "VirtualAddress": 61440,
+                "Misc_VirtualSize": 24,
+                "SizeOfRawData": 512,
+                "PointerToRawData": 34816
+            }
+        ],
+        "Imports": [
+            {
+                "DLL": "libgimpui-2.0-0.dll",
+                "Functions": [
+                    "gimp_ui_init",
+                    "gimp_window_set_transient"
+                ]
+            },
+            {
+                "DLL": "KERNEL32.dll",
+                "Functions": [
+                    "DeleteCriticalSection",
+                    "EnterCriticalSection",
+                    "GetCurrentProcess",
+                    "GetCurrentProcessId",
+                    "GetCurrentThreadId",
+                    "GetLastError",
+                    "GetModuleHandleA",
+                    "GetProcAddress",
+                    "GetStartupInfoA",
+                    "GetSystemTimeAsFileTime",
+                    "GetTickCount",
+                    "InitializeCriticalSection",
+                    "LeaveCriticalSection",
+                    "QueryPerformanceCounter",
+                    "RtlAddFunctionTable",
+                    "RtlCaptureContext",
+                    "RtlLookupFunctionEntry",
+                    "RtlVirtualUnwind",
+                    "SetUnhandledExceptionFilter",
+                    "Sleep",
+                    "TerminateProcess",
+                    "TlsGetValue",
+                    "UnhandledExceptionFilter",
+                    "VirtualProtect",
+                    "VirtualQuery"
+                ]
+            },
+            {
+                "DLL": "msvcrt.dll",
+                "Functions": [
+                    "__C_specific_handler",
+                    "__argc",
+                    "__argv",
+                    "__dllonexit",
+                    "__getmainargs",
+                    "__initenv",
+                    "__iob_func",
+                    "__lconv_init",
+                    "__set_app_type",
+                    "__setusermatherr",
+                    "_acmdln",
+                    "_amsg_exit",
+                    "_cexit",
+                    "_fmode",
+                    "_initterm",
+                    "_lock",
+                    "_onexit",
+                    "_unlock",
+                    "abort",
+                    "calloc",
+                    "exit",
+                    "fprintf",
+                    "free",
+                    "fwrite",
+                    "malloc",
+                    "memcpy",
+                    "memset",
+                    "signal",
+                    "strlen",
+                    "strncmp",
+                    "strncpy",
+                    "vfprintf"
+                ]
+            },
+            {
+                "DLL": "libgimp-2.0-0.dll",
+                "Functions": [
+                    "gimp_display_new",
+                    "gimp_image_insert_layer",
+                    "gimp_image_new",
+                    "gimp_image_undo_disable",
+                    "gimp_image_undo_enable",
+                    "gimp_install_procedure",
+                    "gimp_layer_new_from_pixbuf",
+                    "gimp_main",
+                    "gimp_plugin_menu_register",
+                    "gimp_procedural_db_get_data",
+                    "gimp_procedural_db_set_data",
+                    "gimp_progress_init_printf",
+                    "gimp_progress_update"
+                ]
+            },
+            {
+                "DLL": "libgimpbase-2.0-0.dll",
+                "Functions": [
+                    "gimp_locale_directory"
+                ]
+            },
+            {
+                "DLL": "libgimpwidgets-2.0-0.dll",
+                "Functions": [
+                    "gimp_dialog_get_type",
+                    "gimp_dialog_new",
+                    "gimp_dialog_run",
+                    "gimp_int_combo_box_get_active",
+                    "gimp_int_combo_box_get_type",
+                    "gimp_int_combo_box_new",
+                    "gimp_int_combo_box_set_active",
+                    "gimp_spin_button_new",
+                    "gimp_standard_help_func",
+                    "gtk_box_new"
+                ]
+            },
+            {
+                "DLL": "libgdk_pixbuf-2.0-0.dll",
+                "Functions": [
+                    "gdk_pixbuf_get_height",
+                    "gdk_pixbuf_get_width"
+                ]
+            },
+            {
+                "DLL": "libglib-2.0-0.dll",
+                "Functions": [
+                    "g_dpgettext",
+                    "g_error_copy",
+                    "g_error_free",
+                    "g_free",
+                    "g_log",
+                    "g_set_error",
+                    "g_strconcat",
+                    "g_strdup",
+                    "g_strdup_printf",
+                    "g_uri_parse_scheme"
+                ]
+            },
+            {
+                "DLL": "libgobject-2.0-0.dll",
+                "Functions": [
+                    "g_object_get",
+                    "g_object_set",
+                    "g_object_unref",
+                    "g_signal_connect_data",
+                    "g_type_check_instance_cast",
+                    "g_type_init"
+                ]
+            },
+            {
+                "DLL": "libgtk-win32-2.0-0.dll",
+                "Functions": [
+                    "gtk_adjustment_get_type",
+                    "gtk_adjustment_get_value",
+                    "gtk_box_get_type",
+                    "gtk_box_pack_start",
+                    "gtk_container_add",
+                    "gtk_container_get_type",
+                    "gtk_container_set_border_width",
+                    "gtk_dialog_get_content_area",
+                    "gtk_dialog_get_type",
+                    "gtk_dialog_set_alternative_button_order",
+                    "gtk_entry_get_text",
+                    "gtk_entry_get_type",
+                    "gtk_entry_new",
+                    "gtk_entry_set_activates_default",
+                    "gtk_entry_set_text",
+                    "gtk_image_new_from_stock",
+                    "gtk_label_new",
+                    "gtk_main",
+                    "gtk_main_quit",
+                    "gtk_misc_get_type",
+                    "gtk_misc_set_alignment",
+                    "gtk_offscreen_window_get_pixbuf",
+                    "gtk_offscreen_window_get_type",
+                    "gtk_offscreen_window_new",
+                    "gtk_size_group_add_widget",
+                    "gtk_size_group_new",
+                    "gtk_widget_destroy",
+                    "gtk_widget_set_size_request",
+                    "gtk_widget_show",
+                    "gtk_window_get_type"
+                ]
+            },
+            {
+                "DLL": "libintl-8.dll",
+                "Functions": [
+                    "libintl_bind_textdomain_codeset",
+                    "libintl_bindtextdomain",
+                    "libintl_gettext",
+                    "libintl_textdomain"
+                ]
+            },
+            {
+                "DLL": "libwebkitgtk-1.0-0.dll",
+                "Functions": [
+                    "webkit_web_view_get_settings",
+                    "webkit_web_view_get_type",
+                    "webkit_web_view_new",
+                    "webkit_web_view_open"
+                ]
+            }
+        ],
+        "Label": "benign"
+    },
+    {
+        "FileSize": 38400,
+        "SHA256": "00eea85752664955047caad7d6280bc7bf1ab91c61eb9a2542c26b747a12e963",
+        "Machine": 34404,
+        "NumberOfSections": 11,
+        "TimeDateStamp": 2687016992,
+        "PointerToSymbolTable": 0,
+        "Characteristics": 558,
+        "ImageBase": 4194304,
+        "SizeOfImage": 69632,
+        "Subsystem": 3,
+        "DllCharacteristics": 0,
+        "Sections": [
+            {
+                "Name": ".text\u0000\u0000\u0000",
+                "VirtualAddress": 4096,
+                "Misc_VirtualSize": 19128,
+                "SizeOfRawData": 19456,
+                "PointerToRawData": 1024
+            },
+            {
+                "Name": ".data\u0000\u0000\u0000",
+                "VirtualAddress": 24576,
+                "Misc_VirtualSize": 160,
+                "SizeOfRawData": 512,
+                "PointerToRawData": 20480
+            },
+            {
+                "Name": ".rdata\u0000\u0000",
+                "VirtualAddress": 28672,
+                "Misc_VirtualSize": 6916,
+                "SizeOfRawData": 7168,
+                "PointerToRawData": 20992
+            },
+            {
+                "Name": ".pdata\u0000\u0000",
+                "VirtualAddress": 36864,
+                "Misc_VirtualSize": 768,
+                "SizeOfRawData": 1024,
+                "PointerToRawData": 28160
+            },
+            {
+                "Name": ".xdata\u0000\u0000",
+                "VirtualAddress": 40960,
+                "Misc_VirtualSize": 1880,
+                "SizeOfRawData": 2048,
+                "PointerToRawData": 29184
+            },
+            {
+                "Name": ".bss\u0000\u0000\u0000\u0000",
+                "VirtualAddress": 45056,
+                "Misc_VirtualSize": 2768,
+                "SizeOfRawData": 0,
+                "PointerToRawData": 0
+            },
+            {
+                "Name": ".edata\u0000\u0000",
+                "VirtualAddress": 49152,
+                "Misc_VirtualSize": 1254,
+                "SizeOfRawData": 1536,
+                "PointerToRawData": 31232
+            },
+            {
+                "Name": ".idata\u0000\u0000",
+                "VirtualAddress": 53248,
+                "Misc_VirtualSize": 3960,
+                "SizeOfRawData": 4096,
+                "PointerToRawData": 32768
+            },
+            {
+                "Name": ".CRT\u0000\u0000\u0000\u0000",
+                "VirtualAddress": 57344,
+                "Misc_VirtualSize": 104,
+                "SizeOfRawData": 512,
+                "PointerToRawData": 36864
+            },
+            {
+                "Name": ".tls\u0000\u0000\u0000\u0000",
+                "VirtualAddress": 61440,
+                "Misc_VirtualSize": 104,
+                "SizeOfRawData": 512,
+                "PointerToRawData": 37376
+            },
+            {
+                "Name": ".reloc\u0000\u0000",
+                "VirtualAddress": 65536,
+                "Misc_VirtualSize": 144,
+                "SizeOfRawData": 512,
+                "PointerToRawData": 37888
+            }
+        ],
+        "Imports": [
+            {
+                "DLL": "libgcc_s_seh-1.dll",
+                "Functions": [
+                    "_Unwind_Resume"
+                ]
+            },
+            {
+                "DLL": "libstdc++-6.dll",
+                "Functions": [
+                    "_ZNKSs5rfindEPKcy",
+                    "_ZNKSs6substrEyy",
+                    "_ZNKSs7compareEPKc",
+                    "_ZNKSt5ctypeIcE13_M_widen_initEv",
+                    "_ZNSo3putEc",
+                    "_ZNSo5flushEv",
+                    "_ZNSs12_M_leak_hardEv",
+                    "_ZNSs12_S_constructEycRKSaIcE",
+                    "_ZNSs3endEv",
+                    "_ZNSs4_Rep10_M_destroyERKSaIcE",
+                    "_ZNSs4_Rep10_M_disposeERKSaIcE",
+                    "_ZNSs4swapERSs",
+                    "_ZNSs6assignEPKc",
+                    "_ZNSs6assignEPKcy",
+                    "_ZNSs6assignERKSs",
+                    "_ZNSs7replaceEyyPKcy",
+                    "_ZNSsC1EPKcRKSaIcE",
+                    "_ZNSsC1ERKSs",
+                    "_ZNSt8ios_base4InitC1Ev",
+                    "_ZNSt8ios_base4InitD1Ev",
+                    "_ZSt16__ostream_insertIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_PKS3_x",
+                    "_ZSt16__throw_bad_castv",
+                    "_ZSt18_Rb_tree_decrementPSt18_Rb_tree_node_base",
+                    "_ZSt18_Rb_tree_incrementPSt18_Rb_tree_node_base",
+                    "_ZSt29_Rb_tree_insert_and_rebalancebPSt18_Rb_tree_node_baseS0_RS_",
+                    "_ZSt4cerr",
+                    "_ZSt4cout",
+                    "_ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_",
+                    "_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc",
+                    "_ZdlPv",
+                    "_Znwy",
+                    "__cxa_begin_catch",
+                    "__cxa_end_catch",
+                    "__cxa_rethrow",
+                    "__gxx_personality_seh0"
+                ]
+            },
+            {
+                "DLL": "KERNEL32.dll",
+                "Functions": [
+                    "DeleteCriticalSection",
+                    "EnterCriticalSection",
+                    "GetCurrentProcess",
+                    "GetCurrentProcessId",
+                    "GetCurrentThreadId",
+                    "GetLastError",
+                    "GetModuleFileNameA",
+                    "GetModuleHandleA",
+                    "GetStartupInfoA",
+                    "GetSystemTimeAsFileTime",
+                    "GetTickCount",
+                    "InitializeCriticalSection",
+                    "LeaveCriticalSection",
+                    "QueryPerformanceCounter",
+                    "RtlAddFunctionTable",
+                    "RtlCaptureContext",
+                    "RtlLookupFunctionEntry",
+                    "RtlVirtualUnwind",
+                    "SetUnhandledExceptionFilter",
+                    "Sleep",
+                    "TerminateProcess",
+                    "TlsGetValue",
+                    "UnhandledExceptionFilter",
+                    "VirtualProtect",
+                    "VirtualQuery",
+                    "__C_specific_handler"
+                ]
+            },
+            {
+                "DLL": "msvcrt.dll",
+                "Functions": [
+                    "__dllonexit",
+                    "__getmainargs",
+                    "__initenv",
+                    "__iob_func",
+                    "__lconv_init",
+                    "__set_app_type",
+                    "__setusermatherr",
+                    "_acmdln",
+                    "_amsg_exit",
+                    "_cexit",
+                    "_fmode",
+                    "_initterm",
+                    "_lock",
+                    "_onexit",
+                    "_unlock",
+                    "abort",
+                    "calloc",
+                    "exit",
+                    "fprintf",
+                    "free",
+                    "fwrite",
+                    "getenv",
+                    "malloc",
+                    "memcmp",
+                    "memcpy",
+                    "signal",
+                    "strlen",
+                    "strncmp",
+                    "vfprintf"
+                ]
+            }
+        ],
+        "Exports": [
+            "_ZNKSt5ctypeIcE8do_widenEc",
+            "_ZNSt3mapISsSsSt4lessISsESaISt4pairIKSsSsEEEixEOSs",
+            "_ZNSt8_Rb_treeISsSt4pairIKSsSsESt10_Select1stIS2_ESt4lessISsESaIS2_EE14_M_insert_nodeEPSt18_Rb_tree_node_baseSA_PSt13_Rb_tree_nodeIS2_E",
+            "_ZNSt8_Rb_treeISsSt4pairIKSsSsESt10_Select1stIS2_ESt4lessISsESaIS2_EE22_M_emplace_hint_uniqueIIRKSt21piecewise_construct_tSt5tupleIIOSsEESD_IIEEEEESt17_Rb_tree_iteratorIS2_ESt23_Rb_tree_const_iteratorIS2_EDpOT_",
+            "_ZNSt8_Rb_treeISsSt4pairIKSsSsESt10_Select1stIS2_ESt4lessISsESaIS2_EE22_M_emplace_hint_uniqueIIRKSt21piecewise_construct_tSt5tupleIIRS1_EESD_IIEEEEESt17_Rb_tree_iteratorIS2_ESt23_Rb_tree_const_iteratorIS2_EDpOT_",
+            "_ZNSt8_Rb_treeISsSt4pairIKSsSsESt10_Select1stIS2_ESt4lessISsESaIS2_EE24_M_get_insert_unique_posERS1_",
+            "_ZNSt8_Rb_treeISsSt4pairIKSsSsESt10_Select1stIS2_ESt4lessISsESaIS2_EE29_M_get_insert_hint_unique_posESt23_Rb_tree_const_iteratorIS2_ERS1_",
+            "_ZNSt8_Rb_treeISsSt4pairIKSsSsESt10_Select1stIS2_ESt4lessISsESaIS2_EE8_M_eraseEPSt13_Rb_tree_nodeIS2_E",
+            "_ZSteqIcEN9__gnu_cxx11__enable_ifIXsrSt9__is_charIT_E7__valueEbE6__typeERKSbIS3_St11char_traitsIS3_ESaIS3_EESC_",
+            "main"
+        ],
+        "Label": "benign"
+    },
+    {
+        "FileSize": 65536,
+        "SHA256": "0111bddac92a792c7b2ee3ab77642c33df0e01afe737b0d1fa0cbbf331d9572c",
+        "Machine": 332,
+        "NumberOfSections": 5,
+        "TimeDateStamp": 90950,
+        "PointerToSymbolTable": 0,
+        "Characteristics": 783,
+        "ImageBase": 4194304,
+        "SizeOfImage": 94208,
+        "Subsystem": 3,
+        "DllCharacteristics": 0,
+        "Sections": [
+            {
+                "Name": ".text\u0000\u0000\u0000",
+                "VirtualAddress": 4096,
+                "Misc_VirtualSize": 48512,
+                "SizeOfRawData": 48640,
+                "PointerToRawData": 1024
+            },
+            {
+                "Name": ".data\u0000\u0000\u0000",
+                "VirtualAddress": 53248,
+                "Misc_VirtualSize": 13100,
+                "SizeOfRawData": 13312,
+                "PointerToRawData": 49664
+            },
+            {
+                "Name": ".data_cy",
+                "VirtualAddress": 69632,
+                "Misc_VirtualSize": 4,
+                "SizeOfRawData": 512,
+                "PointerToRawData": 62976
+            },
+            {
+                "Name": ".bss\u0000\u0000\u0000\u0000",
+                "VirtualAddress": 73728,
+                "Misc_VirtualSize": 12600,
+                "SizeOfRawData": 0,
+                "PointerToRawData": 0
+            },
+            {
+                "Name": ".idata\u0000\u0000",
+                "VirtualAddress": 90112,
+                "Misc_VirtualSize": 1640,
+                "SizeOfRawData": 2048,
+                "PointerToRawData": 63488
+            }
+        ],
+        "Imports": [
+            {
+                "DLL": "msys-1.0.dll",
+                "Functions": [
+                    "__errno",
+                    "__main",
+                    "_ctype_",
+                    "abort",
+                    "atoi",
+                    "calloc",
+                    "chmod",
+                    "close",
+                    "cygwin_conv_to_posix_path",
+                    "cygwin_internal",
+                    "dll_crt0__FP11per_process",
+                    "exit",
+                    "fclose",
+                    "fdopen",
+                    "fflush",
+                    "fgets",
+                    "fopen",
+                    "fprintf",
+                    "fputc",
+                    "fputs",
+                    "fread",
+                    "free",
+                    "fseek",
+                    "ftell",
+                    "fwrite",
+                    "getc",
+                    "getpid",
+                    "lstat",
+                    "malloc",
+                    "memcpy",
+                    "mkstemp",
+                    "open",
+                    "perror",
+                    "printf",
+                    "putc",
+                    "puts",
+                    "qsort",
+                    "rand",
+                    "read",
+                    "realloc",
+                    "rename",
+                    "rewind",
+                    "signal",
+                    "sprintf",
+                    "srand",
+                    "stat",
+                    "strcat",
+                    "strcmp",
+                    "strcpy",
+                    "strerror",
+                    "strlen",
+                    "strncat",
+                    "strncmp",
+                    "strncpy",
+                    "strrchr",
+                    "tcgetattr",
+                    "tcsetattr",
+                    "time",
+                    "ungetc",
+                    "unlink",
+                    "vsnprintf"
+                ]
+            },
+            {
+                "DLL": "KERNEL32.dll",
+                "Functions": [
+                    "GetModuleFileNameA",
+                    "GetModuleHandleA",
+                    "GetStdHandle",
+                    "VirtualProtect",
+                    "VirtualQuery",
+                    "WriteFile"
+                ]
+            }
+        ],
+        "Label": "benign"
+    },
+    {
+        "FileSize": 74936,
+        "SHA256": "016584e586de67b725ac1e3974fcca320bf81c8c489ebb17d9909735d517e7ae",
+        "Machine": 332,
+        "NumberOfSections": 8,
+        "TimeDateStamp": 2025535247,
+        "PointerToSymbolTable": 0,
+        "Characteristics": 33166,
+        "ImageBase": 4194304,
+        "SizeOfImage": 90112,
+        "Subsystem": 2,
+        "DllCharacteristics": 0,
+        "Sections": [
+            {
+                "Name": ".text\u0000\u0000\u0000",
+                "VirtualAddress": 4096,
+                "Misc_VirtualSize": 45056,
+                "SizeOfRawData": 45056,
+                "PointerToRawData": 1536
+            },
+            {
+                "Name": ".data\u0000\u0000\u0000",
+                "VirtualAddress": 49152,
+                "Misc_VirtualSize": 12288,
+                "SizeOfRawData": 10240,
+                "PointerToRawData": 46592
+            },
+            {
+                "Name": ".tls\u0000\u0000\u0000\u0000",
+                "VirtualAddress": 61440,
+                "Misc_VirtualSize": 4096,
+                "SizeOfRawData": 512,
+                "PointerToRawData": 56832
+            },
+            {
+                "Name": ".rdata\u0000\u0000",
+                "VirtualAddress": 65536,
+                "Misc_VirtualSize": 4096,
+                "SizeOfRawData": 512,
+                "PointerToRawData": 57344
+            },
+            {
+                "Name": ".idata\u0000\u0000",
+                "VirtualAddress": 69632,
+                "Misc_VirtualSize": 4096,
+                "SizeOfRawData": 2560,
+                "PointerToRawData": 57856
+            },
+            {
+                "Name": ".edata\u0000\u0000",
+                "VirtualAddress": 73728,
+                "Misc_VirtualSize": 4096,
+                "SizeOfRawData": 512,
+                "PointerToRawData": 60416
+            },
+            {
+                "Name": ".rsrc\u0000\u0000\u0000",
+                "VirtualAddress": 77824,
+                "Misc_VirtualSize": 8192,
+                "SizeOfRawData": 5120,
+                "PointerToRawData": 60928
+            },
+            {
+                "Name": ".reloc\u0000\u0000",
+                "VirtualAddress": 86016,
+                "Misc_VirtualSize": 4096,
+                "SizeOfRawData": 2560,
+                "PointerToRawData": 66048
+            }
+        ],
+        "Imports": [
+            {
+                "DLL": "ADVAPI32.dll",
+                "Functions": [
+                    "RegQueryValueA"
+                ]
+            },
+            {
+                "DLL": "KERNEL32.dll",
+                "Functions": [
+                    "CloseHandle",
+                    "CreateFileA",
+                    "EnterCriticalSection",
+                    "ExitProcess",
+                    "FileTimeToDosDateTime",
+                    "FileTimeToLocalFileTime",
+                    "FindClose",
+                    "FindFirstFileA",
+                    "FindNextFileA",
+                    "GetACP",
+                    "GetCPInfo",
+                    "GetCommandLineA",
+                    "GetCurrentDirectoryA",
+                    "GetCurrentThreadId",
+                    "GetDateFormatA",
+                    "GetDriveTypeA",
+                    "GetEnvironmentStrings",
+                    "GetEnvironmentVariableA",
+                    "GetFileAttributesA",
+                    "GetFileType",
+                    "GetFullPathNameA",
+                    "GetLastError",
+                    "GetLocalTime",
+                    "GetModuleFileNameA",
+                    "GetModuleHandleA",
+                    "GetProcAddress",
+                    "GetStartupInfoA",
+                    "GetStdHandle",
+                    "GetStringTypeW",
+                    "GetTimeZoneInformation",
+                    "GetVersion",
+                    "GetVersionExA",
+                    "GetVolumeInformationA",
+                    "GlobalMemoryStatus",
+                    "InitializeCriticalSection",
+                    "LeaveCriticalSection",
+                    "LocalAlloc",
+                    "LocalFree",
+                    "MultiByteToWideChar",
+                    "RaiseException",
+                    "RtlUnwind",
+                    "SetConsoleCtrlHandler",
+                    "SetCurrentDirectoryA",
+                    "SetEnvironmentVariableA",
+                    "SetFilePointer",
+                    "SetHandleCount",
+                    "SleepEx",
+                    "TlsAlloc",
+                    "TlsFree",
+                    "TlsGetValue",
+                    "TlsSetValue",
+                    "UnhandledExceptionFilter",
+                    "VirtualAlloc",
+                    "VirtualFree",
+                    "WideCharToMultiByte",
+                    "WinExec",
+                    "WriteFile",
+                    "lstrlenA"
+                ]
+            },
+            {
+                "DLL": "USER32.dll",
+                "Functions": [
+                    "DdeAccessData",
+                    "DdeClientTransaction",
+                    "DdeConnect",
+                    "DdeCreateStringHandleA",
+                    "DdeDisconnect",
+                    "DdeFreeDataHandle",
+                    "DdeFreeStringHandle",
+                    "DdeInitializeA",
+                    "DdeUnaccessData",
+                    "DdeUninitialize",
+                    "DialogBoxParamA",
+                    "EndDialog",
+                    "EnumThreadWindows",
+                    "EnumWindows",
+                    "GetClassNameA",
+                    "GetClientRect",
+                    "GetDesktopWindow",
+                    "GetParent",
+                    "GetWindowRect",
+                    "GetWindowTextA",
+                    "MessageBoxA",
+                    "SetDlgItemTextA",
+                    "SetWindowPos"
+                ]
+            }
+        ],
+        "Exports": [
+            "@__lockDebuggerData$qv",
+            "@__unlockDebuggerData$qv",
+            "__DebuggerHookData",
+            "__GetExceptDLLinfo",
+            "___CPPdebugHook",
+            "warning_proc"
+        ],
+        "Label": "benign"
+    },
+    {
+        "Error": "Invalid PE file",
+        "Label": "benign"
+    },
+    {
+        "FileSize": 333680,
+        "SHA256": "0222aaf048e5bc28f88d03862f133bc444d358f06201e00dcc93422c81e5bcca",
+        "Machine": 34404,
+        "NumberOfSections": 5,
+        "TimeDateStamp": 1484853358,
+        "PointerToSymbolTable": 0,
+        "Characteristics": 1059,
+        "ImageBase": 5368709120,
+        "SizeOfImage": 352256,
+        "Subsystem": 2,
+        "DllCharacteristics": 33056,
+        "Sections": [
+            {
+                "Name": ".text\u0000\u0000\u0000",
+                "VirtualAddress": 4096,
+                "Misc_VirtualSize": 172655,
+                "SizeOfRawData": 173056,
+                "PointerToRawData": 1024
+            },
+            {
+                "Name": ".rdata\u0000\u0000",
+                "VirtualAddress": 180224,
+                "Misc_VirtualSize": 62032,
+                "SizeOfRawData": 62464,
+                "PointerToRawData": 174080
+            },
+            {
+                "Name": ".data\u0000\u0000\u0000",
+                "VirtualAddress": 245760,
+                "Misc_VirtualSize": 16664,
+                "SizeOfRawData": 7680,
+                "PointerToRawData": 236544
+            },
+            {
+                "Name": ".pdata\u0000\u0000",
+                "VirtualAddress": 266240,
+                "Misc_VirtualSize": 9864,
+                "SizeOfRawData": 10240,
+                "PointerToRawData": 244224
+            },
+            {
+                "Name": ".rsrc\u0000\u0000\u0000",
+                "VirtualAddress": 278528,
+                "Misc_VirtualSize": 71816,
+                "SizeOfRawData": 72192,
+                "PointerToRawData": 254464
+            }
+        ],
+        "Imports": [
+            {
+                "DLL": "java_launcher.dll",
+                "Functions": [
+                    "?CloseSplash@@YAXXZ",
+                    "?OpenSplash@@YAXPEAUHINSTANCE__@@PEAUHBITMAP__@@@Z",
+                    "?getCopyToTempFlag@JavaLauncherConfig@@QEAAHXZ",
+                    "?getPathlistJar@JavaLauncherConfig@@QEAA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PEB_W@Z",
+                    "?getMainClass@JavaLauncherConfig@@QEAA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ",
+                    "??1JavaLauncherConfig@@QEAA@XZ",
+                    "??0JavaLauncherConfig@@QEAA@PEB_W@Z",
+                    "?runJavaCode@@YAHPEBDV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z",
+                    "?getLocalRunDir@@YAPEB_WXZ",
+                    "?getSetupDir@@YAPEB_WXZ",
+                    "?deleteLocalRunDir@@YAXXZ",
+                    "?setupLocalRunDir@@YAHXZ",
+                    "?shouldCreateNewProcessIfTemp@@YAHXZ",
+                    "?getExitStat@@YAHXZ",
+                    "?setExitStat@@YAXH@Z",
+                    "?addToCmdLineArgs@@YAXPEB_W@Z",
+                    "?getcopyJRE@@YAHXZ",
+                    "?setcopyJRE@@YAXH@Z",
+                    "?getMode@@YAHXZ",
+                    "?getCmdLineArgs@@YAXXZ",
+                    "?getArch@@YAPEA_WXZ"
+                ]
+            },
+            {
+                "DLL": "KERNEL32.dll",
+                "Functions": [
+                    "GetProcessHeap",
+                    "CreateFileW",
+                    "FlushFileBuffers",
+                    "WriteConsoleW",
+                    "SetStdHandle",
+                    "GetStringTypeW",
+                    "OutputDebugStringW",
+                    "SetFilePointerEx",
+                    "GetConsoleMode",
+                    "GetConsoleCP",
+                    "HeapReAlloc",
+                    "GetCPInfo",
+                    "GetOEMCP",
+                    "GetACP",
+                    "IsValidCodePage",
+                    "LoadLibraryExW",
+                    "FreeLibrary",
+                    "FatalAppExitA",
+                    "LeaveCriticalSection",
+                    "EnterCriticalSection",
+                    "EnumSystemLocalesW",
+                    "GetUserDefaultLCID",
+                    "GetCommandLineW",
+                    "GetEnvironmentVariableW",
+                    "SetEnvironmentVariableW",
+                    "CreateProcessW",
+                    "GetModuleHandleW",
+                    "IsValidLocale",
+                    "GetLocaleInfoW",
+                    "LCMapStringW",
+                    "CompareStringW",
+                    "GetTimeFormatW",
+                    "GetDateFormatW",
+                    "SetConsoleCtrlHandler",
+                    "EncodePointer",
+                    "DecodePointer",
+                    "RtlPcToFileHeader",
+                    "RaiseException",
+                    "RtlLookupFunctionEntry",
+                    "RtlUnwindEx",
+                    "GetCommandLineA",
+                    "IsProcessorFeaturePresent",
+                    "GetLastError",
+                    "HeapAlloc",
+                    "HeapFree",
+                    "ExitProcess",
+                    "GetModuleHandleExW",
+                    "GetProcAddress",
+                    "AreFileApisANSI",
+                    "MultiByteToWideChar",
+                    "WideCharToMultiByte",
+                    "HeapSize",
+                    "IsDebuggerPresent",
+                    "SetLastError",
+                    "GetCurrentThread",
+                    "GetCurrentThreadId",
+                    "CloseHandle",
+                    "GetStdHandle",
+                    "GetFileType",
+                    "DeleteCriticalSection",
+                    "GetStartupInfoW",
+                    "GetModuleFileNameA",
+                    "WriteFile",
+                    "GetModuleFileNameW",
+                    "QueryPerformanceCounter",
+                    "GetCurrentProcessId",
+                    "GetSystemTimeAsFileTime",
+                    "GetEnvironmentStringsW",
+                    "FreeEnvironmentStringsW",
+                    "RtlCaptureContext",
+                    "RtlVirtualUnwind",
+                    "UnhandledExceptionFilter",
+                    "SetUnhandledExceptionFilter",
+                    "InitializeCriticalSectionAndSpinCount",
+                    "CreateEventW",
+                    "Sleep",
+                    "GetCurrentProcess",
+                    "TerminateProcess",
+                    "TlsAlloc",
+                    "TlsGetValue",
+                    "TlsSetValue",
+                    "TlsFree",
+                    "GetTickCount",
+                    "CreateSemaphoreW"
+                ]
+            },
+            {
+                "DLL": "USER32.dll",
+                "Functions": [
+                    "FindWindowW",
+                    "MessageBoxW",
+                    "CreateWindowExW",
+                    "RegisterClassExW",
+                    "DefWindowProcW",
+                    "LoadStringW"
+                ]
+            }
+        ],
+        "Exports": [
+            "??0JavaLauncherConfig@@QEAA@AEBV0@@Z",
+            "??4JavaLauncherConfig@@QEAAAEAV0@AEBV0@@Z",
+            "setup_build_date",
+            "setup_relative_path",
+            "setup_version"
+        ],
+        "Label": "benign"
+    },
+    {
+        "FileSize": 39936,
+        "SHA256": "02253301617f5201605443ec0c4ab9e3bf8667caa3ea57a0be4d0641e2394ef6",
+        "Machine": 34404,
+        "NumberOfSections": 9,
+        "TimeDateStamp": 55788,
+        "PointerToSymbolTable": 0,
+        "Characteristics": 559,
+        "ImageBase": 4194304,
+        "SizeOfImage": 69632,
+        "Subsystem": 3,
+        "DllCharacteristics": 0,
+        "Sections": [
+            {
+                "Name": ".text\u0000\u0000\u0000",
+                "VirtualAddress": 4096,
+                "Misc_VirtualSize": 23488,
+                "SizeOfRawData": 23552,
+                "PointerToRawData": 1024
+            },
+            {
+                "Name": ".data\u0000\u0000\u0000",
+                "VirtualAddress": 28672,
+                "Misc_VirtualSize": 192,
+                "SizeOfRawData": 512,
+                "PointerToRawData": 24576
+            },
+            {
+                "Name": ".rdata\u0000\u0000",
+                "VirtualAddress": 32768,
+                "Misc_VirtualSize": 6272,
+                "SizeOfRawData": 6656,
+                "PointerToRawData": 25088
+            },
+            {
+                "Name": ".pdata\u0000\u0000",
+                "VirtualAddress": 40960,
+                "Misc_VirtualSize": 864,
+                "SizeOfRawData": 1024,
+                "PointerToRawData": 31744
+            },
+            {
+                "Name": ".xdata\u0000\u0000",
+                "VirtualAddress": 45056,
+                "Misc_VirtualSize": 924,
+                "SizeOfRawData": 1024,
+                "PointerToRawData": 32768
+            },
+            {
+                "Name": ".bss\u0000\u0000\u0000\u0000",
+                "VirtualAddress": 49152,
+                "Misc_VirtualSize": 2956,
+                "SizeOfRawData": 0,
+                "PointerToRawData": 0
+            },
+            {
+                "Name": ".idata\u0000\u0000",
+                "VirtualAddress": 53248,
+                "Misc_VirtualSize": 4756,
+                "SizeOfRawData": 5120,
+                "PointerToRawData": 33792
+            },
+            {
+                "Name": ".CRT\u0000\u0000\u0000\u0000",
+                "VirtualAddress": 61440,
+                "Misc_VirtualSize": 104,
+                "SizeOfRawData": 512,
+                "PointerToRawData": 38912
+            },
+            {
+                "Name": ".tls\u0000\u0000\u0000\u0000",
+                "VirtualAddress": 65536,
+                "Misc_VirtualSize": 104,
+                "SizeOfRawData": 512,
+                "PointerToRawData": 39424
+            }
+        ],
+        "Imports": [
+            {
+                "DLL": "libsybdb-5.dll",
+                "Functions": [
+                    "dbaltbind",
+                    "dbaltcolid",
+                    "dbaltlen",
+                    "dbaltop",
+                    "dbalttype",
+                    "dbbind",
+                    "dbbylist",
+                    "dbcmd",
+                    "dbcollen",
+                    "dbcolname",
+                    "dbcolsource",
+                    "dbcoltype",
+                    "dbconvert",
+                    "dbcount",
+                    "dbdata",
+                    "dbdatlen",
+                    "dberrhandle",
+                    "dbfreebuf",
+                    "dbhasretstat",
+                    "dbinit",
+                    "dblogin",
+                    "dbmsghandle",
+                    "dbnextrow",
+                    "dbnullbind",
+                    "dbnumalts",
+                    "dbnumcols",
+                    "dbnumcompute",
+                    "dbnumrets",
+                    "dbpivot",
+                    "dbpivot_lookup_name",
+                    "dbprtype",
+                    "dbresults",
+                    "dbretdata",
+                    "dbretlen",
+                    "dbretname",
+                    "dbretstatus",
+                    "dbrettype",
+                    "dbsetlname",
+                    "dbsqlok",
+                    "dbsqlsend",
+                    "dbstrlen",
+                    "dbuse",
+                    "dbvarylen",
+                    "tdsdbopen"
+                ]
+            },
+            {
+                "DLL": "KERNEL32.dll",
+                "Functions": [
+                    "DeleteCriticalSection",
+                    "EnterCriticalSection",
+                    "GetCurrentProcess",
+                    "GetCurrentProcessId",
+                    "GetCurrentThreadId",
+                    "GetLastError",
+                    "GetModuleFileNameW",
+                    "GetStartupInfoA",
+                    "GetSystemTimeAsFileTime",
+                    "GetTickCount",
+                    "InitializeCriticalSection",
+                    "LeaveCriticalSection",
+                    "QueryPerformanceCounter",
+                    "RtlAddFunctionTable",
+                    "RtlCaptureContext",
+                    "RtlLookupFunctionEntry",
+                    "RtlVirtualUnwind",
+                    "SetUnhandledExceptionFilter",
+                    "Sleep",
+                    "TerminateProcess",
+                    "TlsGetValue",
+                    "UnhandledExceptionFilter",
+                    "VirtualProtect",
+                    "VirtualQuery"
+                ]
+            },
+            {
+                "DLL": "msvcrt.dll",
+                "Functions": [
+                    "__C_specific_handler",
+                    "__argv",
+                    "__dllonexit",
+                    "__getmainargs",
+                    "__initenv",
+                    "__iob_func",
+                    "__lconv_init",
+                    "__set_app_type",
+                    "__setusermatherr",
+                    "_acmdln",
+                    "_amsg_exit",
+                    "_cexit",
+                    "_errno",
+                    "_exit",
+                    "_fmode",
+                    "_initterm",
+                    "_lock",
+                    "_onexit",
+                    "_snwprintf",
+                    "_strdup",
+                    "_strnicmp",
+                    "_unlock",
+                    "_vsnprintf",
+                    "abort",
+                    "calloc",
+                    "exit",
+                    "feof",
+                    "ferror",
+                    "fflush",
+                    "fgets",
+                    "fopen",
+                    "fprintf",
+                    "fputc",
+                    "free",
+                    "freopen",
+                    "fwprintf",
+                    "fwrite",
+                    "getchar",
+                    "getenv",
+                    "isalpha",
+                    "isspace",
+                    "malloc",
+                    "mbstowcs",
+                    "memcpy",
+                    "memmove",
+                    "memset",
+                    "perror",
+                    "printf",
+                    "putchar",
+                    "raise",
+                    "realloc",
+                    "setlocale",
+                    "signal",
+                    "sscanf",
+                    "strchr",
+                    "strerror",
+                    "strlen",
+                    "strncmp",
+                    "tolower",
+                    "toupper",
+                    "vfprintf",
+                    "wcscpy",
+                    "wcstombs",
+                    "_strdup"
+                ]
+            },
+            {
+                "DLL": "USER32.dll",
+                "Functions": [
+                    "MessageBoxW"
+                ]
+            },
+            {
+                "DLL": "WS2_32.dll",
+                "Functions": [
+                    "gethostname"
+                ]
+            }
+        ],
+        "Label": "benign"
+    },
+    {
+        "FileSize": 35272,
+        "SHA256": "02431aa60089b968bc59acc69796ed9418546894752d0c9766fbe3aae0a85031",
+        "Machine": 34404,
+        "NumberOfSections": 6,
+        "TimeDateStamp": 1343268642,
+        "PointerToSymbolTable": 0,
+        "Characteristics": 34,
+        "ImageBase": 5368709120,
+        "SizeOfImage": 36864,
+        "Subsystem": 3,
+        "DllCharacteristics": 33120,
+        "Sections": [
+            {
+                "Name": ".text\u0000\u0000\u0000",
+                "VirtualAddress": 4096,
+                "Misc_VirtualSize": 9972,
+                "SizeOfRawData": 10240,
+                "PointerToRawData": 1024
+            },
+            {
+                "Name": ".data\u0000\u0000\u0000",
+                "VirtualAddress": 16384,
+                "Misc_VirtualSize": 1792,
+                "SizeOfRawData": 512,
+                "PointerToRawData": 11264
+            },
+            {
+                "Name": ".pdata\u0000\u0000",
+                "VirtualAddress": 20480,
+                "Misc_VirtualSize": 348,
+                "SizeOfRawData": 512,
+                "PointerToRawData": 11776
+            },
+            {
+                "Name": ".idata\u0000\u0000",
+                "VirtualAddress": 24576,
+                "Misc_VirtualSize": 2952,
+                "SizeOfRawData": 3072,
+                "PointerToRawData": 12288
+            },
+            {
+                "Name": ".rsrc\u0000\u0000\u0000",
+                "VirtualAddress": 28672,
+                "Misc_VirtualSize": 3848,
+                "SizeOfRawData": 4096,
+                "PointerToRawData": 15360
+            },
+            {
+                "Name": ".reloc\u0000\u0000",
+                "VirtualAddress": 32768,
+                "Misc_VirtualSize": 88,
+                "SizeOfRawData": 512,
+                "PointerToRawData": 19456
+            }
+        ],
+        "Imports": [
+            {
+                "DLL": "ADVAPI32.dll",
+                "Functions": [
+                    "CryptAcquireContextW",
+                    "CryptDeriveKey",
+                    "CryptReleaseContext",
+                    "CryptGetProvParam",
+                    "CryptImportKey",
+                    "CryptCreateHash",
+                    "CryptDestroyKey",
+                    "CryptDestroyHash",
+                    "CryptHashData"
+                ]
+            },
+            {
+                "DLL": "KERNEL32.dll",
+                "Functions": [
+                    "CloseHandle",
+                    "LocalFree",
+                    "GetCurrentProcessId",
+                    "HeapSetInformation",
+                    "LocalAlloc",
+                    "GetLastError",
+                    "CreateFileW",
+                    "ReadFile",
+                    "FormatMessageW",
+                    "GetConsoleWindow",
+                    "WideCharToMultiByte",
+                    "WriteFile",
+                    "GetProcessHeap",
+                    "GetModuleHandleW",
+                    "GetFileSize",
+                    "MultiByteToWideChar",
+                    "TerminateProcess",
+                    "GetCurrentProcess",
+                    "UnhandledExceptionFilter",
+                    "QueryPerformanceCounter",
+                    "RtlVirtualUnwind",
+                    "RtlLookupFunctionEntry",
+                    "RtlCaptureContext",
+                    "GetTickCount",
+                    "GetSystemTimeAsFileTime",
+                    "GetCurrentThreadId",
+                    "Sleep",
+                    "SetUnhandledExceptionFilter"
+                ]
+            },
+            {
+                "DLL": "msvcrt.dll",
+                "Functions": [
+                    "__C_specific_handler",
+                    "_fmode",
+                    "?terminate@@YAXXZ",
+                    "_initterm",
+                    "__setusermatherr",
+                    "_cexit",
+                    "_exit",
+                    "exit",
+                    "__set_app_type",
+                    "__wgetmainargs",
+                    "_amsg_exit",
+                    "_XcptFilter",
+                    "_iob",
+                    "_vsnwprintf",
+                    "fprintf",
+                    "vfwprintf",
+                    "_wcsicmp",
+                    "_commode",
+                    "memcpy",
+                    "memset"
+                ]
+            },
+            {
+                "DLL": "USER32.dll",
+                "Functions": [
+                    "DialogBoxParamW",
+                    "GetWindowLongPtrW",
+                    "EndDialog",
+                    "SendDlgItemMessageW",
+                    "LoadStringW",
+                    "SetWindowLongPtrW",
+                    "GetDlgItemTextW",
+                    "SetDlgItemTextW"
+                ]
+            },
+            {
+                "DLL": "CRYPT32.dll",
+                "Functions": [
+                    "CertOIDToAlgId",
+                    "CertOpenStore",
+                    "CertFreeCertificateContext",
+                    "CertCloseStore",
+                    "CertEnumCertificatesInStore",
+                    "CertComparePublicKeyInfo",
+                    "CertSetCertificateContextProperty",
+                    "PFXExportCertStoreEx",
+                    "CryptExportPublicKeyInfo"
+                ]
+            },
+            {
+                "DLL": "CRYPTUI.dll",
+                "Functions": [
+                    "CryptUIWizExport"
+                ]
+            },
+            {
+                "DLL": "RPCRT4.dll",
+                "Functions": [
+                    "UuidCreate"
+                ]
+            }
+        ],
+        "Label": "benign"
+    },
+    {
+        "Error": "Invalid PE file",
+        "Label": "benign"
+    },
+    {
+        "FileSize": 537432,
+        "SHA256": "046041aba6ba77534c36bb0c2496408d23c6a09f930c46b392f1edc70dfd66de",
+        "Machine": 332,
+        "NumberOfSections": 4,
+        "TimeDateStamp": 1275478496,
+        "PointerToSymbolTable": 0,
+        "Characteristics": 258,
+        "ImageBase": 16777216,
+        "SizeOfImage": 548864,
+        "Subsystem": 2,
+        "DllCharacteristics": 33088,
+        "Sections": [
+            {
+                "Name": ".text\u0000\u0000\u0000",
+                "VirtualAddress": 4096,
+                "Misc_VirtualSize": 72208,
+                "SizeOfRawData": 72704,
+                "PointerToRawData": 1024
+            },
+            {
+                "Name": ".data\u0000\u0000\u0000",
+                "VirtualAddress": 77824,
+                "Misc_VirtualSize": 12544,
+                "SizeOfRawData": 4096,
+                "PointerToRawData": 73728
+            },
+            {
+                "Name": ".rsrc\u0000\u0000\u0000",
+                "VirtualAddress": 94208,
+                "Misc_VirtualSize": 446380,
+                "SizeOfRawData": 446464,
+                "PointerToRawData": 77824
+            },
+            {
+                "Name": ".reloc\u0000\u0000",
+                "VirtualAddress": 540672,
+                "Misc_VirtualSize": 6810,
+                "SizeOfRawData": 7168,
+                "PointerToRawData": 524288
+            }
+        ],
+        "Imports": [
+            {
+                "DLL": "ADVAPI32.dll",
+                "Functions": [
+                    "RegCloseKey",
+                    "RegDeleteValueA",
+                    "RegSetValueExA",
+                    "RegCreateKeyExA",
+                    "RegOpenKeyExA",
+                    "AdjustTokenPrivileges",
+                    "LookupPrivilegeValueA",
+                    "OpenProcessToken"
+                ]
+            },
+            {
+                "DLL": "KERNEL32.dll",
+                "Functions": [
+                    "FindClose",
+                    "FindFirstFileA",
+                    "lstrlenA",
+                    "ReadFile",
+                    "GetFileSize",
+                    "CreateFileA",
+                    "GetCurrentDirectoryA",
+                    "GetCurrentProcess",
+                    "GetModuleFileNameA",
+                    "SetErrorMode",
+                    "CreateMutexA",
+                    "GetModuleHandleA",
+                    "CreateThread",
+                    "GetSystemDirectoryA",
+                    "CloseHandle",
+                    "GetVersionExA",
+                    "LoadLibraryA",
+                    "GetProcAddress",
+                    "GetWindowsDirectoryA",
+                    "FreeLibrary",
+                    "CompareStringA",
+                    "FormatMessageA",
+                    "lstrcmpiA",
+                    "GetProcessHeap",
+                    "SetEndOfFile",
+                    "WriteConsoleW",
+                    "HeapReAlloc",
+                    "GetStringTypeW",
+                    "HeapSize",
+                    "FlushFileBuffers",
+                    "SetStdHandle",
+                    "GetConsoleMode",
+                    "GetConsoleCP",
+                    "SetFilePointer",
+                    "Sleep",
+                    "LoadLibraryW",
+                    "MultiByteToWideChar",
+                    "LCMapStringW",
+                    "IsValidCodePage",
+                    "GetOEMCP",
+                    "GetACP",
+                    "GetCPInfo",
+                    "IsProcessorFeaturePresent",
+                    "RaiseException",
+                    "HeapAlloc",
+                    "RtlUnwind",
+                    "CreateFileW",
+                    "LeaveCriticalSection",
+                    "EnterCriticalSection",
+                    "OutputDebugStringA",
+                    "CreateDirectoryA",
+                    "GetLastError",
+                    "LocalFree",
+                    "GetCommandLineA",
+                    "HeapSetInformation",
+                    "GetStartupInfoW",
+                    "GetLocalTime",
+                    "SetUnhandledExceptionFilter",
+                    "GetModuleHandleW",
+                    "ExitProcess",
+                    "DecodePointer",
+                    "WriteFile",
+                    "GetStdHandle",
+                    "GetModuleFileNameW",
+                    "FreeEnvironmentStringsW",
+                    "WideCharToMultiByte",
+                    "GetEnvironmentStringsW",
+                    "SetHandleCount",
+                    "InitializeCriticalSectionAndSpinCount",
+                    "GetFileType",
+                    "DeleteCriticalSection",
+                    "EncodePointer",
+                    "TlsAlloc",
+                    "TlsGetValue",
+                    "TlsSetValue",
+                    "TlsFree",
+                    "InterlockedIncrement",
+                    "SetLastError",
+                    "GetCurrentThreadId",
+                    "InterlockedDecrement",
+                    "HeapCreate",
+                    "QueryPerformanceCounter",
+                    "GetTickCount",
+                    "GetCurrentProcessId",
+                    "GetSystemTimeAsFileTime",
+                    "UnhandledExceptionFilter",
+                    "IsDebuggerPresent",
+                    "TerminateProcess",
+                    "HeapFree"
+                ]
+            },
+            {
+                "DLL": "GDI32.dll",
+                "Functions": [
+                    "CreateCompatibleDC",
+                    "GetObjectA",
+                    "StretchBlt",
+                    "DeleteDC",
+                    "SelectObject",
+                    "CreateFontIndirectA",
+                    "DeleteObject",
+                    "GetDeviceCaps"
+                ]
+            },
+            {
+                "DLL": "USER32.dll",
+                "Functions": [
+                    "ReleaseDC",
+                    "GetDC",
+                    "LoadImageA",
+                    "SystemParametersInfoA",
+                    "SendDlgItemMessageA",
+                    "SetWindowTextA",
+                    "GetWindowLongA",
+                    "SetWindowLongA",
+                    "PostMessageA",
+                    "GetParent",
+                    "SetDlgItemTextA",
+                    "GetDlgItem",
+                    "SendMessageA",
+                    "ShowWindow",
+                    "GetAsyncKeyState",
+                    "ExitWindowsEx",
+                    "EnumWindows",
+                    "CharLowerA",
+                    "LoadStringA",
+                    "MessageBoxA",
+                    "GetWindowTextA",
+                    "GetClassNameA",
+                    "SetForegroundWindow",
+                    "SetFocus"
+                ]
+            },
+            {
+                "DLL": "VERSION.dll",
+                "Functions": [
+                    "VerQueryValueA",
+                    "GetFileVersionInfoA",
+                    "GetFileVersionInfoSizeA"
+                ]
+            },
+            {
+                "DLL": "COMCTL32.dll",
+                "Functions": [
+                    "CreatePropertySheetPageA",
+                    "PropertySheetA",
+                    "17"
+                ]
+            }
+        ],
+        "Label": "benign"
+    },
+    {
+        "FileSize": 125904,
+        "SHA256": "04631dabeccc7d887cc5317c6de48266272f1c90920d644c08895bc956ba3b3b",
+        "Machine": 332,
+        "NumberOfSections": 6,
+        "TimeDateStamp": 1343342327,
+        "PointerToSymbolTable": 0,
+        "Characteristics": 291,
+        "ImageBase": 4194304,
+        "SizeOfImage": 131072,
+        "Subsystem": 2,
+        "DllCharacteristics": 33024,
+        "Sections": [
+            {
+                "Name": ".text\u0000\u0000\u0000",
+                "VirtualAddress": 4096,
+                "Misc_VirtualSize": 89092,
+                "SizeOfRawData": 89600,
+                "PointerToRawData": 1024
+            },
+            {
+                "Name": ".orpc\u0000\u0000\u0000",
+                "VirtualAddress": 94208,
+                "Misc_VirtualSize": 336,
+                "SizeOfRawData": 512,
+                "PointerToRawData": 90624
+            },
+            {
+                "Name": ".data\u0000\u0000\u0000",
+                "VirtualAddress": 98304,
+                "Misc_VirtualSize": 8201,
+                "SizeOfRawData": 7680,
+                "PointerToRawData": 91136
+            },
+            {
+                "Name": ".idata\u0000\u0000",
+                "VirtualAddress": 110592,
+                "Misc_VirtualSize": 9606,
+                "SizeOfRawData": 9728,
+                "PointerToRawData": 98816
+            },
+            {
+                "Name": ".tls\u0000\u0000\u0000\u0000",
+                "VirtualAddress": 122880,
+                "Misc_VirtualSize": 9,
+                "SizeOfRawData": 0,
+                "PointerToRawData": 0
+            },
+            {
+                "Name": ".rsrc\u0000\u0000\u0000",
+                "VirtualAddress": 126976,
+                "Misc_VirtualSize": 1496,
+                "SizeOfRawData": 1536,
+                "PointerToRawData": 108544
+            }
+        ],
+        "Imports": [
+            {
+                "DLL": "ADVAPI32.dll",
+                "Functions": [
+                    "EventUnregister",
+                    "EventRegister",
+                    "EventWrite"
+                ]
+            },
+            {
+                "DLL": "KERNEL32.dll",
+                "Functions": [
+                    "AllocConsole",
+                    "SetUnhandledExceptionFilter",
+                    "InterlockedIncrement",
+                    "InterlockedDecrement",
+                    "GetCurrentProcess",
+                    "SetEvent",
+                    "GetModuleHandleW",
+                    "OpenProcess",
+                    "InitializeCriticalSectionAndSpinCount",
+                    "Sleep",
+                    "TerminateProcess",
+                    "MultiByteToWideChar",
+                    "GetLastError",
+                    "GetProcAddress",
+                    "GetProcessId",
+                    "CreateEventW",
+                    "WaitForMultipleObjects",
+                    "DeleteCriticalSection",
+                    "CloseHandle",
+                    "GetCPInfo",
+                    "GetTickCount",
+                    "InitializeCriticalSection",
+                    "LeaveCriticalSection",
+                    "GetACP",
+                    "EnterCriticalSection",
+                    "SetConsoleTitleW",
+                    "GetVersion",
+                    "HeapSize",
+                    "GetSystemInfo",
+                    "CompareStringW",
+                    "GetVersionExA",
+                    "GetFileAttributesW",
+                    "CreateFileA",
+                    "IsValidCodePage",
+                    "WideCharToMultiByte",
+                    "UnmapViewOfFile",
+                    "MapViewOfFile",
+                    "CreateFileMappingW",
+                    "GetProcessHeap",
+                    "HeapFree",
+                    "HeapReAlloc",
+                    "HeapAlloc",
+                    "HeapDestroy",
+                    "ReadFile",
+                    "GetFileSize",
+                    "CreateFileW",
+                    "GetTickCount64",
+                    "GetSystemTimeAsFileTime",
+                    "GetCurrentThreadId",
+                    "QueryPerformanceCounter",
+                    "IsProcessorFeaturePresent",
+                    "IsDebuggerPresent",
+                    "DecodePointer",
+                    "EncodePointer"
+                ]
+            },
+            {
+                "DLL": "MSVCR110.dll",
+                "Functions": [
+                    "??3@YAXPAX@Z",
+                    "_CxxThrowException",
+                    "__RTDynamicCast",
+                    "_except_handler4_common",
+                    "_controlfp_s",
+                    "_invoke_watson",
+                    "__crtSetUnhandledExceptionFilter",
+                    "__CxxFrameHandler3",
+                    "??1type_info@@UAE@XZ",
+                    "??1reader_writer_lock@Concurrency@@QAE@XZ",
+                    "??0reader_writer_lock@Concurrency@@QAE@XZ",
+                    "__crtTerminateProcess",
+                    "__crtUnhandledException",
+                    "_crt_debugger_hook",
+                    "_onexit",
+                    "__dllonexit",
+                    "_calloc_crt",
+                    "_unlock",
+                    "_lock",
+                    "?terminate@@YAXXZ",
+                    "_commode",
+                    "_fmode",
+                    "__winitenv",
+                    "_initterm",
+                    "_initterm_e",
+                    "__setusermatherr",
+                    "_configthreadlocale",
+                    "_cexit",
+                    "_exit",
+                    "exit",
+                    "__set_app_type",
+                    "__wgetmainargs",
+                    "_amsg_exit",
+                    "_XcptFilter",
+                    "_fdopen",
+                    "__uncaught_exception",
+                    "?_CheckTaskCollection@_UnrealizedChore@details@Concurrency@@IAEXXZ",
+                    "?_Schedule@_StructuredTaskCollection@details@Concurrency@@QAEXPAV_UnrealizedChore@23@@Z",
+                    "?_RunAndWait@_StructuredTaskCollection@details@Concurrency@@QAG?AW4_TaskCollectionStatus@23@PAV_UnrealizedChore@23@@Z",
+                    "?_Abort@_StructuredTaskCollection@details@Concurrency@@AAEXXZ",
+                    "?_CleanupToken@_StructuredTaskCollection@details@Concurrency@@AAEXXZ",
+                    "?Free@Concurrency@@YAXPAX@Z",
+                    "??0missing_wait@Concurrency@@QAE@XZ",
+                    "?Get@CurrentScheduler@Concurrency@@SAPAVScheduler@2@XZ",
+                    "_time64",
+                    "getc",
+                    "fclose",
+                    "wcscpy_s",
+                    "fseek",
+                    "_vsnwprintf_s",
+                    "wcscat_s",
+                    "ftell",
+                    "memcpy_s",
+                    "fread",
+                    "_ungetc_nolock",
+                    "_wstat64i32",
+                    "_wfsopen",
+                    "_ismbblead",
+                    "_wsplitpath_s",
+                    "ungetc",
+                    "_filbuf",
+                    "qsort",
+                    "_wsopen_s",
+                    "??0exception@std@@QAE@ABV01@@Z",
+                    "??1exception@std@@UAE@XZ",
+                    "?what@exception@std@@UBEPBDXZ",
+                    "feof",
+                    "_wcsicmp",
+                    "??2@YAPAXI@Z",
+                    "freopen_s",
+                    "_set_invalid_parameter_handler",
+                    "_purecall",
+                    "wprintf",
+                    "_wgetenv_s",
+                    "_resetstkoflw",
+                    "__iob_func",
+                    "malloc",
+                    "free",
+                    "_wtoi",
+                    "memmove",
+                    "_recalloc",
+                    "memset",
+                    "calloc",
+                    "_swab",
+                    "memcpy",
+                    "_stricmp",
+                    "_strnicmp",
+                    "wcstoul",
+                    "memcmp"
+                ]
+            },
+            {
+                "DLL": "MSVCP110.dll",
+                "Functions": [
+                    "?_Winerror_map@std@@YAPBDH@Z",
+                    "?_Syserror_map@std@@YAPBDH@Z",
+                    "?_Xbad_alloc@std@@YAXXZ",
+                    "?_Xout_of_range@std@@YAXPBD@Z",
+                    "?_Xlength_error@std@@YAXPBD@Z"
+                ]
+            },
+            {
+                "DLL": "atl110.DLL",
+                "Functions": [
+                    "64",
+                    "32",
+                    "17",
+                    "23",
+                    "61",
+                    "20"
+                ]
+            },
+            {
+                "DLL": "ole32.dll",
+                "Functions": [
+                    "CoRegisterPSClsid",
+                    "CoCreateInstance",
+                    "CLSIDFromString",
+                    "CoInitializeSecurity",
+                    "CoInitializeEx",
+                    "CoRevokeClassObject",
+                    "CoRegisterClassObject",
+                    "CoTaskMemFree",
+                    "CoTaskMemAlloc",
+                    "CoUninitialize"
+                ]
+            },
+            {
+                "DLL": "USER32.dll",
+                "Functions": [
+                    "MessageBoxA"
+                ]
+            },
+            {
+                "DLL": "OLEAUT32.dll",
+                "Functions": [
+                    "SysAllocStringLen",
+                    "SysReAllocStringLen",
+                    "SysAllocString",
+                    "SysFreeString",
+                    "SysStringLen",
+                    "VarBstrCmp",
+                    "BSTR_UserSize",
+                    "BSTR_UserMarshal",
+                    "BSTR_UserUnmarshal",
+                    "BSTR_UserFree"
+                ]
+            },
+            {
+                "DLL": "cpfe.dll",
+                "Functions": [
+                    "?update@file_buffer@edge@@IAEXIII@Z",
+                    "?opened_in_editor@file_buffer@edge@@IAEXXZ",
+                    "??0a_find_all_refs_operation@edge@@QAE@PAUallocator@1@PAUIntermediateSymbol@@PAVtranslation_unit@1@W4a_far_filter_mode@1@@Z",
+                    "install_host",
+                    "??1scoped_query_manager@edge@@QAE@XZ",
+                    "??0scoped_query_manager@edge@@QAE@PAUallocator@1@PAVtranslation_unit@1@PAUIEdgeSnapshotSession@@_N@Z",
+                    "?get_inactive_regions_for_file@translation_unit@edge@@QBEXPAUallocator@2@PAUIEdgeSnapshotSession@@PBG_NPAUInactiveRegionArray@@@Z",
+                    "??1file_buffer@edge@@MAE@XZ",
+                    "?get_semantic_tokens_for_fragments_in_view@translation_unit@edge@@QBE_NPAUallocator@2@PAUIEdgeSnapshotSession@@PBGPAUSemanticTokenArray@@@Z",
+                    "?update_range@translation_unit@edge@@QAEXPAUallocator@2@PAUIEdgeSnapshotSession@@Ufile_position@2@2_N3332PAI4@Z",
+                    "?get_errors_for_file@translation_unit@edge@@QBEXPAUallocator@2@PAUIEdgeSnapshotSession@@PBGPAUIsenseErrorArray@@@Z",
+                    "?get_errors_for_tu@translation_unit@edge@@QBEXPAUallocator@2@PAUIEdgeSnapshotSession@@PAUIsenseErrorArray@@@Z",
+                    "?get_output_pch_file@translation_unit@edge@@QBE_NPAU?$buffer@G@2@@Z",
+                    "?get_input_pch_file@translation_unit@edge@@QBE_NPAU?$buffer@G@2@@Z",
+                    "?contains_source_file@translation_unit@edge@@QBE_NPBG@Z",
+                    "?get_preparse_snapshot_session@translation_unit@edge@@QBEPAUIEdgeSnapshotSession@@XZ",
+                    "?preparse_successful@translation_unit@edge@@QBE_NXZ",
+                    "??1translation_unit@edge@@QAE@XZ",
+                    "??0translation_unit@edge@@QAE@HPAPBGPBG1PAUIEdgeSnapshotSession@@@Z",
+                    "??0file_position@edge@@QAE@XZ",
+                    "??0file_buffer@edge@@IAE@XZ",
+                    "?get_reference_highlights@translation_unit@edge@@QBE_NPAUallocator@2@PAUIEdgeSnapshotSession@@PBGPAUReferenceHighlightArray@@@Z",
+                    "?resolve_candidate@a_find_all_refs_operation@edge@@QAE?AW4a_far_resolution_kind@2@PAUIEdgeSnapshotSession@@ABUfile_position@2@PAK2@Z",
+                    "??0a_find_def_operation@edge@@QAE@PAUallocator@1@@Z",
+                    "??1a_find_def_operation@edge@@QAE@XZ",
+                    "?find_definition@a_find_def_operation@edge@@QAE?AW4an_error_code@12@PAUIntermediateSymbol@@0PAVtranslation_unit@2@PAUIEdgeSnapshotSession@@@Z",
+                    "?canonicalize@edge@@YAPBGPBG_N@Z",
+                    "?get_host@edge@@YAPAUhost@1@XZ",
+                    "??1a_find_all_refs_operation@edge@@QAE@XZ",
+                    "?fill_in_intermediate@edge@@YAXPAUIntermediateSymbol@@PAUsymbol@1@@Z",
+                    "?get_param_help_overloads@intellisense_operation@edge@@QAEXPAU?$list@PAUsymbol@edge@@@2@PAW4arg_list_entry_kind@2@PAUfile_position@2@@Z",
+                    "?get_auto_complete_members@intellisense_operation@edge@@QAEXPAU?$list@PAUsymbol@edge@@@2@W4member_list_kind@12@_NAA_N3@Z",
+                    "?get_auto_complete_members@intellisense_operation@edge@@QAEXPAU?$list@PAUsymbol@edge@@@2@W4member_list_kind@12@@Z",
+                    "?last_error_code@intellisense_operation@edge@@QBE?AW4error_code@12@XZ",
+                    "?call_sites_in_enclosing_function_scope@intellisense_operation@edge@@QAEXPAU?$list@Ucall_site@edge@@@2@@Z",
+                    "?function_scope_enclosing_cursor@intellisense_operation@edge@@QAEPAUfunction_symbol@2@XZ",
+                    "?scope_at_cursor@intellisense_operation@edge@@QAEPAUscope_entry@2@PAPAUmember_selection_entry@2@@Z",
+                    "?function_call_at_cursor@intellisense_operation@edge@@QAE_NPAUcall_site@2@@Z",
+                    "?symbol_at_cursor@intellisense_operation@edge@@QAEPAUsymbol@2@PAU?$list@PAUsymbol@edge@@@2@@Z",
+                    "??1intellisense_operation@edge@@QAE@XZ",
+                    "??0intellisense_operation@edge@@QAE@PAUallocator@1@PAVtranslation_unit@1@PAUIEdgeSnapshotSession@@ABUfile_position@1@_N@Z",
+                    "?get_intermediate_symbols@a_get_symbol_operation@edge@@QBE?AW4an_error_code@12@PAVtranslation_unit@2@PAUIEdgeSnapshotSession@@W4a_symbol_filter@2@PAUIntermediateSymbolArray@@@Z",
+                    "??1a_get_symbol_operation@edge@@QAE@XZ",
+                    "??0a_get_symbol_operation@edge@@QAE@PAUallocator@1@ABUfile_line_column@1@@Z"
+                ]
+            },
+            {
+                "DLL": "RPCRT4.dll",
+                "Functions": [
+                    "CStdStubBuffer_DebugServerQueryInterface",
+                    "NdrCStdStubBuffer_Release",
+                    "NdrDllGetClassObject",
+                    "CStdStubBuffer_AddRef",
+                    "IUnknown_QueryInterface_Proxy",
+                    "NdrOleFree",
+                    "NdrOleAllocate",
+                    "CStdStubBuffer_CountRefs",
+                    "IUnknown_Release_Proxy",
+                    "CStdStubBuffer_Connect",
+                    "CStdStubBuffer_QueryInterface",
+                    "CStdStubBuffer_Invoke",
+                    "CStdStubBuffer_IsIIDSupported",
+                    "CStdStubBuffer_Disconnect",
+                    "CStdStubBuffer_DebugServerRelease",
+                    "IUnknown_AddRef_Proxy"
+                ]
+            }
+        ],
+        "Label": "benign"
+    },
+    {
+        "FileSize": 83456,
+        "SHA256": "04720bfdcf20864606b17eabea2b9ead471c1fbd71bf8ce8246edb7247b5d148",
+        "Machine": 332,
+        "NumberOfSections": 5,
+        "TimeDateStamp": 1436499235,
+        "PointerToSymbolTable": 0,
+        "Characteristics": 258,
+        "ImageBase": 4194304,
+        "SizeOfImage": 94208,
+        "Subsystem": 2,
+        "DllCharacteristics": 49472,
+        "Sections": [
+            {
+                "Name": ".text\u0000\u0000\u0000",
+                "VirtualAddress": 4096,
+                "Misc_VirtualSize": 69836,
+                "SizeOfRawData": 70144,
+                "PointerToRawData": 1024
+            },
+            {
+                "Name": ".data\u0000\u0000\u0000",
+                "VirtualAddress": 77824,
+                "Misc_VirtualSize": 2328,
+                "SizeOfRawData": 512,
+                "PointerToRawData": 71168
+            },
+            {
+                "Name": ".idata\u0000\u0000",
+                "VirtualAddress": 81920,
+                "Misc_VirtualSize": 3646,
+                "SizeOfRawData": 4096,
+                "PointerToRawData": 71680
+            },
+            {
+                "Name": ".rsrc\u0000\u0000\u0000",
+                "VirtualAddress": 86016,
+                "Misc_VirtualSize": 3488,
+                "SizeOfRawData": 3584,
+                "PointerToRawData": 75776
+            },
+            {
+                "Name": ".reloc\u0000\u0000",
+                "VirtualAddress": 90112,
+                "Misc_VirtualSize": 3716,
+                "SizeOfRawData": 4096,
+                "PointerToRawData": 79360
+            }
+        ],
+        "Imports": [
+            {
+                "DLL": "ADVAPI32.dll",
+                "Functions": [
+                    "RegQueryValueExW",
+                    "RegOpenKeyExW",
+                    "RegCloseKey",
+                    "OpenProcessToken",
+                    "RegQueryInfoKeyW",
+                    "RegDeleteKeyW",
+                    "RegEnumKeyExW",
+                    "RegCreateKeyW",
+                    "RegCreateKeyExW",
+                    "LookupPrivilegeValueW",
+                    "RegDeleteValueW",
+                    "AllocateAndInitializeSid",
+                    "FreeSid",
+                    "AdjustTokenPrivileges",
+                    "InitiateSystemShutdownW",
+                    "RegSetValueExW",
+                    "RegEnumValueW"
+                ]
+            },
+            {
+                "DLL": "KERNEL32.dll",
+                "Functions": [
+                    "GetProcAddress",
+                    "GetCurrentProcessId",
+                    "FindFirstFileW",
+                    "GetCurrentProcess",
+                    "WritePrivateProfileSectionW",
+                    "CreateFileW",
+                    "CompareStringW",
+                    "lstrcmpW",
+                    "lstrlenW",
+                    "WritePrivateProfileStringW",
+                    "GetPrivateProfileIntW",
+                    "GetLastError",
+                    "FindClose",
+                    "lstrcmpiW",
+                    "FindNextFileW",
+                    "CloseHandle",
+                    "GetWindowsDirectoryW",
+                    "GetCurrentDirectoryW",
+                    "SetFileAttributesW",
+                    "lstrlenA",
+                    "GetWindowsDirectoryA",
+                    "GetSystemDirectoryW",
+                    "LoadLibraryW",
+                    "CopyFileW",
+                    "GetModuleHandleA",
+                    "LoadLibraryExA",
+                    "LocalFree",
+                    "ExpandEnvironmentStringsW",
+                    "CreateMutexW",
+                    "WaitForSingleObject",
+                    "ReleaseMutex",
+                    "GetProcessHeap",
+                    "HeapFree",
+                    "HeapAlloc",
+                    "GetSystemInfo",
+                    "GetVersionExW",
+                    "SetCurrentDirectoryW",
+                    "CreateDirectoryW",
+                    "LocalAlloc",
+                    "LoadLibraryA",
+                    "WideCharToMultiByte",
+                    "GetTickCount",
+                    "GetSystemTimeAsFileTime",
+                    "GetCurrentThreadId",
+                    "QueryPerformanceCounter",
+                    "TerminateProcess",
+                    "SetUnhandledExceptionFilter",
+                    "GetFileType",
+                    "UnhandledExceptionFilter",
+                    "GetStartupInfoA",
+                    "Sleep",
+                    "GetPrivateProfileStringW",
+                    "GetModuleHandleW",
+                    "LoadLibraryExW",
+                    "FreeLibrary",
+                    "GetCommandLineW",
+                    "GetPrivateProfileSectionW"
+                ]
+            },
+            {
+                "DLL": "USER32.dll",
+                "Functions": [
+                    "CheckDlgButton",
+                    "EndDialog",
+                    "GetDlgItem",
+                    "IsDlgButtonChecked",
+                    "DialogBoxParamW",
+                    "MessageBoxW",
+                    "IsWindow",
+                    "CheckRadioButton",
+                    "GetDlgItemTextW",
+                    "CharPrevW",
+                    "SetWindowTextW",
+                    "MessageBoxExW",
+                    "CharNextW",
+                    "LoadStringW",
+                    "SetFocus"
+                ]
+            },
+            {
+                "DLL": "msvcrt.dll",
+                "Functions": [
+                    "exit",
+                    "__set_app_type",
+                    "__getmainargs",
+                    "_amsg_exit",
+                    "__p__commode",
+                    "_XcptFilter",
+                    "_cexit",
+                    "__p__fmode",
+                    "_vsnprintf",
+                    "_exit",
+                    "_ismbblead",
+                    "_except_handler4_common",
+                    "_controlfp",
+                    "?terminate@@YAXXZ",
+                    "_acmdln",
+                    "_initterm",
+                    "__setusermatherr",
+                    "_vsnwprintf",
+                    "memset"
+                ]
+            },
+            {
+                "DLL": "cmutil.dll",
+                "Functions": [
+                    "CmRealloc",
+                    "SzToWzWithAlloc",
+                    "GetOSVersion",
+                    "CmMalloc",
+                    "GetOSMajorVersion",
+                    "WzToSzWithAlloc",
+                    "CmFree"
+                ]
+            },
+            {
+                "DLL": "ole32.dll",
+                "Functions": [
+                    "CoUninitialize",
+                    "CoInitialize"
+                ]
+            },
+            {
+                "DLL": "SHELL32.dll",
+                "Functions": [
+                    "SHGetFolderPathW",
+                    "SHChangeNotify",
+                    "SHFileOperationW",
+                    "SHGetMalloc",
+                    "SHGetPathFromIDListW",
+                    "SHGetDesktopFolder",
+                    "ShellExecuteExW",
+                    "SHGetSpecialFolderLocation"
+                ]
+            },
+            {
+                "DLL": "VERSION.dll",
+                "Functions": [
+                    "GetFileVersionInfoA",
+                    "GetFileVersionInfoSizeA",
+                    "VerQueryValueA"
+                ]
+            }
+        ],
+        "Label": "benign"
+    },
+    {
+        "FileSize": 140800,
+        "SHA256": "04c3fad7c843c2155a69e4a54fcc18324d1b4d366a0868550af02dfdd9186366",
+        "Machine": 332,
+        "NumberOfSections": 5,
+        "TimeDateStamp": 1438937247,
+        "PointerToSymbolTable": 0,
+        "Characteristics": 258,
+        "ImageBase": 4194304,
+        "SizeOfImage": 163840,
+        "Subsystem": 2,
+        "DllCharacteristics": 33088,
+        "Sections": [
+            {
+                "Name": ".text\u0000\u0000\u0000",
+                "VirtualAddress": 4096,
+                "Misc_VirtualSize": 52939,
+                "SizeOfRawData": 53248,
+                "PointerToRawData": 1024
+            },
+            {
+                "Name": ".rdata\u0000\u0000",
+                "VirtualAddress": 57344,
+                "Misc_VirtualSize": 25956,
+                "SizeOfRawData": 26112,
+                "PointerToRawData": 54272
+            },
+            {
+                "Name": ".data\u0000\u0000\u0000",
+                "VirtualAddress": 86016,
+                "Misc_VirtualSize": 13120,
+                "SizeOfRawData": 5120,
+                "PointerToRawData": 80384
+            },
+            {
+                "Name": ".rsrc\u0000\u0000\u0000",
+                "VirtualAddress": 102400,
+                "Misc_VirtualSize": 50288,
+                "SizeOfRawData": 50688,
+                "PointerToRawData": 85504
+            },
+            {
+                "Name": ".reloc\u0000\u0000",
+                "VirtualAddress": 155648,
+                "Misc_VirtualSize": 4444,
+                "SizeOfRawData": 4608,
+                "PointerToRawData": 136192
+            }
+        ],
+        "Imports": [
+            {
+                "DLL": "jxbrowser-chromium-lib.dll",
+                "Functions": [
+                    "jxb_start_process_watcher",
+                    "jxb_chrome_shutdown",
+                    "jxb_start_ipc",
+                    "jxb_run_message_loop",
+                    "jxb_stop_process_watcher",
+                    "jxb_init_plugins",
+                    "jxb_chrome_initialize",
+                    "jxb_run_process"
+                ]
+            },
+            {
+                "DLL": "KERNEL32.dll",
+                "Functions": [
+                    "UnhandledExceptionFilter",
+                    "CloseHandle",
+                    "WriteConsoleW",
+                    "SetFilePointerEx",
+                    "SetStdHandle",
+                    "GetConsoleMode",
+                    "GetConsoleCP",
+                    "FlushFileBuffers",
+                    "OutputDebugStringW",
+                    "GetCommandLineW",
+                    "LocalFree",
+                    "EncodePointer",
+                    "DecodePointer",
+                    "IsDebuggerPresent",
+                    "IsProcessorFeaturePresent",
+                    "GetLastError",
+                    "WideCharToMultiByte",
+                    "ExitProcess",
+                    "GetModuleHandleExW",
+                    "GetProcAddress",
+                    "MultiByteToWideChar",
+                    "HeapSize",
+                    "HeapFree",
+                    "RaiseException",
+                    "HeapAlloc",
+                    "SetLastError",
+                    "GetCurrentThreadId",
+                    "GetProcessHeap",
+                    "GetStdHandle",
+                    "GetFileType",
+                    "DeleteCriticalSection",
+                    "GetStartupInfoW",
+                    "GetModuleFileNameW",
+                    "WriteFile",
+                    "QueryPerformanceCounter",
+                    "GetCurrentProcessId",
+                    "GetSystemTimeAsFileTime",
+                    "GetEnvironmentStringsW",
+                    "FreeEnvironmentStringsW",
+                    "CreateFileW",
+                    "SetUnhandledExceptionFilter",
+                    "InitializeCriticalSectionAndSpinCount",
+                    "Sleep",
+                    "GetCurrentProcess",
+                    "TerminateProcess",
+                    "TlsAlloc",
+                    "TlsGetValue",
+                    "TlsSetValue",
+                    "TlsFree",
+                    "GetModuleHandleW",
+                    "GetStringTypeW",
+                    "IsValidCodePage",
+                    "GetACP",
+                    "GetOEMCP",
+                    "GetCPInfo",
+                    "EnterCriticalSection",
+                    "LeaveCriticalSection",
+                    "LoadLibraryExW",
+                    "HeapReAlloc",
+                    "RtlUnwind",
+                    "LCMapStringW"
+                ]
+            },
+            {
+                "DLL": "SHELL32.dll",
+                "Functions": [
+                    "CommandLineToArgvW"
+                ]
+            }
+        ],
+        "Label": "benign"
+    },
+    {
+        "FileSize": 80896,
+        "SHA256": "04ffb8d60a17d6405a9408e73e9cabcdaf5e396f7c4784874dc49c353e97315b",
+        "Machine": 34404,
+        "NumberOfSections": 6,
+        "TimeDateStamp": 1343265099,
+        "PointerToSymbolTable": 0,
+        "Characteristics": 34,
+        "ImageBase": 5368709120,
+        "SizeOfImage": 102400,
+        "Subsystem": 3,
+        "DllCharacteristics": 33120,
+        "Sections": [
+            {
+                "Name": ".text\u0000\u0000\u0000",
+                "VirtualAddress": 4096,
+                "Misc_VirtualSize": 64060,
+                "SizeOfRawData": 64512,
+                "PointerToRawData": 1024
+            },
+            {
+                "Name": ".data\u0000\u0000\u0000",
+                "VirtualAddress": 69632,
+                "Misc_VirtualSize": 14936,
+                "SizeOfRawData": 5632,
+                "PointerToRawData": 65536
+            },
+            {
+                "Name": ".pdata\u0000\u0000",
+                "VirtualAddress": 86016,
+                "Misc_VirtualSize": 2256,
+                "SizeOfRawData": 2560,
+                "PointerToRawData": 71168
+            },
+            {
+                "Name": ".idata\u0000\u0000",
+                "VirtualAddress": 90112,
+                "Misc_VirtualSize": 3946,
+                "SizeOfRawData": 4096,
+                "PointerToRawData": 73728
+            },
+            {
+                "Name": ".rsrc\u0000\u0000\u0000",
+                "VirtualAddress": 94208,
+                "Misc_VirtualSize": 1784,
+                "SizeOfRawData": 2048,
+                "PointerToRawData": 77824
+            },
+            {
+                "Name": ".reloc\u0000\u0000",
+                "VirtualAddress": 98304,
+                "Misc_VirtualSize": 798,
+                "SizeOfRawData": 1024,
+                "PointerToRawData": 79872
+            }
+        ],
+        "Imports": [
+            {
+                "DLL": "KERNEL32.dll",
+                "Functions": [
+                    "HeapFree",
+                    "GetProcessHeap",
+                    "HeapAlloc",
+                    "GetLastError",
+                    "LoadLibraryExW",
+                    "FreeLibrary",
+                    "GetTickCount",
+                    "WTSGetActiveConsoleSessionId",
+                    "Sleep",
+                    "GetComputerNameW",
+                    "HeapSetInformation",
+                    "SystemTimeToTzSpecificLocalTime",
+                    "GetSystemTime",
+                    "ExpandEnvironmentStringsW",
+                    "CloseHandle",
+                    "CreateFileW",
+                    "FlushFileBuffers",
+                    "WriteConsoleW",
+                    "SetStdHandle",
+                    "VirtualQuery",
+                    "VirtualProtect",
+                    "VirtualAlloc",
+                    "GetSystemInfo",
+                    "SetThreadStackGuarantee",
+                    "SetFilePointer",
+                    "GetConsoleMode",
+                    "GetConsoleCP",
+                    "LCMapStringW",
+                    "WideCharToMultiByte",
+                    "MultiByteToWideChar",
+                    "GetStringTypeW",
+                    "InitializeCriticalSectionAndSpinCount",
+                    "LeaveCriticalSection",
+                    "GetVersionExW",
+                    "SetUnhandledExceptionFilter",
+                    "EncodePointer",
+                    "DecodePointer",
+                    "SetLastError",
+                    "FlsAlloc",
+                    "FlsGetValue",
+                    "FlsSetValue",
+                    "FlsFree",
+                    "GetCurrentThreadId",
+                    "ExitProcess",
+                    "GetModuleHandleExW",
+                    "GetProcAddress",
+                    "GetStdHandle",
+                    "WriteFile",
+                    "GetModuleFileNameA",
+                    "HeapCreate",
+                    "GetFileType",
+                    "DeleteCriticalSection",
+                    "GetStartupInfoW",
+                    "SetHandleCount",
+                    "GetModuleFileNameW",
+                    "QueryPerformanceCounter",
+                    "GetCurrentProcessId",
+                    "GetSystemTimeAsFileTime",
+                    "GetEnvironmentStringsW",
+                    "FreeEnvironmentStringsW",
+                    "GetCommandLineW",
+                    "UnhandledExceptionFilter",
+                    "GetCurrentProcess",
+                    "TerminateProcess",
+                    "IsValidCodePage",
+                    "GetACP",
+                    "GetOEMCP",
+                    "GetCPInfo",
+                    "OutputDebugStringA",
+                    "EnterCriticalSection"
+                ]
+            },
+            {
+                "DLL": "NETAPI32.dll",
+                "Functions": [
+                    "NetApiBufferFree",
+                    "NetGetJoinInformation"
+                ]
+            },
+            {
+                "DLL": "ntdll.dll",
+                "Functions": [
+                    "RtlUnwindEx",
+                    "RtlVirtualUnwind",
+                    "RtlLookupFunctionEntry",
+                    "RtlCaptureContext"
+                ]
+            },
+            {
+                "DLL": "ole32.dll",
+                "Functions": [
+                    "CoTaskMemFree",
+                    "CoTaskMemAlloc",
+                    "CoCreateInstance",
+                    "CoUninitialize",
+                    "CoInitializeEx"
+                ]
+            },
+            {
+                "DLL": "OLEACC.dll",
+                "Functions": [
+                    "AccessibleChildren",
+                    "AccessibleObjectFromWindow"
+                ]
+            },
+            {
+                "DLL": "OLEAUT32.dll",
+                "Functions": [
+                    "VariantInit",
+                    "SysAllocString",
+                    "VariantClear",
+                    "SysFreeString"
+                ]
+            },
+            {
+                "DLL": "USER32.dll",
+                "Functions": [
+                    "GetDesktopWindow",
+                    "FindWindowExW",
+                    "LoadStringW",
+                    "SystemParametersInfoW",
+                    "GetSystemMetrics",
+                    "GetCursorPos",
+                    "SendInput",
+                    "OpenInputDesktop",
+                    "SetThreadDesktop",
+                    "CloseDesktop",
+                    "FindWindowW",
+                    "keybd_event",
+                    "GetForegroundWindow"
+                ]
+            },
+            {
+                "DLL": "WTSAPI32.dll",
+                "Functions": [
+                    "WTSConnectSessionW"
+                ]
+            },
+            {
+                "DLL": "SHLWAPI.dll",
+                "Functions": [
+                    "PathFindFileNameW"
+                ]
+            }
+        ],
+        "Label": "benign"
+    },
+    {
+        "FileSize": 149736,
+        "SHA256": "050171bc07ebcd963ce724b6b66ff8d1b6c1258e2676c59fd36db0384427bb59",
+        "Machine": 34404,
+        "NumberOfSections": 11,
+        "TimeDateStamp": 32884768,
+        "PointerToSymbolTable": 124928,
+        "Characteristics": 39,
+        "ImageBase": 4194304,
+        "SizeOfImage": 163840,
+        "Subsystem": 2,
+        "DllCharacteristics": 0,
+        "Sections": [
+            {
+                "Name": ".text\u0000\u0000\u0000",
+                "VirtualAddress": 4096,
+                "Misc_VirtualSize": 49800,
+                "SizeOfRawData": 50176,
+                "PointerToRawData": 1024
+            },
+            {
+                "Name": ".data\u0000\u0000\u0000",
+                "VirtualAddress": 57344,
+                "Misc_VirtualSize": 584,
+                "SizeOfRawData": 1024,
+                "PointerToRawData": 51200
+            },
+            {
+                "Name": ".rdata\u0000\u0000",
+                "VirtualAddress": 61440,
+                "Misc_VirtualSize": 50544,
+                "SizeOfRawData": 50688,
+                "PointerToRawData": 52224
+            },
+            {
+                "Name": ".pdata\u0000\u0000",
+                "VirtualAddress": 114688,
+                "Misc_VirtualSize": 1320,
+                "SizeOfRawData": 1536,
+                "PointerToRawData": 102912
+            },
+            {
+                "Name": ".xdata\u0000\u0000",
+                "VirtualAddress": 118784,
+                "Misc_VirtualSize": 1512,
+                "SizeOfRawData": 1536,
+                "PointerToRawData": 104448
+            },
+            {
+                "Name": ".bss\u0000\u0000\u0000\u0000",
+                "VirtualAddress": 122880,
+                "Misc_VirtualSize": 5200,
+                "SizeOfRawData": 0,
+                "PointerToRawData": 0
+            },
+            {
+                "Name": ".idata\u0000\u0000",
+                "VirtualAddress": 131072,
+                "Misc_VirtualSize": 12084,
+                "SizeOfRawData": 12288,
+                "PointerToRawData": 105984
+            },
+            {
+                "Name": ".CRT\u0000\u0000\u0000\u0000",
+                "VirtualAddress": 143360,
+                "Misc_VirtualSize": 104,
+                "SizeOfRawData": 512,
+                "PointerToRawData": 118272
+            },
+            {
+                "Name": ".tls\u0000\u0000\u0000\u0000",
+                "VirtualAddress": 147456,
+                "Misc_VirtualSize": 104,
+                "SizeOfRawData": 512,
+                "PointerToRawData": 118784
+            },
+            {
+                "Name": ".rsrc\u0000\u0000\u0000",
+                "VirtualAddress": 151552,
+                "Misc_VirtualSize": 5000,
+                "SizeOfRawData": 5120,
+                "PointerToRawData": 119296
+            },
+            {
+                "Name": "/4\u0000\u0000\u0000\u0000\u0000\u0000",
+                "VirtualAddress": 159744,
+                "Misc_VirtualSize": 24,
+                "SizeOfRawData": 512,
+                "PointerToRawData": 124416
+            }
+        ],
+        "Imports": [
+            {
+                "DLL": "libgimpui-2.0-0.dll",
+                "Functions": [
+                    "gimp_drawable_combo_box_new",
+                    "gimp_ui_init",
+                    "gimp_window_set_transient"
+                ]
+            },
+            {
+                "DLL": "KERNEL32.dll",
+                "Functions": [
+                    "DeleteCriticalSection",
+                    "EnterCriticalSection",
+                    "GetCurrentProcess",
+                    "GetCurrentProcessId",
+                    "GetCurrentThreadId",
+                    "GetLastError",
+                    "GetModuleHandleA",
+                    "GetProcAddress",
+                    "GetStartupInfoA",
+                    "GetSystemTimeAsFileTime",
+                    "GetTickCount",
+                    "InitializeCriticalSection",
+                    "LeaveCriticalSection",
+                    "QueryPerformanceCounter",
+                    "RtlAddFunctionTable",
+                    "RtlCaptureContext",
+                    "RtlLookupFunctionEntry",
+                    "RtlVirtualUnwind",
+                    "SetUnhandledExceptionFilter",
+                    "Sleep",
+                    "TerminateProcess",
+                    "TlsGetValue",
+                    "UnhandledExceptionFilter",
+                    "VirtualProtect",
+                    "VirtualQuery"
+                ]
+            },
+            {
+                "DLL": "msvcrt.dll",
+                "Functions": [
+                    "__C_specific_handler",
+                    "__argc",
+                    "__argv",
+                    "__dllonexit",
+                    "__getmainargs",
+                    "__initenv",
+                    "__iob_func",
+                    "__lconv_init",
+                    "__set_app_type",
+                    "__setusermatherr",
+                    "_acmdln",
+                    "_amsg_exit",
+                    "_cexit",
+                    "_errno",
+                    "_fmode",
+                    "_initterm",
+                    "_lock",
+                    "_onexit",
+                    "_unlock",
+                    "abort",
+                    "acos",
+                    "calloc",
+                    "exit",
+                    "fclose",
+                    "fprintf",
+                    "free",
+                    "fscanf",
+                    "fwrite",
+                    "malloc",
+                    "memcpy",
+                    "signal",
+                    "strlen",
+                    "strncmp",
+                    "vfprintf"
+                ]
+            },
+            {
+                "DLL": "libgimp-2.0-0.dll",
+                "Functions": [
+                    "gimp_display_new",
+                    "gimp_displays_flush",
+                    "gimp_drawable_bpp",
+                    "gimp_drawable_detach",
+                    "gimp_drawable_flush",
+                    "gimp_drawable_get",
+                    "gimp_drawable_has_alpha",
+                    "gimp_drawable_height",
+                    "gimp_drawable_is_gray",
+                    "gimp_drawable_is_indexed",
+                    "gimp_drawable_is_rgb",
+                    "gimp_drawable_mask_bounds",
+                    "gimp_drawable_merge_shadow",
+                    "gimp_drawable_update",
+                    "gimp_drawable_width",
+                    "gimp_gimprc_query",
+                    "gimp_image_insert_layer",
+                    "gimp_image_new",
+                    "gimp_install_procedure",
+                    "gimp_item_get_image",
+                    "gimp_layer_new",
+                    "gimp_main",
+                    "gimp_pixel_rgn_get_pixel",
+                    "gimp_pixel_rgn_get_row",
+                    "gimp_pixel_rgn_init",
+                    "gimp_pixel_rgn_set_pixel",
+                    "gimp_pixel_rgn_set_row",
+                    "gimp_plugin_menu_register",
+                    "gimp_procedural_db_get_data",
+                    "gimp_procedural_db_set_data",
+                    "gimp_progress_init",
+                    "gimp_progress_update",
+                    "gimp_tile_cache_ntiles"
+                ]
+            },
+            {
+                "DLL": "libgimpbase-2.0-0.dll",
+                "Functions": [
+                    "gimp_directory",
+                    "gimp_locale_directory",
+                    "gimp_path_free",
+                    "gimp_path_get_user_writable_dir",
+                    "gimp_path_parse"
+                ]
+            },
+            {
+                "DLL": "libgimpcolor-2.0-0.dll",
+                "Functions": [
+                    "gimp_bilinear",
+                    "gimp_bilinear_rgba",
+                    "gimp_rgb_add",
+                    "gimp_rgb_clamp",
+                    "gimp_rgb_composite",
+                    "gimp_rgb_get_uchar",
+                    "gimp_rgb_multiply",
+                    "gimp_rgb_set_alpha",
+                    "gimp_rgba_set"
+                ]
+            },
+            {
+                "DLL": "libgimpmath-2.0-0.dll",
+                "Functions": [
+                    "gimp_vector3_add",
+                    "gimp_vector3_cross_product",
+                    "gimp_vector3_inner_product",
+                    "gimp_vector3_length",
+                    "gimp_vector3_mul",
+                    "gimp_vector3_normalize",
+                    "gimp_vector3_set",
+                    "gimp_vector3_sub",
+                    "gimp_vector_2d_to_3d",
+                    "gimp_vector_3d_to_2d"
+                ]
+            },
+            {
+                "DLL": "libgimpwidgets-2.0-0.dll",
+                "Functions": [
+                    "gimp_color_button_get_color",
+                    "gimp_color_button_get_type",
+                    "gimp_color_button_new",
+                    "gimp_color_button_set_color",
+                    "gimp_color_button_set_update",
+                    "gimp_dialog_get_type",
+                    "gimp_dialog_new",
+                    "gimp_dialog_run",
+                    "gimp_double_adjustment_update",
+                    "gimp_frame_new",
+                    "gimp_help_set_help_data",
+                    "gimp_int_combo_box_connect",
+                    "gimp_int_combo_box_get_active",
+                    "gimp_int_combo_box_get_type",
+                    "gimp_int_combo_box_new",
+                    "gimp_int_combo_box_set_active",
+                    "gimp_scale_entry_new",
+                    "gimp_spin_button_new",
+                    "gimp_standard_help_func",
+                    "gimp_table_attach_aligned",
+                    "gimp_toggle_button_update",
+                    "gtk_box_new"
+                ]
+            },
+            {
+                "DLL": "libcairo-2.dll",
+                "Functions": [
+                    "cairo_arc",
+                    "cairo_destroy",
+                    "cairo_fill",
+                    "cairo_format_stride_for_width",
+                    "cairo_image_surface_create_for_data",
+                    "cairo_line_to",
+                    "cairo_move_to",
+                    "cairo_paint",
+                    "cairo_set_line_width",
+                    "cairo_set_source_surface",
+                    "cairo_stroke",
+                    "cairo_surface_destroy",
+                    "cairo_surface_flush",
+                    "cairo_surface_mark_dirty"
+                ]
+            },
+            {
+                "DLL": "libgdk-win32-2.0-0.dll",
+                "Functions": [
+                    "gdk_cairo_create",
+                    "gdk_cairo_set_source_color",
+                    "gdk_cursor_new_for_display",
+                    "gdk_cursor_unref",
+                    "gdk_flush",
+                    "gdk_window_set_cursor"
+                ]
+            },
+            {
+                "DLL": "libgdk_pixbuf-2.0-0.dll",
+                "Functions": [
+                    "gdk_pixbuf_new_from_inline"
+                ]
+            },
+            {
+                "DLL": "libglib-2.0-0.dll",
+                "Functions": [
+                    "g_ascii_dtostr",
+                    "g_ascii_strtod",
+                    "g_dpgettext",
+                    "g_filename_from_utf8_utf8",
+                    "g_fopen",
+                    "g_free",
+                    "g_get_tmp_dir",
+                    "g_log",
+                    "g_malloc",
+                    "g_malloc0",
+                    "g_malloc_n",
+                    "g_source_remove",
+                    "g_strdup",
+                    "g_strerror",
+                    "g_timeout_add"
+                ]
+            },
+            {
+                "DLL": "libgobject-2.0-0.dll",
+                "Functions": [
+                    "g_object_bind_property",
+                    "g_object_unref",
+                    "g_signal_connect_data",
+                    "g_type_check_instance_cast"
+                ]
+            },
+            {
+                "DLL": "libgtk-win32-2.0-0.dll",
+                "Functions": [
+                    "gtk_adjustment_get_value",
+                    "gtk_box_get_type",
+                    "gtk_box_pack_start",
+                    "gtk_button_new_from_stock",
+                    "gtk_button_new_with_mnemonic",
+                    "gtk_check_button_new_with_mnemonic",
+                    "gtk_container_add",
+                    "gtk_container_get_type",
+                    "gtk_container_set_border_width",
+                    "gtk_dialog_get_content_area",
+                    "gtk_dialog_get_type",
+                    "gtk_dialog_set_alternative_button_order",
+                    "gtk_dialog_set_default_response",
+                    "gtk_drawing_area_new",
+                    "gtk_file_chooser_dialog_new",
+                    "gtk_file_chooser_get_filename_utf8",
+                    "gtk_file_chooser_get_type",
+                    "gtk_file_chooser_set_current_folder_utf8",
+                    "gtk_file_chooser_set_do_overwrite_confirmation",
+                    "gtk_frame_get_type",
+                    "gtk_frame_new",
+                    "gtk_frame_set_label_widget",
+                    "gtk_frame_set_shadow_type",
+                    "gtk_icon_factory_add",
+                    "gtk_icon_factory_add_default",
+                    "gtk_icon_factory_new",
+                    "gtk_icon_set_add_source",
+                    "gtk_icon_set_new",
+                    "gtk_icon_set_unref",
+                    "gtk_icon_source_free",
+                    "gtk_icon_source_new",
+                    "gtk_icon_source_set_pixbuf",
+                    "gtk_icon_source_set_size",
+                    "gtk_icon_source_set_size_wildcarded",
+                    "gtk_image_new_from_stock",
+                    "gtk_label_get_type",
+                    "gtk_label_new",
+                    "gtk_label_new_with_mnemonic",
+                    "gtk_label_set_mnemonic_widget",
+                    "gtk_misc_get_type",
+                    "gtk_misc_set_alignment",
+                    "gtk_notebook_append_page",
+                    "gtk_notebook_get_type",
+                    "gtk_notebook_new",
+                    "gtk_size_group_add_widget",
+                    "gtk_size_group_new",
+                    "gtk_spin_button_get_type",
+                    "gtk_spin_button_get_value",
+                    "gtk_spin_button_set_value",
+                    "gtk_stock_add_static",
+                    "gtk_table_attach",
+                    "gtk_table_attach_defaults",
+                    "gtk_table_get_type",
+                    "gtk_table_new",
+                    "gtk_table_set_col_spacing",
+                    "gtk_table_set_col_spacings",
+                    "gtk_table_set_row_spacing",
+                    "gtk_table_set_row_spacings",
+                    "gtk_toggle_button_get_active",
+                    "gtk_toggle_button_get_type",
+                    "gtk_toggle_button_set_active",
+                    "gtk_widget_destroy",
+                    "gtk_widget_destroyed",
+                    "gtk_widget_get_display",
+                    "gtk_widget_get_type",
+                    "gtk_widget_get_window",
+                    "gtk_widget_queue_draw",
+                    "gtk_widget_realize",
+                    "gtk_widget_set_events",
+                    "gtk_widget_set_sensitive",
+                    "gtk_widget_set_size_request",
+                    "gtk_widget_show",
+                    "gtk_window_get_type",
+                    "gtk_window_present"
+                ]
+            },
+            {
+                "DLL": "libintl-8.dll",
+                "Functions": [
+                    "libintl_bind_textdomain_codeset",
+                    "libintl_bindtextdomain",
+                    "libintl_fprintf",
+                    "libintl_gettext",
+                    "libintl_snprintf",
+                    "libintl_textdomain"
+                ]
+            }
+        ],
+        "Label": "benign"
+    },
+    {
+        "FileSize": 26112,
+        "SHA256": "0524d1cc0e49105631e29f5e13f5dd2d1eb580899297b29cf67aa9644da62e20",
+        "Machine": 34404,
+        "NumberOfSections": 9,
+        "TimeDateStamp": 16900,
+        "PointerToSymbolTable": 0,
+        "Characteristics": 559,
+        "ImageBase": 4194304,
+        "SizeOfImage": 57344,
+        "Subsystem": 3,
+        "DllCharacteristics": 0,
+        "Sections": [
+            {
+                "Name": ".text\u0000\u0000\u0000",
+                "VirtualAddress": 4096,
+                "Misc_VirtualSize": 12992,
+                "SizeOfRawData": 13312,
+                "PointerToRawData": 1024
+            },
+            {
+                "Name": ".data\u0000\u0000\u0000",
+                "VirtualAddress": 20480,
+                "Misc_VirtualSize": 192,
+                "SizeOfRawData": 512,
+                "PointerToRawData": 14336
+            },
+            {
+                "Name": ".rdata\u0000\u0000",
+                "VirtualAddress": 24576,
+                "Misc_VirtualSize": 4368,
+                "SizeOfRawData": 4608,
+                "PointerToRawData": 14848
+            },
+            {
+                "Name": ".pdata\u0000\u0000",
+                "VirtualAddress": 32768,
+                "Misc_VirtualSize": 672,
+                "SizeOfRawData": 1024,
+                "PointerToRawData": 19456
+            },
+            {
+                "Name": ".xdata\u0000\u0000",
+                "VirtualAddress": 36864,
+                "Misc_VirtualSize": 652,
+                "SizeOfRawData": 1024,
+                "PointerToRawData": 20480
+            },
+            {
+                "Name": ".bss\u0000\u0000\u0000\u0000",
+                "VirtualAddress": 40960,
+                "Misc_VirtualSize": 2652,
+                "SizeOfRawData": 0,
+                "PointerToRawData": 0
+            },
+            {
+                "Name": ".idata\u0000\u0000",
+                "VirtualAddress": 45056,
+                "Misc_VirtualSize": 3512,
+                "SizeOfRawData": 3584,
+                "PointerToRawData": 21504
+            },
+            {
+                "Name": ".CRT\u0000\u0000\u0000\u0000",
+                "VirtualAddress": 49152,
+                "Misc_VirtualSize": 104,
+                "SizeOfRawData": 512,
+                "PointerToRawData": 25088
+            },
+            {
+                "Name": ".tls\u0000\u0000\u0000\u0000",
+                "VirtualAddress": 53248,
+                "Misc_VirtualSize": 104,
+                "SizeOfRawData": 512,
+                "PointerToRawData": 25600
+            }
+        ],
+        "Imports": [
+            {
+                "DLL": "libfontconfig-1.dll",
+                "Functions": [
+                    "FcCacheCreateTagFile",
+                    "FcCacheNumFont",
+                    "FcCacheNumSubdir",
+                    "FcCacheSubdir",
+                    "FcConfigDestroy",
+                    "FcConfigEnableHome",
+                    "FcConfigGetCacheDirs",
+                    "FcConfigGetConfigDirs",
+                    "FcConfigGetCurrent",
+                    "FcConfigGetSysRoot",
+                    "FcConfigSetCurrent",
+                    "FcConfigSetSysRoot",
+                    "FcDirCacheClean",
+                    "FcDirCacheLoad",
+                    "FcDirCacheRead",
+                    "FcDirCacheUnlink",
+                    "FcDirCacheUnload",
+                    "FcDirCacheValid",
+                    "FcFini",
+                    "FcInitLoadConfig",
+                    "FcStrCopy",
+                    "FcStrFree",
+                    "FcStrListCreate",
+                    "FcStrListDone",
+                    "FcStrListNext",
+                    "FcStrSetAdd",
+                    "FcStrSetAddFilename",
+                    "FcStrSetCreate",
+                    "FcStrSetDestroy",
+                    "FcStrSetMember"
+                ]
+            },
+            {
+                "DLL": "KERNEL32.dll",
+                "Functions": [
+                    "DeleteCriticalSection",
+                    "EnterCriticalSection",
+                    "GetCurrentProcess",
+                    "GetCurrentProcessId",
+                    "GetCurrentThreadId",
+                    "GetLastError",
+                    "GetStartupInfoA",
+                    "GetSystemTimeAsFileTime",
+                    "GetTickCount",
+                    "InitializeCriticalSection",
+                    "LeaveCriticalSection",
+                    "QueryPerformanceCounter",
+                    "RtlAddFunctionTable",
+                    "RtlCaptureContext",
+                    "RtlLookupFunctionEntry",
+                    "RtlVirtualUnwind",
+                    "SetUnhandledExceptionFilter",
+                    "Sleep",
+                    "TerminateProcess",
+                    "TlsGetValue",
+                    "UnhandledExceptionFilter",
+                    "VirtualProtect",
+                    "VirtualQuery"
+                ]
+            },
+            {
+                "DLL": "msvcrt.dll",
+                "Functions": [
+                    "__C_specific_handler",
+                    "__argv",
+                    "__dllonexit",
+                    "__getmainargs",
+                    "__initenv",
+                    "__iob_func",
+                    "__lconv_init",
+                    "__set_app_type",
+                    "__setusermatherr",
+                    "_acmdln",
+                    "_amsg_exit",
+                    "_cexit",
+                    "_errno",
+                    "_fmode",
+                    "_initterm",
+                    "_lock",
+                    "_onexit",
+                    "_unlock",
+                    "abort",
+                    "calloc",
+                    "exit",
+                    "fflush",
+                    "fprintf",
+                    "fputc",
+                    "free",
+                    "fwrite",
+                    "getenv",
+                    "malloc",
+                    "memcpy",
+                    "perror",
+                    "printf",
+                    "puts",
+                    "signal",
+                    "strchr",
+                    "strlen",
+                    "strncmp",
+                    "vfprintf",
+                    "_stat64"
+                ]
+            }
+        ],
+        "Label": "benign"
+    },
+    {
+        "Error": "Invalid PE file",
+        "Label": "benign"
+    },
+    {
+        "FileSize": 54784,
+        "SHA256": "05bff93d5b773dd409d8677c4601d76a774a8ecaf6f96e8a6a06a40daee4053c",
+        "Streams": [
+            [
+                "\u0005DocumentSummaryInformation"
+            ],
+            [
+                "\u0005SummaryInformation"
+            ],
+            [
+                "MsoDataStore",
+                "J\u00cfC\u00c5\u00c8P\u00d9\u00d7\u00c2\u00d4S\u00c1\u00d34Y\u00c9Z\u00d0\u00cbUJA==",
+                "Item"
+            ],
+            [
+                "MsoDataStore",
+                "J\u00cfC\u00c5\u00c8P\u00d9\u00d7\u00c2\u00d4S\u00c1\u00d34Y\u00c9Z\u00d0\u00cbUJA==",
+                "Properties"
+            ],
+            [
+                "MsoDataStore",
+                "\u00d8\u00d7\u00d0\u00c5N\u00cc\u00c2\u00ceLU\u00d2\u00dcZ\u00c73\u00da3AB\u00c0\u00d4\u00c0==",
+                "Item"
+            ],
+            [
+                "MsoDataStore",
+                "\u00d8\u00d7\u00d0\u00c5N\u00cc\u00c2\u00ceLU\u00d2\u00dcZ\u00c73\u00da3AB\u00c0\u00d4\u00c0==",
+                "Properties"
+            ],
+            [
+                "Workbook"
+            ]
+        ],
+        "Stream Content": 

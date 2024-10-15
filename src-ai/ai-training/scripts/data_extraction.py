@@ -6,8 +6,8 @@ import json
 import csv
 
 # Define directories PLEASE CHANGE TO YOUR OWN DIRECTORY (FOR TESTING PURPOSES ONLY)
-# BENIGN_DIR = '/home/pengu/NTRL/src-ai/ai-training/data/benign'
-MALICIOUS_DIR = 'C:/Users/26dwi/Downloads/ENTRYL TEST'
+BENIGN_DIR = 'C:/Users/26dwi/ENTRYL/src-ai/ai-training/data/benign'
+MALICIOUS_DIR = 'C:/Users/26dwi/ENTRYL/src-ai/ai-training/data/malware'
 OUTPUT_DIR = 'C:/Users/26dwi/ENTRYL/src-ai/ai-training/extracted'
 
 def hash_file(file_path):
@@ -111,7 +111,7 @@ def process_directory(directory, label):
             # Check file extension to determine the type
             if file.lower().endswith(('.exe', '.dll', '.sys', '.bin')):
                 features = extract_pe_features(file_path)
-            elif file.lower().endswith(('.xls', '.xlsx', '.doc', '.docx', '.ppt', '.pptx', '.vsd')):
+            elif file.lower().endswith(('.xls', '.xlsx', '.doc', '.docx', '.ppt', '.pptx', '.vsd', "ole")):
                 features = extract_ole_features(file_path)
             else:
                 print(f"Unsupported file type: {file_path}")
@@ -150,13 +150,13 @@ def save_to_csv(data, filename):
 if __name__ == '__main__':
     # Extract features from benign and malicious files
     print("Extracting features from benign files...")
-    # benign_data = process_directory(BENIGN_DIR, label='benign')
+    benign_data = process_directory(BENIGN_DIR, label='benign')
     
     print("Extracting features from malicious files...")
     malicious_data = process_directory(MALICIOUS_DIR, label='malicious')
     
     # Combine both datasets
-    all_data = malicious_data
+    all_data = benign_data + malicious_data
     
     # Save the extracted data
     print("Saving data to JSON and CSV...")
