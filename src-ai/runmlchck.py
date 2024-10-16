@@ -6,7 +6,6 @@ import olefile
 import csv
 import traceback
 import numpy as np
-from tkinter import filedialog, Tk, messagebox, scrolledtext
 import h2o  # Import H2O library
 
 # Initialize H2O Cluster
@@ -42,19 +41,6 @@ clear_temp_directory()
 # Paths for extracted data and results within the temp directory
 EXTRACTED_DATA_PATH = os.path.join(TEMP_DIR, 'extracted_data.json')
 RESULTS_PATH = os.path.join(TEMP_DIR, 'results.json')
-
-def select_directory():
-    """Prompt the user to select a directory."""
-    root = Tk()
-    root.withdraw()  # Hide the root window
-    selected_directory = filedialog.askdirectory(title="Select a Directory to Scan")
-    root.destroy()
-    
-    if not selected_directory:
-        print("No directory selected, exiting.")
-        exit(1)
-    
-    return selected_directory
 
 def hash_file(file_path):
     """Calculates the SHA256 hash of a file."""
@@ -171,36 +157,6 @@ def process_directory(directory):
 
     return extracted_data
 
-def save_to_json(data):
-    """Save extracted data to a JSON file."""
-    try:
-        with open(EXTRACTED_DATA_PATH, 'w') as f:
-            json.dump(data, f, indent=4)
-        print(f"Extracted data saved to {EXTRACTED_DATA_PATH}")
-    except Exception as e:
-        print(f"Error saving data to JSON: {str(e)}")
-        traceback.print_exc()
-
-def save_to_csv(data):
-    """Save extracted data to a CSV file."""
-    try:
-        all_fieldnames = set()
-        for item in data:
-            all_fieldnames.update(item.keys())
-
-        all_fieldnames = list(all_fieldnames)
-
-        with open(os.path.join(TEMP_DIR, 'extracted_data.csv'), 'w', newline='') as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames=all_fieldnames)
-            writer.writeheader()
-            for row in data:
-                filled_row = {field: row.get(field, 'N/A') for field in all_fieldnames}
-                writer.writerow(filled_row)
-        print(f"Extracted data saved to {os.path.join(TEMP_DIR, 'extracted_data.csv')}")
-    except Exception as e:
-        print(f"Error saving data to CSV: {str(e)}")
-        traceback.print_exc()
-
 def flatten_features(item):
     """Flatten nested features in the extracted data."""
     flattened = {}
@@ -236,9 +192,8 @@ def run_extraction_script(directory):
         
         # Save the extracted data
         if extracted_data:
-            print("Saving extracted data to JSON and CSV...")
+            print("Saving extracted data to JSON...")
             save_to_json(extracted_data)
-            save_to_csv(extracted_data)
             print("Feature extraction completed successfully.")
         else:
             print("No relevant files found for extraction.")
@@ -253,7 +208,7 @@ def load_h2o_model(model_path):
         print("H2O model loaded successfully.")
         return model
     except Exception as e:
-        show_error_popup(f"Error loading H2O model: {str(e)}")
+        print(f"Error loading H2O model: {str(e)}")
         exit(1)
 
 def run_model_on_extracted_data(model):
@@ -263,111 +218,52 @@ def run_model_on_extracted_data(model):
             extracted_data = json.load(data_file)
 
         # Flatten the extracted data into feature vectors
-        feature_vectors = [flatten_features(item) for item in extracted_data]
-
-        # Convert feature vectors into an H2OFrame
-        df_h2o = h2o.H2OFrame(feature_vectors)
-
-        # Define expected feature columns based on your training data
-        expected_columns = [
-            'FileSize', 'SHA256', 'Machine', 'NumberOfSections', 
-            'TimeDateStamp', 'PointerToSymbolTable', 'Characteristics', 
-            'ImageBase', 'SizeOfImage', 'Subsystem', 
-            'DllCharacteristics', 'NumberOfSections', 'TotalSectionSize',
-            'NumberOfDLLs', 'TotalImportedFunctions'  # Adjust based on your training data
-        ]
-
-        # Check for missing columns and add them with default values
-        missing_cols = set(expected_columns) - set(df_h2o.columns)
-        if missing_cols:
-            print(f"Missing columns from input data: {missing_cols}")
-            for col in missing_cols:
-                df_h2o[col] = 0  # Add missing columns with default values
-
-        # Ensure the columns match the expected structure
-        df_h2o = df_h2o[expected_columns]  # Reorder to match expected columns
-        print("H2O Frame columns:", df_h2o.columns)
-
-        # Make predictions using the H2O model
-        predictions = model.predict(df_h2o)
-
-        # Store predictions and check for malicious files
+        flattened_data = [flatten_features(item) for item in extracted_data]
+        
+        # Convert to H2OFrame for prediction
+        h2o_frame = h2o.H2OFrame(flattened_data)
+        predictions = model.predict(h2o_frame)
+        
+        # Save predictions to a JSON file
         results = []
-        any_malicious = False
-        for i, item in enumerate(extracted_data):
-            item['prediction'] = predictions[i, 0]  # Get the predicted class
-            results.append(item)
+        for idx, item in enumerate(extracted_data):
+            prediction = {
+                'SHA256': item['SHA256'],
+                'Prediction': predictions[idx, 0],
+                'Maliciousness': "Malicious" if predictions[idx, 0] > 0.5 else "Benign"  # Assuming binary classification
+            }
+            results.append(prediction)
 
-            # Print predictions four times
-            print(f"Prediction for {item['SHA256']}: {item['prediction']} (1)")
-
-            # Check if the prediction indicates malicious
-            if item['prediction'] == "malicious":  # Adjust according to your actual prediction values
-                any_malicious = True
-
-        # Final result
-        if any_malicious:
-            print("Some files were found to be malicious.")
-        else:
-            print("No malicious files found. All files are clean.")
-
-        return results
+        # Write results to file
+        with open(RESULTS_PATH, 'w') as result_file:
+            json.dump(results, result_file, indent=2)
+        
+        print("Predictions have been written to the results file.")
+        
     except Exception as e:
-        show_error_popup(f"Error running model on extracted data: {str(e)}")
+        print(f"Error during model prediction: {str(e)}")
         traceback.print_exc()
 
-def save_results(results):
-    """Save the results of the predictions to a global location."""
-    try:
-        with open(RESULTS_PATH, 'w') as output_file:
-            json.dump(results, output_file, indent=4)
-        print(f"Results saved to: {RESULTS_PATH}")
-    except Exception as e:
-        show_error_popup(f"Error saving results: {str(e)}")
-        exit(1)
-
-def show_error_popup(error_message):
-    """Show a popup window displaying the error message."""
-    root = Tk()
-    root.title("Error")
-    root.geometry("600x400")
-    
-    # Create a scrolled text box to display the error message
-    text_box = scrolledtext.ScrolledText(root, wrap="word")
-    text_box.pack(expand=True, fill="both")
-    text_box.insert("1.0", error_message)
-
-    # Create an "OK" button to close the window
-    ok_button = messagebox.showinfo("Error", error_message)
-    root.mainloop()
+def save_to_json(data):
+    """Save extracted data to a JSON file."""
+    with open(EXTRACTED_DATA_PATH, 'w') as json_file:
+        json.dump(data, json_file, indent=2)
 
 def main():
-    """Main function to run the complete checking process."""
+    """Main function to orchestrate feature extraction and model prediction."""
     try:
-        # Step 1: Prompt for directory
-        selected_directory = select_directory()
-        print(f"Selected directory: {selected_directory}")
-
-        # Step 2: Run extraction script
-        print("Running the extraction script...")
-        run_extraction_script(selected_directory)
-
-        # Step 3: Load the pre-trained H2O model
-        model_path = "C:/Users/26dwi/ENTRYL/src-ai/ai-training/models/StackedEnsemble_BestOfFamily_1_AutoML_1_20241015_203626"  # Update this to your model's path
-        print("Loading the machine learning model...")
+        # Specify the directory to process
+        directory_to_process = os.getenv('DIRECTORY_TO_PROCESS', './sample_files')
+        run_extraction_script(directory_to_process)
+        
+        # Load the H2O model
+        model_path = os.getenv('MODEL_PATH', './model')
         model = load_h2o_model(model_path)
-
-        # Step 4: Run the model on the extracted data
-        print("Running the model on the extracted data...")
-        results = run_model_on_extracted_data(model)
-
-        # Step 5: Save the results
-        print("Saving the results...")
-        save_results(results)
-
-        print("Process completed.")
+        
+        # Run model on extracted data
+        run_model_on_extracted_data(model)
     except Exception as e:
-        show_error_popup(f"Error in main process: {str(e)}")
+        print(f"An unexpected error occurred: {str(e)}")
         traceback.print_exc()
 
 if __name__ == "__main__":

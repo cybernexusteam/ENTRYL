@@ -30,14 +30,12 @@ import {
   AlertDialogDescription,
   AlertDialogAction,
   AlertDialogCancel,
-  AlertDialogTrigger,
   AlertDialogContent,
   AlertDialogHeader,
   AlertDialogFooter,
 } from "@/components/ui/alert"; // Adjust this import based on your project structure
-import { Area, Legend, Line, LineChart, ResponsiveContainer, Tooltip, YAxis } from "recharts";
+import { Area, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Process } from "tauri-plugin-system-info-api";
-import { set } from "react-hook-form";
 
 interface SystemInfo {
   total_memory: number;
@@ -156,7 +154,7 @@ const Dashboard = () => {
     setShowContent(false);
     setTimeout(() => {
       router.push("/page");
-    },1000);
+    }, 1000);
   };
 
   // Function to handle scan button click
@@ -176,15 +174,19 @@ const Dashboard = () => {
         const parsedResults = JSON.parse(results as string);
         const maliciousFiles = parsedResults.filter((item: { status: string }) => item.status === "malicious");
 
+        // Set alert message based on scan results
         if (maliciousFiles.length > 0) {
-          setAlertMessage(`Malicious files detected:\n${maliciousFiles.map(file => file.file_name).join(", ")}`);
+          setAlertMessage(`Malicious files detected:\n${maliciousFiles.map((file: { file_name: string }) => file.file_name).join(", ")}`);
         } else {
           setAlertMessage("No malicious files found. All files are clean.");
         }
 
-        // Open the alert dialog
-        setIsAlertOpen(true);
-        setScanStatus("Scan completed.");
+        // Open the alert dialog if any malicious files are found
+        if (maliciousFiles.length > 0) {
+          setIsAlertOpen(true);
+        } else {
+          setScanStatus("Scan completed. All files are clean.");
+        }
       } catch (error) {
         console.error("Error during scan:", error);
         setScanStatus(`Error: ${error}`);
@@ -256,127 +258,52 @@ const Dashboard = () => {
             </Sidebar>
           </motion.div>
 
-          <div className="flex flex-col h-[70vh] w-full mr-10">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 3, type: "spring" }}
-              exit={{ opacity: 0, y: -20 }}
-              className="ml-14 my-auto"
-            >
-              <span className="text-text0 dark:text-white text-8xl relative top-[-90px]">
-                {" "}
-                Hi, {storedUsername ? storedUsername + "   👋" : "User"}.
-              </span>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7, duration: 3, type: "spring" }}
-              exit={{ opacity: 0, y: -20 }}
-              className="w-full flex justify-between mx-10 max-h-1/2"
-            >
-              <div className="w-full flex flex-col items-center justify-center">
-                <div className="flex w-full gap-6">
-                  <div className="flex flex-col gap-6 w-[500px]">
-                    <BentoGrid className="w-[500px]">
-                      {items.map((item, i) => (
-                        <BentoGridItem
-                          key={i}
-                          title={item.title}
-                          description={item.description}
-                          icon={item.icon}
-                          className={item.className}
-                        />
-                      ))}
-                    </BentoGrid>
-                    <div className="w-full h-full p-5 bg-opacity-20 bg-surface0 border-2 border-opacity-20 border-text0 rounded-xl">
-                      <motion.h1 className="text-text0 font-extrabold text-4xl">
-                        ANTIMALWARE CLEANING
-                      </motion.h1>
-                      <Button onClick={handleScanClick} className="mt-4">
-                        Start Scan
-                      </Button>
-                      {scanStatus && <p className="mt-2 text-text0">{scanStatus}</p>}
-                    </div>
-                  </div>
+          <div className="flex flex-col h-[70vh] w-full">
+            <div className="bg-white rounded-lg shadow-md p-4 flex flex-col space-y-4">
+              <h2 className="text-lg font-bold">Dashboard</h2>
+              <BentoGrid>
+                {items.map((item, index) => (
+                  <BentoGridItem key={index} {...item} />
+                ))}
+              </BentoGrid>
+              <Button
+                onClick={handleScanClick}
+                className="bg-green-500 hover:bg-green-700 text-white"
+              >
+                Scan for Malware
+              </Button>
+              <div>{scanStatus}</div>
+            </div>
 
-                  <div className="max-w-1/2 grid md:grid-cols-1 h-[70vh] gap-6">
-                    <div className="p-5 bg-opacity-20 bg-surface0 border-2 border-opacity-20 border-text0 rounded-xl">
-                      <motion.h1 className="text-text0 font-bold my-3">
-                        CPU Usage:
-                        <span className="text-text0 dark:text-white font-normal">
-                          {" "}
-                          {systemInfo
-                            ? `${systemInfo.cpu_usage.toFixed(2)}%`
-                            : "Loading..."}
-                        </span>
-                      </motion.h1>
-                      <ChartContainer
-                        config={{ cpu: { label: "CPU Usage" } }}
-                        className="h-[25vh]"
-                      >
-                        <ResponsiveContainer width="100%" height="100%">
-                          <LineChart data={cpuData}>
-                            <YAxis domain={[0, 100]} />
-                            <Tooltip content={<ChartTooltipContent />} />
-                            <Legend content={<ChartLegendContent />} />
-                            <Line
-                              type="monotone"
-                              dataKey="usage"
-                              stroke="#8884d8"
-                              dot={false}
-                            />
-                            <Area
-                              name="CPU Usage"
-                              type="monotone"
-                              dataKey="usage"
-                              stroke="#8884d8"
-                              fillOpacity={1}
-                              fill="url(#CPU Usage)"
-                            />
-                          </LineChart>
-                        </ResponsiveContainer>
-                      </ChartContainer>
-                    </div>
-                    <div className="w-full h-full p-5 bg-opacity-20 bg-surface0 border-2 border-opacity-20 border-text0 rounded-xl">
-                      <motion.h1 className="text-text0 font-bold my-3">
-                        Memory Usage:
-                        <span className="text-text0 dark:text-white font-normal">
-                          {systemInfo
-                            ? `${(
-                                (systemInfo.used_memory /
-                                  systemInfo.total_memory) *
-                                100
-                              ).toFixed(2)}%`
-                            : "Loading..."}
-                        </span>
-                      </motion.h1>
-                      <ChartContainer
-                        config={{ memory: { label: "Memory Usage" } }} className="h-[25vh]"
-                      >
-                        <ResponsiveContainer width="100%" height="100%">
-                          <LineChart data={memoryData}>
-                            <YAxis domain={[0, 100]} />
-                            <Tooltip content={<ChartTooltipContent />} />
-                            <Legend content={<ChartLegendContent />} />
-                            <Line
-                              type="monotone"
-                              dataKey="usage"
-                              stroke="#82ca9d"
-                              dot={false}
-                            />
-                          </LineChart>
-                        </ResponsiveContainer>
-                      </ChartContainer>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
+            <div className="h-[70%] w-full flex flex-col md:flex-row">
+              <ChartContainer className="md:w-1/2 h-full">
+                <ResponsiveContainer>
+                  <LineChart data={cpuData}>
+                    <XAxis dataKey="time" />
+                    <YAxis domain={[0, 100]} />
+                    <Tooltip content={<ChartTooltipContent />} />
+                    <Legend content={<ChartLegendContent />} />
+                    <Line type="monotone" dataKey="usage" stroke="#8884d8" />
+                    <Area type="monotone" dataKey="usage" fill="#8884d8" />
+                  </LineChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+              <ChartContainer className="md:w-1/2 h-full">
+                <ResponsiveContainer>
+                  <LineChart data={memoryData}>
+                    <XAxis dataKey="time" />
+                    <YAxis domain={[0, 100]} />
+                    <Tooltip content={<ChartTooltipContent />} />
+                    <Legend content={<ChartLegendContent />} />
+                    <Line type="monotone" dataKey="usage" stroke="#82ca9d" />
+                    <Area type="monotone" dataKey="usage" fill="#82ca9d" />
+                  </LineChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            </div>
           </div>
 
-          {/* Alert Dialog for Malicious Files */}
+          {/* Alert Dialog for Malware Detection */}
           <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
             <AlertDialogContent>
               <AlertDialogHeader>
@@ -386,8 +313,9 @@ const Dashboard = () => {
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel onClick={() => setIsAlertOpen(false)}>Close</AlertDialogCancel>
-                <AlertDialogAction onClick={() => setIsAlertOpen(false)}>Okay</AlertDialogAction>
+                <AlertDialogCancel onClick={() => setIsAlertOpen(false)}>
+                  Close
+                </AlertDialogCancel>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
@@ -396,36 +324,5 @@ const Dashboard = () => {
     </AnimatePresence>
   );
 };
-
-const links = [
-  {
-    label: "Dashboard",
-    href: "#",
-    icon: (
-      <IconBrandTabler className="text-text0 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-    ),
-  },
-  {
-    label: "Profile",
-    href: "#",
-    icon: (
-      <IconUserBolt className="text-text0 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-    ),
-  },
-  {
-    label: "Settings",
-    href: "#",
-    icon: (
-      <IconSettings className="text-text0 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-    ),
-  },
-  {
-    label: "Logout",
-    href: "/",
-    icon: (
-      <IconArrowLeft className="text-text0 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-    ),
-  },
-];
 
 export default Dashboard;
