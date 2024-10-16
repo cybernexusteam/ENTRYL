@@ -20,6 +20,7 @@ import { AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+
 const formSchema = z.object({
   username: z.string().min(2).max(50),
 });
@@ -59,6 +60,7 @@ const Name = () => {
         <motion.div 
           className='bg-black text-text0 w-full h-screen'
         > 
+        
           <div className='flex flex-col justify-center items-center h-full'>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(handleSubmit)} className="flex justify-between items-center">

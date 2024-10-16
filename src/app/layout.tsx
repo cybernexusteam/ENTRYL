@@ -2,24 +2,32 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { AnimatePresence } from "framer-motion";
-
+import { ClerkProvider } from "@clerk/nextjs";
+import { dark, neobrutalism } from "@clerk/themes";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "ENTRYL",
   description: "Cybersecurity app",
 };
-
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    
+      <html lang="en">
+        <body className={inter.className}>
+        <ClerkProvider
+         appearance={{
+          baseTheme: [dark, neobrutalism],
+        }}
+        >
           {children}
-      </body>
-    </html>
+        </ClerkProvider>
+        </body>
+      </html>
+    
   );
 }
