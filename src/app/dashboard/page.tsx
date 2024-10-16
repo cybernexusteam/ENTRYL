@@ -37,6 +37,13 @@ import {
 } from "@/components/ui/alert"; // Adjust this import based on your project structure
 import { Area, Legend, Line, LineChart, ResponsiveContainer, Tooltip, YAxis } from "recharts";
 import { Process } from "tauri-plugin-system-info-api";
+import { set } from "react-hook-form";
+
+interface SystemInfo {
+  total_memory: number;
+  used_memory: number;
+  cpu_usage: number;
+}
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -144,6 +151,14 @@ const Dashboard = () => {
     },
   ];
 
+  // Function to handle button click
+  const handleButtonClick = () => {
+    setShowContent(false);
+    setTimeout(() => {
+      router.push("/page");
+    },1000);
+  };
+
   // Function to handle scan button click
   const handleScanClick = async () => {
     const selectedDirectory = await open({
@@ -212,7 +227,7 @@ const Dashboard = () => {
                     {links.map((link, idx) => (
                       <Button
                         key={idx}
-                        onClick={() => handleButtonClick}
+                        onClick={handleButtonClick}
                         className="bg-surface1"
                       >
                         <SidebarLink link={link} />
