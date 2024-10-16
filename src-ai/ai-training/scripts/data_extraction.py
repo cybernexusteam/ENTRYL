@@ -4,6 +4,7 @@ import pefile
 import olefile
 import json
 import csv
+import struct
 
 # Define directories (PLEASE CHANGE TO YOUR OWN DIRECTORY)
 BENIGN_DIR = 'C:/Users/26dwi/ENTRYL/src-ai/ai-training/data/benign'
@@ -18,10 +19,38 @@ def hash_file(file_path):
             sha256_hash.update(byte_block)
     return sha256_hash.hexdigest()
 
+def check_file_type(file_path):
+    """Check if the file is NE, PE, or OLE by examining the header."""
+    with open(file_path, "rb") as f:
+        # Read the first 64 bytes to check for MZ, PE, NE, or OLE signature
+        mz_header = f.read(64)
+
+        # Check if the file starts with "MZ"
+        if mz_header[:2] == b'MZ':
+            # Offset to the NE/PE header is located at byte 0x3C (60 in decimal)
+            ne_pe_offset = struct.unpack_from('<I', mz_header, 0x3C)[0]
+            f.seek(ne_pe_offset)
+            ne_pe_header = f.read(2)
+
+            if ne_pe_header == b'PE':
+                return 'PE'
+            elif ne_pe_header == b'NE':
+                return 'NE'
+            else:
+                return 'UNKNOWN'
+        else:
+            return 'UNKNOWN'
+
+def is_ole_file(file_path):
+    """Check if a file is a valid OLE2 structured storage file."""
+    try:
+        return olefile.isOleFile(file_path)
+    except Exception as e:
+        return False
+
 def extract_pe_features(file_path):
     """Extract static features from a PE file."""
     features = {}
-    
     try:
         pe = pefile.PE(file_path)
         
@@ -75,9 +104,39 @@ def extract_pe_features(file_path):
     
     return features
 
+def extract_ne_features(file_path):
+    """Extract basic features from an NE (New Executable) file."""
+    features = {}
+    try:
+        with open(file_path, "rb") as f:
+            # Basic file information
+            features['FileSize'] = os.path.getsize(file_path)
+            features['SHA256'] = hash_file(file_path)
+            
+            # Read NE header (at offset 0x3C + 2 bytes for 'NE' signature)
+            f.seek(0x3C)
+            ne_header_offset = struct.unpack('<I', f.read(4))[0]
+            f.seek(ne_header_offset + 2)  # Skip past 'NE' signature
+
+            # Read some key fields from NE header
+            features['LinkerVersion'] = struct.unpack('<B', f.read(1))[0]
+            features['LinkerRevision'] = struct.unpack('<B', f.read(1))[0]
+            features['EntryTableOffset'] = struct.unpack('<H', f.read(2))[0]
+            features['EntryTableLength'] = struct.unpack('<H', f.read(2))[0]
+            features['FileFlags'] = struct.unpack('<H', f.read(2))[0]
+
+    except Exception as e:
+        features['Error'] = str(e)
+    
+    return features
+
 def extract_ole_features(file_path):
     """Extract static features from an OLE file."""
     features = {}
+    
+    if not is_ole_file(file_path):
+        features['Error'] = 'Not a valid OLE file'
+        return features
     
     try:
         ole = olefile.OleFileIO(file_path)
@@ -103,13 +162,15 @@ def extract_ole_features(file_path):
         
         features['Metadata'] = metadata
 
-        # Extract macros if present
-        if ole.exists('Macros'):
+        # Extract macros if the 'Macros' stream is present
+        if ole.exists('Macros'):  # Check if 'Macros' stream exists
             try:
                 macro_stream = ole.openstream('Macros')
                 features['Macros'] = macro_stream.read().decode('utf-8', errors='replace')
             except Exception as e:
                 features['Macros'] = f"Error reading macros: {str(e)}"
+        else:
+            features['Macros'] = "No Macros stream found."
         
     except Exception as e:
         features['Error'] = str(e)
@@ -125,10 +186,13 @@ def process_directory(directory, label):
             file_path = os.path.join(root, file)
             print(f"Processing file: {file_path}")
             
-            # Check file extension to determine the type
-            if file.lower().endswith(('.exe', '.dll', '.sys', '.bin')):
+            file_type = check_file_type(file_path)
+            
+            if file_type == 'PE':
                 features = extract_pe_features(file_path)
-            elif file.lower().endswith(('.xls', '.xlsx', '.doc', '.docx', '.ppt', '.pptx', '.vsd', '.ole')):
+            elif file_type == 'NE':
+                features = extract_ne_features(file_path)
+            elif is_ole_file(file_path):
                 features = extract_ole_features(file_path)
             else:
                 print(f"Unsupported file type: {file_path}")
