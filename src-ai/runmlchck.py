@@ -353,7 +353,7 @@ def main():
         run_extraction_script(selected_directory)
 
         # Step 3: Load the pre-trained H2O model
-        model_path = "C:/Users/26dwi/ENTRYL/src-ai/ai-training/models/StackedEnsemble_AllModels_1_AutoML_1_20241014_193144"  # Update this to your model's path
+        model_path = "C:/Users/26dwi/ENTRYL/src-ai/ai-training/models/StackedEnsemble_BestOfFamily_1_AutoML_1_20241015_203626"  # Update this to your model's path
         print("Loading the machine learning model...")
         model = load_h2o_model(model_path)
 
