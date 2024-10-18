@@ -16,6 +16,7 @@ import {
   IconCpu,
   IconDeviceDesktop,
   IconSettings,
+  IconUser,
   IconUserBolt,
 } from "@tabler/icons-react";
 import { invoke } from "@tauri-apps/api/tauri";
@@ -35,8 +36,19 @@ import {
   AlertDialogHeader,
   AlertDialogFooter,
 } from "@/components/ui/alert"; // Adjust this import based on your project structure
-import { Area, Legend, Line, LineChart, ResponsiveContainer, Tooltip, YAxis } from "recharts";
+import {
+  Area,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  YAxis,
+} from "recharts";
 import { Process } from "tauri-plugin-system-info-api";
+import { SignOutButton, UserButton } from "@clerk/clerk-react";
+import { UserProfilePage } from "../profile/page";
+import { set } from "zod";
 
 // Define the SystemInfo type
 type SystemInfo = {
@@ -50,7 +62,9 @@ const Dashboard = () => {
   const [systemInfo, setSystemInfo] = useState<SystemInfo | null>(null);
   const [processes, setProcesses] = useState<Process[]>([]);
   const [cpuData, setCpuData] = useState<{ time: string; usage: number }[]>([]);
-  const [memoryData, setMemoryData] = useState<{ time: string; usage: number }[]>([]);
+  const [memoryData, setMemoryData] = useState<
+    { time: string; usage: number }[]
+  >([]);
   const [scanStatus, setScanStatus] = useState<string | null>(null);
   const [storedUsername, setStoredUsername] = useState<string | null>(null);
   const welcome = ["Hi"];
@@ -155,7 +169,7 @@ const Dashboard = () => {
 
   // Function to handle button click
   const handleButtonClick = () => {
-    console.log("Button clicked");
+    setShowContent(false);
   };
 
   // Function to handle scan button click
@@ -173,10 +187,16 @@ const Dashboard = () => {
 
         // Process the results
         const parsedResults = JSON.parse(results as string);
-        const maliciousFiles = parsedResults.filter((item: { status: string }) => item.status === "malicious");
+        const maliciousFiles = parsedResults.filter(
+          (item: { status: string }) => item.status === "malicious"
+        );
 
         if (maliciousFiles.length > 0) {
-          setAlertMessage(`Malicious files detected:\n${maliciousFiles.map((file: { file_name: string }) => file.file_name).join(", ")}`);
+          setAlertMessage(
+            `Malicious files detected:\n${maliciousFiles
+              .map((file: { file_name: string }) => file.file_name)
+              .join(", ")}`
+          );
         } else {
           setAlertMessage("No malicious files found. All files are clean.");
         }
@@ -195,30 +215,23 @@ const Dashboard = () => {
   const links = [
     {
       label: "Dashboard",
-      href: "#",
+      href: "/dashboard",
       icon: (
-        <IconBrandTabler className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+        <IconBrandTabler className="text-neutral-200 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
       ),
     },
     {
       label: "Profile",
-      href: "#",
+      href: "../profile",
       icon: (
-        <IconUserBolt className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+        <IconUserBolt className="text-neutral-200 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
       ),
     },
     {
       label: "Settings",
       href: "#",
       icon: (
-        <IconSettings className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-      ),
-    },
-    {
-      label: "Logout",
-      href: "#",
-      icon: (
-        <IconArrowLeft className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+        <IconSettings className="text-neutral-200 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
       ),
     },
   ];
@@ -249,32 +262,43 @@ const Dashboard = () => {
                       ENTRYL
                     </motion.span>
                   </Link>
-                <div className="mt-8 flex flex-col gap-2">
-                  {links.map((link, idx) => (
-                    <Button
-                      key={idx}
-                      onClick={() => handleButtonClick}
-                      className="bg-surface1"
-                    >
-                      <SidebarLink link={link} />
-                    </Button>
-                  ))}
-                </div>
+                  <div className="mt-8 flex flex-col gap-2">
+                    {links.map((link, idx) => (
+                      <Button
+                        key={idx}
+                        onClick={() => handleButtonClick}
+                        className="bg-surface1"
+                      >
+                        <SidebarLink link={link} />
+                      </Button>
+                    ))}
+                  </div>
+
+                  <div className="mt-8 flex flex-col gap-2">
+                    <SignOutButton>
+                      <Button
+                        onClick={() => handleButtonClick}
+                        className="bg-surface1"
+                      >
+                        <SidebarLink
+                          link={{
+                            label: "Logout",
+                            href: "/",
+                            icon: (
+                              <IconArrowLeft className="text-text0 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+                            ),
+                          }}
+                        />
+                      </Button>
+                    </SignOutButton>
+                  </div>
                 </div>
                 <div>
                   <SidebarLink
                     link={{
                       label: storedUsername ? storedUsername : "User",
                       href: "#",
-                      icon: (
-                        <Image
-                          src=""
-                          className="h-7 w-7 flex-shrink-0 rounded-full border-black border-2"
-                          width={50}
-                          height={50}
-                          alt="Avatar"
-                        />
-                      ),
+                      icon: <UserButton />,
                     }}
                   />
                 </div>
@@ -323,7 +347,9 @@ const Dashboard = () => {
                       <Button onClick={handleScanClick} className="mt-4">
                         Start Scan
                       </Button>
-                      {scanStatus && <p className="mt-2 text-text0">{scanStatus}</p>}
+                      {scanStatus && (
+                        <p className="mt-2 text-text0">{scanStatus}</p>
+                      )}
                     </div>
                   </div>
 
@@ -379,7 +405,8 @@ const Dashboard = () => {
                         </span>
                       </motion.h1>
                       <ChartContainer
-                        config={{ memory: { label: "Memory Usage" } }} className="h-[25vh]"
+                        config={{ memory: { label: "Memory Usage" } }}
+                        className="h-[25vh]"
                       >
                         <ResponsiveContainer width="100%" height="100%">
                           <LineChart data={memoryData}>
@@ -407,13 +434,15 @@ const Dashboard = () => {
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>Scan Results</AlertDialogTitle>
-                <AlertDialogDescription>
-                  {alertMessage}
-                </AlertDialogDescription>
+                <AlertDialogDescription>{alertMessage}</AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel onClick={() => setIsAlertOpen(false)}>Close</AlertDialogCancel>
-                <AlertDialogAction onClick={() => setIsAlertOpen(false)}>Okay</AlertDialogAction>
+                <AlertDialogCancel onClick={() => setIsAlertOpen(false)}>
+                  Close
+                </AlertDialogCancel>
+                <AlertDialogAction onClick={() => setIsAlertOpen(false)}>
+                  Okay
+                </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
