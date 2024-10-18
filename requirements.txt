@@ -10,7 +10,7 @@ joblib==1.4.2
 kiwisolver==1.4.7
 lightgbm==4.5.0
 matplotlib==3.9.2
-numpy==2.1.2
+numpy==2.0
 olefile==0.47
 packaging==24.1
 pandas==2.2.3
