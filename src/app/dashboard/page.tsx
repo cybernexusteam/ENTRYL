@@ -52,7 +52,7 @@ const Dashboard = () => {
   const [cpuData, setCpuData] = useState<{ time: string; usage: number }[]>([]);
   const [memoryData, setMemoryData] = useState<{ time: string; usage: number }[]>([]);
   const [scanStatus, setScanStatus] = useState<string | null>(null);
-  const storedUsername = localStorage.getItem("username");
+  const [storedUsername, setStoredUsername] = useState<string | null>(null);
   const welcome = ["Hi"];
   const [showContent, setShowContent] = useState(true);
   const router = useRouter();
@@ -62,6 +62,8 @@ const Dashboard = () => {
   const [alertMessage, setAlertMessage] = useState("");
 
   useEffect(() => {
+    const username = localStorage.getItem("username");
+    setStoredUsername(username);
     const fetchSystemInfo = async () => {
       try {
         const info = await invoke<string>("get_system_info");
@@ -190,7 +192,36 @@ const Dashboard = () => {
       setScanStatus("No directory selected.");
     }
   };
-
+  const links = [
+    {
+      label: "Dashboard",
+      href: "#",
+      icon: (
+        <IconBrandTabler className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+      ),
+    },
+    {
+      label: "Profile",
+      href: "#",
+      icon: (
+        <IconUserBolt className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+      ),
+    },
+    {
+      label: "Settings",
+      href: "#",
+      icon: (
+        <IconSettings className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+      ),
+    },
+    {
+      label: "Logout",
+      href: "#",
+      icon: (
+        <IconArrowLeft className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+      ),
+    },
+  ];
   return (
     <AnimatePresence>
       {showContent && (
