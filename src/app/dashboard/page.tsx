@@ -47,7 +47,6 @@ import {
 } from "recharts";
 import { Process } from "tauri-plugin-system-info-api";
 import { SignOutButton, UserButton } from "@clerk/clerk-react";
-import { UserProfilePage } from "../profile/page";
 import { set } from "zod";
 
 // Define the SystemInfo type
@@ -68,12 +67,13 @@ const Dashboard = () => {
   const [scanStatus, setScanStatus] = useState<string | null>(null);
   const [storedUsername, setStoredUsername] = useState<string | null>(null);
   const welcome = ["Hi"];
+
   const [showContent, setShowContent] = useState(true);
   const router = useRouter();
-
   // Alert dialog states
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+
 
   useEffect(() => {
     const username = localStorage.getItem("username");
@@ -88,8 +88,9 @@ const Dashboard = () => {
       } catch (error) {
         console.error("Error fetching system info:", error);
       }
+      
     };
-
+    
     const fetchProcesses = async () => {
       try {
         const processesData = await invoke<string>("get_processes");
@@ -168,9 +169,13 @@ const Dashboard = () => {
   ];
 
   // Function to handle button click
-  const handleButtonClick = () => {
-    setShowContent(false);
+  const handleButtonClick = (href: string) => {
+    setShowContent(false); // Trigger exit animation on button click
+    setTimeout(() => {
+      router.push(href); // Perform redirection after animation
+    }, 2000); // Set a timeout to match the animation duration
   };
+
 
   // Function to handle scan button click
   const handleScanClick = async () => {
@@ -240,10 +245,6 @@ const Dashboard = () => {
       {showContent && (
         <motion.div className="bg-black flex items-center w-full h-screen overflow-hidden">
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 1, delay: 1 }}
             className="h-screen"
           >
             <Sidebar open={isSidebarOpen} setOpen={setIsSidebarOpen}>
@@ -266,7 +267,7 @@ const Dashboard = () => {
                     {links.map((link, idx) => (
                       <Button
                         key={idx}
-                        onClick={() => handleButtonClick}
+                        onClick={() => handleButtonClick(link.href)}
                         className="bg-surface1"
                       >
                         <SidebarLink link={link} />
@@ -277,7 +278,7 @@ const Dashboard = () => {
                   <div className="mt-8 flex flex-col gap-2">
                     <SignOutButton>
                       <Button
-                        onClick={() => handleButtonClick}
+                        onClick={() => handleButtonClick("/")}
                         className="bg-surface1"
                       >
                         <SidebarLink
@@ -311,7 +312,7 @@ const Dashboard = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 3, type: "spring" }}
-              exit={{ opacity: 0, y: -20 }}
+              exit={{ opacity: 0, y: -20}}
               className="ml-14 my-auto"
             >
               <span className="text-text0 dark:text-white text-8xl relative top-[-90px]">
