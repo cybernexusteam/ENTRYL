@@ -175,14 +175,7 @@ def extract_ole_features(file_path):
         
         features['Metadata'] = metadata
 
-        if ole.exists('Macros'):
-            try:
-                macro_stream = ole.openstream('Macros')
-                features['Macros'] = macro_stream.read().decode('utf-8', errors='replace')
-            except Exception as e:
-                features['Macros'] = f"Error reading macros: {str(e)}"
-        else:
-            features['Macros'] = "No Macros stream found."
+        # Removed the macro extraction code as per request
         
         features['TotalEntropy'] = calculate_entropy(open(file_path, 'rb').read())
         
@@ -239,24 +232,23 @@ def save_to_csv(data, filename):
         with open(os.path.join(OUTPUT_DIR, filename), 'w', newline='', encoding='utf-8') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=all_fieldnames)
             writer.writeheader()
-            for row in data:
-                filled_row = {field: row.get(field, 'N/A') for field in all_fieldnames}
-                writer.writerow(filled_row)
+            writer.writerows(data)
     except Exception as e:
         print(f"Error saving to CSV file {filename}: {e}")
 
-# Main execution
-if __name__ == '__main__':
-    print("Extracting features from benign files...")
-    benign_data = process_directory(BENIGN_DIR, label='benign')
+def main():
+    # Extract features from benign and malicious files
+    benign_features = process_directory(BENIGN_DIR, 'Benign')
+    malicious_features = process_directory(MALICIOUS_DIR, 'Malicious')
     
-    print("Extracting features from malicious files...")
-    malicious_data = process_directory(MALICIOUS_DIR, label='malicious')
+    # Combine results
+    all_features = benign_features + malicious_features
     
-    all_data = benign_data + malicious_data
+    # Save to JSON
+    save_to_json(all_features, 'extracted_features.json')
     
-    print("Saving data to JSON and CSV...")
-    save_to_json(all_data, 'extracted_data4.json')
-    save_to_csv(all_data, 'extracted_data4.csv')
-    
-    print("Feature extraction completed successfully.")
+    # Save to CSV
+    save_to_csv(all_features, 'extracted_features.csv')
+
+if __name__ == "__main__":
+    main()
