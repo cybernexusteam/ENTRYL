@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import roc_curve, auc, confusion_matrix, precision_recall_curve
 import seaborn as sns
 
-h2o.init()
+h2o.init(max_mem_size="8G")
 
 DATA_FILE = 'C:/Users/26dwi/ENTRYL/src-ai/ai-training/extracted/extracted_data3.json'
 
@@ -26,13 +26,15 @@ def load_and_preprocess_data(file_path):
     return df
 
 def engineer_features(df):
-    df['SectionCount'] = df['Sections'].apply(lambda x: len(eval(x)) if isinstance(x, str) else 0)
-    df['ImportCount'] = df['Imports'].apply(lambda x: len(eval(x)) if isinstance(x, str) else 0)
-    df['ExportCount'] = df['Exports'].apply(lambda x: len(eval(x)) if isinstance(x, str) else 0)
+    # Safely parse 'Sections' column without failing on NaN
+    df['SectionCount'] = df['Sections'].apply(lambda x: len(eval(x)) if isinstance(x, str) and pd.notna(x) else 0)
+    
+    df['ImportCount'] = df['Imports'].apply(lambda x: len(eval(x)) if isinstance(x, str) and pd.notna(x) else 0)
+    df['ExportCount'] = df['Exports'].apply(lambda x: len(eval(x)) if isinstance(x, str) and pd.notna(x) else 0)
 
     def extract_suspicious_functions(imports):
         functions = []
-        if isinstance(imports, str):
+        if isinstance(imports, str) and pd.notna(imports):
             imports_list = eval(imports)
             for entry in imports_list:
                 functions += entry.get('Functions', [])
@@ -44,11 +46,11 @@ def engineer_features(df):
     for func in suspicious_functions:
         df[f'Uses_{func}'] = df['FunctionImports'].apply(lambda funcs: 1 if func in funcs else 0)
 
-    df['IsDLL'] = df['Characteristics'].apply(lambda x: 1 if x & 0x2000 else 0)
-    df['IsExecutable'] = df['Characteristics'].apply(lambda x: 1 if x & 0x0002 else 0)
+    df['IsDLL'] = df['Characteristics'].apply(lambda x: 1 if pd.notna(x) and x & 0x2000 else 0)
+    df['IsExecutable'] = df['Characteristics'].apply(lambda x: 1 if pd.notna(x) and x & 0x0002 else 0)
 
     if 'TotalEntropy' not in df.columns:
-        df['TotalEntropy'] = df['Sections'].apply(lambda x: np.mean([s.get('Entropy', 0) for s in eval(x)]) if isinstance(x, str) else 0)
+        df['TotalEntropy'] = df['Sections'].apply(lambda x: np.mean([s.get('Entropy', 0) for s in eval(x)]) if isinstance(x, str) and pd.notna(x) else 0)
 
     df['HasMacros'] = df['Macros'].apply(lambda x: 0 if x == "No Macros stream found." else 1)
 
@@ -56,6 +58,7 @@ def engineer_features(df):
     df.drop(columns=drop_columns, inplace=True)
 
     return df
+
 
 def prepare_data_for_h2o(df):
     le = LabelEncoder()
