@@ -75,7 +75,7 @@ export default function SignInPage() {
           <p className="text-center text-sm text-zinc-500">
             No account?{' '}
             <a
-              href="#"
+              href="../../sign-up/[[...sign-up]]/page.tsx"
               className="font-medium text-overlay2 decoration-zinc-950/20 underline-offset-4 outline-none hover:text-zinc-700 hover:underline focus-visible:underline"
             >
               Create an account

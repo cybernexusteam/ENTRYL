@@ -49,7 +49,7 @@ import { Process } from "tauri-plugin-system-info-api";
 import { SignOutButton, useAuth, UserButton, useUser } from "@clerk/clerk-react";
 import { set } from "zod";
 import { currentUser } from '@clerk/nextjs/server'
-import { User } from '@/components/ui/user'
+
 
 // Define the SystemInfo type
 type SystemInfo = {
