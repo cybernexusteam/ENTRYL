@@ -46,8 +46,10 @@ import {
   YAxis,
 } from "recharts";
 import { Process } from "tauri-plugin-system-info-api";
-import { SignOutButton, UserButton } from "@clerk/clerk-react";
+import { SignOutButton, useAuth, UserButton, useUser } from "@clerk/clerk-react";
 import { set } from "zod";
+import { currentUser } from '@clerk/nextjs/server'
+import { User } from '@/components/ui/user'
 
 // Define the SystemInfo type
 type SystemInfo = {
@@ -73,11 +75,14 @@ const Dashboard = () => {
   // Alert dialog states
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
-
+  const [redirectTo, setRedirectTo] = useState<string | null>(null);
+  const { user } = useUser()
 
   useEffect(() => {
+    
     const username = localStorage.getItem("username");
     setStoredUsername(username);
+
     const fetchSystemInfo = async () => {
       try {
         const info = await invoke<string>("get_system_info");
@@ -168,12 +173,21 @@ const Dashboard = () => {
     },
   ];
 
-  // Function to handle button click
+  useEffect(() => {
+    if (redirectTo) {
+      const timeoutId = setTimeout(() => {
+        router.push(redirectTo);
+        setShowContent(true); // Reset showContent after redirection
+        setRedirectTo(null); // Reset redirectTo after redirection
+      }, 2000); // Set a timeout to match the animation duration
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [redirectTo, router]);
+
   const handleButtonClick = (href: string) => {
     setShowContent(false); // Trigger exit animation on button click
-    setTimeout(() => {
-      router.push(href); // Perform redirection after animation
-    }, 2000); // Set a timeout to match the animation duration
+    setRedirectTo(href); // Set the redirection target
   };
 
 
@@ -241,7 +255,7 @@ const Dashboard = () => {
     },
   ];
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
       {showContent && (
         <motion.div className="bg-black flex items-center w-full h-screen overflow-hidden">
           <motion.div
@@ -297,7 +311,7 @@ const Dashboard = () => {
                 <div>
                   <SidebarLink
                     link={{
-                      label: storedUsername ? storedUsername : "User",
+                      label: user?.fullName || "Not Signed In",
                       href: "#",
                       icon: <UserButton />,
                     }}
@@ -317,7 +331,7 @@ const Dashboard = () => {
             >
               <span className="text-text0 dark:text-white text-8xl relative top-[-90px]">
                 {" "}
-                Hi, {storedUsername ? storedUsername + "   👋" : "User"}.
+                Hi, {user?.fullName}
               </span>
             </motion.div>
             <motion.div

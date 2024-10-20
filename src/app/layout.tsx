@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark, neobrutalism } from "@clerk/themes";
+import { AnimatePresence } from "framer-motion";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -15,7 +16,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    
       <html lang="en">
         <body className={inter.className}>
         <ClerkProvider

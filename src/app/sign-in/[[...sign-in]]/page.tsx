@@ -5,9 +5,14 @@ import * as SignIn from '@clerk/elements/sign-in'
 import { IconBrandGithub, IconBrandGoogle } from '@tabler/icons-react'
 import Image from "next/image";
 import LetterLogo from "@/components/ui/LetterLogo.png";
+import { motion } from 'framer-motion';
 export default function SignInPage() {
   return (
-    <div className="grid w-full h-screen flex-grow items-center bg-black px-4 sm:justify-center">
+    <motion.div
+    initial={{ opacity: 0, y:-20 }}
+    animate={{ opacity: 1, y: 0 }}
+    className="grid w-full h-screen flex-grow items-center bg-black px-4 sm:justify-center"
+    >
       <SignIn.Root>
         <SignIn.Step
           name="start"
@@ -96,6 +101,6 @@ export default function SignInPage() {
       </SignIn.Step>
       </SignIn.Root>
 
-    </div>
+    </motion.div>
   )
 }
