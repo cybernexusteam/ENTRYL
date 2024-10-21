@@ -265,15 +265,33 @@ def run_model_on_extracted_data(model_path):
         # Predict using the model
         predictions = model.predict(h2o_frame)
 
+        # Convert predictions to a list and map to 'Benign' or 'Malware'
+        prediction_labels = []
+        for pred in predictions.as_data_frame()['predict']:
+            # Adjust the threshold as necessary, assuming 1 is malware and 0 is benign
+            if pred == 1:
+                prediction_labels.append("Malware")
+            else:
+                prediction_labels.append("Benign")
+
+        # Combine extracted data with predictions
+        results = []
+        for i, item in enumerate(extracted_data):
+            results.append({
+                **item,  # Flattened features
+                'Prediction': prediction_labels[i]
+            })
+
         # Save predictions
         with open(RESULTS_PATH, 'w') as f:
-            json.dump(predictions.as_data_frame().to_dict(orient='records'), f)
+            json.dump(results, f)
 
         print(f"Model predictions saved to: {RESULTS_PATH}")
     
     except Exception as e:
         print(f"Error during model prediction: {str(e)}")
         traceback.print_exc()
+
 
 if __name__ == "__main__":
     # Ask user for the directory and perform extraction and prediction
@@ -282,7 +300,7 @@ if __name__ == "__main__":
     if directory:
         extracted_data = run_extraction_script(directory)
 
-        model_path = "C:/Users/26dwi/ENTRYL/src-ai/ai-training/models/StackedEnsemble_AllModels_1_AutoML_1_20241018_193813"  # Change to the actual path of your H2O model
+        model_path = "C:/Users/26dwi/ENTRYL/src-ai/ai-training/models/StackedEnsemble_BestOfFamily_1_AutoML_1_20241021_25258"  # Change to the actual path of your H2O model
         run_model_on_extracted_data(model_path)
     else:
         print("No directory selected. Exiting.")
