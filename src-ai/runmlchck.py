@@ -67,11 +67,23 @@ def calculate_entropy(data):
         entropy -= p_x * math.log2(p_x)
     return entropy
 
+import os
+import pefile
+import traceback
+
 def extract_pe_features(file_path):
     """Extract static features from a PE file."""
     features = {}
     
     try:
+        # Ensure the file path is correctly formatted for the OS
+        file_path = os.path.normpath(file_path)
+
+        # Check if the file exists
+        if not os.path.isfile(file_path):
+            features['Error'] = f'File does not exist: {file_path}'
+            return features
+
         pe = pefile.PE(file_path)
         
         # Basic file information
@@ -124,13 +136,14 @@ def extract_pe_features(file_path):
         features['TotalEntropy'] = calculate_entropy(pe.__data__)
                 
     except pefile.PEFormatError:
-        features['Error'] = 'Invalid PE file'
+        features['Error'] = 'Invalid PE file format'
     except Exception as e:
         print(f"Error extracting PE features from {file_path}: {str(e)}")
         traceback.print_exc()
         features['Error'] = 'Failed to extract PE features'
     
     return features
+
 
 def extract_ole_features(file_path):
     """Extract basic features from an OLE file."""
@@ -194,6 +207,7 @@ def process_directory(directory):
                 traceback.print_exc()
 
     return extracted_data
+
 
 def flatten_features(item):
     """Flatten nested features in the extracted data."""
