@@ -74,6 +74,7 @@ def extract_pe_features(file_path):
         features['Subsystem'] = getattr(pe.OPTIONAL_HEADER, 'Subsystem', 'N/A')
         features['DllCharacteristics'] = getattr(pe.OPTIONAL_HEADER, 'DllCharacteristics', 'N/A')
         
+        # Extract Sections
         features['Sections'] = []
         for section in pe.sections:
             try:
@@ -90,8 +91,9 @@ def extract_pe_features(file_path):
                 print(f"Error extracting section from {file_path}: {e}")
                 continue
         
+        # Extract Imports
+        features['Imports'] = []
         if hasattr(pe, 'DIRECTORY_ENTRY_IMPORT'):
-            features['Imports'] = []
             for entry in pe.DIRECTORY_ENTRY_IMPORT:
                 try:
                     dll_info = {
@@ -103,8 +105,9 @@ def extract_pe_features(file_path):
                     print(f"Error extracting imports from {file_path}: {e}")
                     continue
         
+        # Extract Exports
+        features['Exports'] = []
         if hasattr(pe, 'DIRECTORY_ENTRY_EXPORT'):
-            features['Exports'] = []
             for exp in pe.DIRECTORY_ENTRY_EXPORT.symbols:
                 try:
                     features['Exports'].append(exp.name.decode('latin-1', errors='replace') if exp.name else "N/A")
@@ -174,8 +177,6 @@ def extract_ole_features(file_path):
                     metadata[stream] = f"Error reading stream: {str(e)}"
         
         features['Metadata'] = metadata
-
-        # Removed the macro extraction code as per request
         
         features['TotalEntropy'] = calculate_entropy(open(file_path, 'rb').read())
         
@@ -245,10 +246,10 @@ def main():
     all_features = benign_features + malicious_features
     
     # Save to JSON
-    save_to_json(all_features, 'extracted_features.json')
+    save_to_json(all_features, 'extracted_features02.json')
     
     # Save to CSV
-    save_to_csv(all_features, 'extracted_features.csv')
+    save_to_csv(all_features, 'extracted_features02.csv')
 
 if __name__ == "__main__":
     main()

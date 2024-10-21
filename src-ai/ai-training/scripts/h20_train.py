@@ -10,10 +10,11 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import roc_curve, auc, confusion_matrix, precision_recall_curve
 import seaborn as sns
 import os
+import tensorflow as tf
 
-h2o.init(max_mem_size="4G")
+h2o.init(max_mem_size="8G")  # Increase memory allocation to 8GB for longer training
 
-DATA_FILE = 'C:/Users/26dwi/ENTRYL/src-ai/ai-training/extracted/extracted_features.json'
+DATA_FILE = 'C:/Users/26dwi/ENTRYL/src-ai/ai-training/extracted/extracted_features02.json'
 OUTPUT_DIR = 'C:/Users/26dwi/ENTRYL/src-ai/ai-training/models'
 
 def load_data(file_path):
@@ -22,14 +23,17 @@ def load_data(file_path):
     return pd.json_normalize(data)
 
 def preprocess_data(df):
+    # Convert all object columns to strings for consistent processing
     for col in df.columns:
         if df[col].dtype == 'object':
             df[col] = df[col].astype(str)
+    # Replace missing values with a placeholder
     imputer = SimpleImputer(strategy='constant', fill_value='missing')
     df_imputed = pd.DataFrame(imputer.fit_transform(df), columns=df.columns)
     return df_imputed
 
 def engineer_features(df):
+    # Feature engineering for section, import, and export counts
     def safe_len(x):
         try:
             return len(eval(x)) if pd.notna(x) and x not in ['nan', 'missing'] else 0
@@ -40,6 +44,7 @@ def engineer_features(df):
     df['ImportCount'] = df['Imports'].apply(safe_len)
     df['ExportCount'] = df['Exports'].apply(safe_len)
 
+    # Extract suspicious functions
     def extract_suspicious_functions(imports):
         try:
             imports_list = eval(imports)
@@ -49,22 +54,27 @@ def engineer_features(df):
 
     df['FunctionImports'] = df['Imports'].apply(extract_suspicious_functions)
 
+    # Flag suspicious API usage
     suspicious_functions = ['CreateRemoteThread', 'VirtualAllocEx', 'WriteProcessMemory']
     for func in suspicious_functions:
         df[f'Uses_{func}'] = df['FunctionImports'].apply(lambda funcs: 1 if func in funcs else 0)
 
+    # Flags for DLLs and executables
     df['IsDLL'] = df['Characteristics'].apply(lambda x: 1 if pd.notna(x) and x not in ['missing', 'nan'] and int(float(x)) & 0x2000 else 0)
     df['IsExecutable'] = df['Characteristics'].apply(lambda x: 1 if pd.notna(x) and x not in ['missing', 'nan'] and int(float(x)) & 0x0002 else 0)
 
+    # Compute mean entropy for sections
     df['TotalEntropy'] = df['Sections'].apply(lambda x: 
         np.mean([float(s.get('Entropy', 0)) for s in eval(x)]) if isinstance(x, str) and x not in ['nan', 'missing'] else 0)
-    
+
+    # Drop the original columns that are no longer needed
     drop_columns = ['Imports', 'Exports', 'Sections', 'FunctionImports']
     df.drop(columns=drop_columns, inplace=True)
 
     return df
 
 def encode_categorical(df):
+    # Label encode categorical variables
     le = LabelEncoder()
     for col in df.select_dtypes(include=['object']):
         df[col] = le.fit_transform(df[col].astype(str))
@@ -75,15 +85,15 @@ def prepare_data_for_h2o(df):
     return h2o.H2OFrame(df_encoded)
 
 def train_model(train, valid, y_col, X_cols):
-    # Set up the AutoML object with extended runtime and multiple runs
+    # AutoML setup excluding DeepLearning models for faster training
     aml = H2OAutoML(
-        max_models=100,  # Increased from 50 to allow for more model exploration
+        max_models=150,
         seed=42,
         balance_classes=True,
-        max_runtime_secs=7200,  # 2 hours as requested
+        max_runtime_secs=14400,  # 4 hours
         stopping_metric="AUC",
         sort_metric="AUC",
-        exclude_algos=["DeepLearning"],
+        exclude_algos=["DeepLearning"],  # Exclude deep learning models
         project_name="MalwareDetection",
         nfolds=5,
         keep_cross_validation_predictions=True,
@@ -93,14 +103,6 @@ def train_model(train, valid, y_col, X_cols):
 
     # Train the model
     aml.train(x=X_cols, y=y_col, training_frame=train, validation_frame=valid)
-    
-    # After the initial run, we'll retrain the best model for additional iterations
-    if aml.leader is not None:
-        best_model = aml.leader
-        for i in range(3):  # Perform 3 additional training iterations
-            print(f"Retraining iteration {i+1}")
-            best_model = best_model.deeplearning(epochs=best_model.actual_params.get('epochs', 10) + 10)
-    
     return aml
 
 def save_model_and_results(aml, valid, output_dir):
@@ -111,6 +113,7 @@ def save_model_and_results(aml, valid, output_dir):
         model_path = h2o.save_model(model=aml.leader, path=output_dir, force=True)
         print(f"Model saved to: {model_path}")
         
+        # Save model performance on validation data
         with open(os.path.join(output_dir, 'model_performance.txt'), 'w') as f:
             f.write(str(aml.leader.model_performance(valid)))
     else:
@@ -121,10 +124,12 @@ def plot_results(aml, valid, y_col, output_dir):
         print("No models were trained successfully. Unable to plot results.")
         return
 
+    # Generate predictions and plot ROC curve, PR curve, and confusion matrix
     valid_pred = aml.leader.predict(valid)
     valid_pred = valid_pred.as_data_frame()['p1']
     valid_true = valid[y_col].as_data_frame().values.ravel()
 
+    # ROC curve
     fpr, tpr, _ = roc_curve(valid_true, valid_pred)
     roc_auc = auc(fpr, tpr)
     plt.figure(figsize=(10, 6))
@@ -139,6 +144,7 @@ def plot_results(aml, valid, y_col, output_dir):
     plt.savefig(os.path.join(output_dir, 'roc_curve.png'))
     plt.close()
 
+    # Precision-Recall curve
     precision, recall, _ = precision_recall_curve(valid_true, valid_pred)
     plt.figure(figsize=(10, 6))
     plt.plot(recall, precision, color='green', lw=2)
@@ -148,6 +154,7 @@ def plot_results(aml, valid, y_col, output_dir):
     plt.savefig(os.path.join(output_dir, 'precision_recall_curve.png'))
     plt.close()
 
+    # Confusion Matrix
     conf_matrix = confusion_matrix(valid_true, (valid_pred > 0.5).astype(int))
     plt.figure(figsize=(8, 6))
     sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', cbar=False,
@@ -159,11 +166,42 @@ def plot_results(aml, valid, y_col, output_dir):
     plt.savefig(os.path.join(output_dir, 'confusion_matrix.png'))
     plt.close()
 
+def export_model_to_tensorflow(aml, output_dir):
+    if aml.leader is not None:
+        print(f"Leader model: {aml.leader.model_id}")
+        
+        model = aml.leader
+        training_frame = model.training_frame
+        features = training_frame.columns[:-1]
+        X_train = training_frame[features].as_data_frame().values
+        y_train = training_frame[model.actual_params['response_column']].as_data_frame().values
+
+        # Build equivalent TensorFlow model
+        tf_model = tf.keras.Sequential([
+            tf.keras.layers.Input(shape=(X_train.shape[1],)),
+            tf.keras.layers.Dense(64, activation='relu'),
+            tf.keras.layers.Dense(32, activation='relu'),
+            tf.keras.layers.Dense(1, activation='sigmoid')  # Binary classification
+        ])
+
+        # Compile the TensorFlow model
+        tf_model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+
+        # Train the TensorFlow model on the H2O data
+        tf_model.fit(X_train, y_train, epochs=10, batch_size=32)
+
+        # Save the TensorFlow model
+        tf_model.save(os.path.join(output_dir, 'tensorflow_model.h5'))
+        print(f"TensorFlow model saved to: {os.path.join(output_dir, 'tensorflow_model.h5')}")
+    else:
+        print("No leader model available for export.")
+
 def main():
     df = load_data(DATA_FILE)
     df = preprocess_data(df)
     df = engineer_features(df)
 
+    # Split data into train and validation sets
     train_df, valid_df = train_test_split(df, test_size=0.2, random_state=42, stratify=df['Label'])
 
     train_h2o = prepare_data_for_h2o(train_df)
@@ -180,6 +218,9 @@ def main():
 
     save_model_and_results(aml, valid_h2o, OUTPUT_DIR)
     plot_results(aml, valid_h2o, y_col, OUTPUT_DIR)
+
+    # Export to TensorFlow
+    export_model_to_tensorflow(aml, OUTPUT_DIR)
 
     if aml.leaderboard is not None:
         print(aml.leaderboard.head(rows=10))
