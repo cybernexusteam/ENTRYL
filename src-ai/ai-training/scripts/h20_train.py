@@ -166,15 +166,17 @@ def plot_results(aml, valid, y_col, output_dir):
     plt.savefig(os.path.join(output_dir, 'confusion_matrix.png'))
     plt.close()
 
-def export_model_to_tensorflow(aml, output_dir):
+def export_model_to_tensorflow(aml, train_h2o, y_col, output_dir):
+    """
+    Exports the best H2O model to TensorFlow for further use.
+    """
     if aml.leader is not None:
         print(f"Leader model: {aml.leader.model_id}")
-        
-        model = aml.leader
-        training_frame = model.training_frame
-        features = training_frame.columns[:-1]
-        X_train = training_frame[features].as_data_frame().values
-        y_train = training_frame[model.actual_params['response_column']].as_data_frame().values
+
+        # Extract the original training data used for AutoML
+        features = train_h2o.columns[:-1]  # All columns except the label (last column)
+        X_train = train_h2o[features].as_data_frame(use_pandas=True).values
+        y_train = train_h2o[y_col].as_data_frame(use_pandas=True).values
 
         # Build equivalent TensorFlow model
         tf_model = tf.keras.Sequential([
@@ -196,12 +198,12 @@ def export_model_to_tensorflow(aml, output_dir):
     else:
         print("No leader model available for export.")
 
+
 def main():
     df = load_data(DATA_FILE)
     df = preprocess_data(df)
     df = engineer_features(df)
 
-    # Split data into train and validation sets
     train_df, valid_df = train_test_split(df, test_size=0.2, random_state=42, stratify=df['Label'])
 
     train_h2o = prepare_data_for_h2o(train_df)
@@ -219,13 +221,14 @@ def main():
     save_model_and_results(aml, valid_h2o, OUTPUT_DIR)
     plot_results(aml, valid_h2o, y_col, OUTPUT_DIR)
 
-    # Export to TensorFlow
-    export_model_to_tensorflow(aml, OUTPUT_DIR)
+    # Call the export function, now passing `train_h2o` and `y_col`
+    export_model_to_tensorflow(aml, train_h2o, y_col, OUTPUT_DIR)
 
     if aml.leaderboard is not None:
         print(aml.leaderboard.head(rows=10))
     else:
         print("No leaderboard available. AutoML may have failed to train any models.")
+
 
 if __name__ == "__main__":
     main()
