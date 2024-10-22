@@ -16,7 +16,6 @@ import {
   IconCpu,
   IconDeviceDesktop,
   IconSettings,
-  IconUser,
   IconUserBolt,
 } from "@tabler/icons-react";
 import { invoke } from "@tauri-apps/api/tauri";
@@ -34,14 +33,9 @@ import {
   AlertDialogContent,
   AlertDialogHeader,
   AlertDialogFooter,
-} 
-from "@/components/ui/alert";
+} from "@/components/ui/alert";
 import { Area, Legend, Line, LineChart, ResponsiveContainer, Tooltip, YAxis } from "recharts";
 import { Process } from "tauri-plugin-system-info-api";
-import { SignOutButton, useAuth, UserButton, useUser } from "@clerk/clerk-react";
-import { set } from "zod";
-import { currentUser } from '@clerk/nextjs/server'
-
 
 type SystemInfo = {
   total_memory: number;
@@ -69,7 +63,6 @@ const Dashboard = () => {
   const router = useRouter();
 
   useEffect(() => {
-    
     const username = localStorage.getItem("username");
     setStoredUsername(username);
     
@@ -83,9 +76,8 @@ const Dashboard = () => {
       } catch (error) {
         console.error("Error fetching system info:", error);
       }
-      
     };
-    
+
     const fetchProcesses = async () => {
       try {
         const processesData = await invoke<string>("get_processes");
@@ -204,32 +196,35 @@ const Dashboard = () => {
   const links = [
     {
       label: "Dashboard",
-      href: "/dashboard",
-      icon: (
-        <IconBrandTabler className="text-neutral-200 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-      ),
+      href: "#",
+      icon: <IconBrandTabler className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />,
     },
     {
       label: "Profile",
-      href: "../profile",
-      icon: (
-        <IconUserBolt className="text-neutral-200 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-      ),
+      href: "#",
+      icon: <IconUserBolt className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />,
     },
     {
       label: "Settings",
       href: "#",
-      icon: (
-        <IconSettings className="text-neutral-200 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-      ),
+      icon: <IconSettings className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />,
+    },
+    {
+      label: "Logout",
+      href: "/",
+      icon: <IconArrowLeft className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />,
     },
   ];
 
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence>
       {showContent && (
         <motion.div className="bg-black flex items-center w-full h-screen overflow-hidden">
           <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 1, delay: 1 }}
             className="h-screen"
           >
             <Sidebar open={isSidebarOpen} setOpen={setIsSidebarOpen}>
@@ -243,40 +238,26 @@ const Dashboard = () => {
                   </Link>
                   <div className="mt-8 flex flex-col gap-2">
                     {links.map((link, idx) => (
-
                       <Button key={idx} onClick={() => link.href === "/" && router.push("/")} className="bg-surface1">
                         <SidebarLink link={link} />
                       </Button>
                     ))}
                   </div>
-
-                  <div className="mt-8 flex flex-col gap-2">
-                    <SignOutButton>
-                      <Button
-                        onClick={() => handleButtonClick("/")}
-                        className="bg-surface1"
-                      >
-                        <SidebarLink
-                          link={{
-                            label: "Logout",
-                            href: "/",
-                            icon: (
-                              <IconArrowLeft className="text-text0 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-                            ),
-                          }}
-                        />
-                      </Button>
-                    </SignOutButton>
-                  </div>
-
                 </div>
                 <div>
                   <SidebarLink
                     link={{
-                      label: user?.fullName || "Not Signed In",
-
+                      label: storedUsername || "User",
                       href: "#",
-                      icon: <UserButton />,
+                      icon: (
+                        <Image
+                          src=""
+                          className="h-7 w-7 flex-shrink-0 rounded-full border-black border-2"
+                          width={50}
+                          height={50}
+                          alt="Avatar"
+                        />
+                      ),
                     }}
                   />
                 </div>
@@ -289,12 +270,11 @@ const Dashboard = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 3, type: "spring" }}
-              exit={{ opacity: 0, y: -20}}
+              exit={{ opacity: 0, y: -20 }}
               className="ml-14 my-auto"
             >
               <span className="text-text0 dark:text-white text-8xl relative top-[-90px]">
-                {" "}
-                Hi, {user?.fullName}
+                Hi, {storedUsername ? storedUsername + "   👋" : "User"}.
               </span>
             </motion.div>
 
@@ -326,9 +306,7 @@ const Dashboard = () => {
                       <Button onClick={handleScanClick} className="mt-4">
                         Start Scan
                       </Button>
-                      {scanStatus && (
-                        <p className="mt-2 text-text0">{scanStatus}</p>
-                      )}
+                      {scanStatus && <p className="mt-2 text-text0">{scanStatus}</p>}
                     </div>
                   </div>
 
@@ -369,7 +347,6 @@ const Dashboard = () => {
                             : " Loading..."}
                         </span>
                       </motion.h1>
-
                       <ChartContainer config={{ memory: { label: "Memory Usage" } }} className="h-[25vh]">
                         <ResponsiveContainer width="100%" height="100%">
                           <LineChart data={memoryData}>
