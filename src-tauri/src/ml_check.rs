@@ -1,22 +1,21 @@
-use std::process::Command; // Import Command to run system commands
-use std::fs; // Import fs to read files
-use std::collections::HashMap; // Import HashMap for JSON parsing
-use serde_json; // Import serde_json for JSON handling
-use tauri::command; // Import the command macro
+use std::process::Command;
+use std::fs;
+use std::collections::HashMap;
+use serde_json;
+use tauri::command;
 
-#[command] // Mark this function as callable from the frontend
+#[command] 
 pub async fn run_ml_check(directory: String) -> Result<bool, String> {
     // Construct and run the command to invoke the Python script
     let output = Command::new("python")
-        .arg("C:/Users/26dwi/ENTRYL/src-ai/runmlchck.py") // Path to the Python script
-        .arg(&directory) // Pass the directory as an argument to the Python script
-        .output(); // Execute the command and wait for it to finish
+        .arg("C:/Users/26dwi/ENTRYL/src-ai/runmlchck.py")
+        .arg(&directory)
+        .output();
 
     match output {
         Ok(output) => {
             if output.status.success() {
-                // Attempt to read the results.json file
-                let json_file_path = "results.json"; // Path to the results.json
+                let json_file_path = "results.json";
                 match fs::read_to_string(json_file_path) {
                     Ok(content) => {
                         // Parse the JSON content

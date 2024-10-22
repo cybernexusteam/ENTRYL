@@ -6,125 +6,229 @@ import json
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 from sklearn.impute import SimpleImputer
-from sklearn.feature_selection import VarianceThreshold
+import matplotlib.pyplot as plt
+from sklearn.metrics import roc_curve, auc, confusion_matrix, precision_recall_curve
+import seaborn as sns
+import os
+import tensorflow as tf
 
-# Initialize H2O
-h2o.init()
+h2o.init(max_mem_size="8G")  # Increase memory allocation to 8GB for longer training
 
-# Define the path to your extracted data
-DATA_FILE = 'C:/Users/26dwi/ENTRYL/src-ai/ai-training/extracted/extracted_data3.json'
+DATA_FILE = 'C:/Users/26dwi/ENTRYL/src-ai/ai-training/extracted/extracted_features02.json'
+OUTPUT_DIR = 'C:/Users/26dwi/ENTRYL/src-ai/ai-training/models'
 
-def load_and_preprocess_data(file_path):
-    """Load and preprocess the extracted data."""
+def load_data(file_path):
     with open(file_path, 'r') as f:
         data = json.load(f)
-    
-    df = pd.json_normalize(data)
-    
-    # Handle nested structures
+    return pd.json_normalize(data)
+
+def preprocess_data(df):
+    # Convert all object columns to strings for consistent processing
     for col in df.columns:
-        if isinstance(df[col].iloc[0], (list, dict)):
+        if df[col].dtype == 'object':
             df[col] = df[col].astype(str)
-    
-    return df
+    # Replace missing values with a placeholder
+    imputer = SimpleImputer(strategy='constant', fill_value='missing')
+    df_imputed = pd.DataFrame(imputer.fit_transform(df), columns=df.columns)
+    return df_imputed
 
 def engineer_features(df):
-    """Create new features and handle existing ones."""
-    # Count the number of sections, imports, and exports
-    df['SectionCount'] = df['Sections'].apply(lambda x: len(eval(x)) if isinstance(x, str) else 0)
-    df['ImportCount'] = df['Imports'].apply(lambda x: len(eval(x)) if isinstance(x, str) else 0)
-    df['ExportCount'] = df['Exports'].apply(lambda x: len(eval(x)) if isinstance(x, str) else 0)
-    
-    # Extract specific import DLLs often associated with malware
-    suspicious_dlls = ['kernel32.dll', 'advapi32.dll', 'user32.dll', 'wininet.dll', 'ws2_32.dll']
-    for dll in suspicious_dlls:
-        df[f'Has_{dll}'] = df['Imports'].apply(lambda x: 1 if dll in str(x).lower() else 0)
-    
-    # Create features from file characteristics
-    df['IsDLL'] = df['Characteristics'].apply(lambda x: 1 if x & 0x2000 else 0)
-    df['IsExecutable'] = df['Characteristics'].apply(lambda x: 1 if x & 0x0002 else 0)
-    
-    # Handle entropy features
-    if 'TotalEntropy' not in df.columns:
-        df['TotalEntropy'] = df['Sections'].apply(lambda x: np.mean([s.get('Entropy', 0) for s in eval(x)]) if isinstance(x, str) else 0)
-    
-    # Create feature for presence of macros in OLE files
-    df['HasMacros'] = df['Macros'].apply(lambda x: 0 if x == "No Macros stream found." else 1)
-    
+    # Feature engineering for section, import, and export counts
+    def safe_len(x):
+        try:
+            return len(eval(x)) if pd.notna(x) and x not in ['nan', 'missing'] else 0
+        except:
+            return 0
+
+    df['SectionCount'] = df['Sections'].apply(safe_len)
+    df['ImportCount'] = df['Imports'].apply(safe_len)
+    df['ExportCount'] = df['Exports'].apply(safe_len)
+
+    # Extract suspicious functions
+    def extract_suspicious_functions(imports):
+        try:
+            imports_list = eval(imports)
+            return [func for entry in imports_list for func in entry.get('Functions', [])]
+        except:
+            return []
+
+    df['FunctionImports'] = df['Imports'].apply(extract_suspicious_functions)
+
+    # Flag suspicious API usage
+    suspicious_functions = ['CreateRemoteThread', 'VirtualAllocEx', 'WriteProcessMemory']
+    for func in suspicious_functions:
+        df[f'Uses_{func}'] = df['FunctionImports'].apply(lambda funcs: 1 if func in funcs else 0)
+
+    # Flags for DLLs and executables
+    df['IsDLL'] = df['Characteristics'].apply(lambda x: 1 if pd.notna(x) and x not in ['missing', 'nan'] and int(float(x)) & 0x2000 else 0)
+    df['IsExecutable'] = df['Characteristics'].apply(lambda x: 1 if pd.notna(x) and x not in ['missing', 'nan'] and int(float(x)) & 0x0002 else 0)
+
+    # Compute mean entropy for sections
+    df['TotalEntropy'] = df['Sections'].apply(lambda x: 
+        np.mean([float(s.get('Entropy', 0)) for s in eval(x)]) if isinstance(x, str) and x not in ['nan', 'missing'] else 0)
+
+    # Drop the original columns that are no longer needed
+    drop_columns = ['Imports', 'Exports', 'Sections', 'FunctionImports']
+    df.drop(columns=drop_columns, inplace=True)
+
+    return df
+
+def encode_categorical(df):
+    # Label encode categorical variables
+    le = LabelEncoder()
+    for col in df.select_dtypes(include=['object']):
+        df[col] = le.fit_transform(df[col].astype(str))
     return df
 
 def prepare_data_for_h2o(df):
-    """Prepare the DataFrame for H2O AutoML."""
-    # Encode categorical variables
-    le = LabelEncoder()
-    categorical_columns = df.select_dtypes(include=['object']).columns
-    for col in categorical_columns:
-        df[col] = le.fit_transform(df[col].astype(str))
+    df_encoded = encode_categorical(df)
+    return h2o.H2OFrame(df_encoded)
+
+def train_model(train, valid, y_col, X_cols):
+    # AutoML setup excluding DeepLearning models for faster training
+    aml = H2OAutoML(
+        max_models=150,
+        seed=42,
+        balance_classes=True,
+        max_runtime_secs=14400,  # 4 hours
+        stopping_metric="AUC",
+        sort_metric="AUC",
+        exclude_algos=["DeepLearning"],  # Exclude deep learning models
+        project_name="MalwareDetection",
+        nfolds=5,
+        keep_cross_validation_predictions=True,
+        keep_cross_validation_models=True,
+        verbosity="info"
+    )
+
+    # Train the model
+    aml.train(x=X_cols, y=y_col, training_frame=train, validation_frame=valid)
+    return aml
+
+def save_model_and_results(aml, valid, output_dir):
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
     
-    # Handle missing values
-    imputer = SimpleImputer(strategy='mean')
-    df_imputed = pd.DataFrame(imputer.fit_transform(df), columns=df.columns)
-    
-    # Remove low variance features
-    selector = VarianceThreshold()
-    df_selected = pd.DataFrame(selector.fit_transform(df_imputed), columns=df_imputed.columns[selector.get_support()])
-    
-    return df_selected
+    if aml.leader is not None:
+        model_path = h2o.save_model(model=aml.leader, path=output_dir, force=True)
+        print(f"Model saved to: {model_path}")
+        
+        # Save model performance on validation data
+        with open(os.path.join(output_dir, 'model_performance.txt'), 'w') as f:
+            f.write(str(aml.leader.model_performance(valid)))
+    else:
+        print("No models were trained successfully. Unable to save model or performance metrics.")
 
-# Load and preprocess the data
-print("Loading and preprocessing data...")
-df = load_and_preprocess_data(DATA_FILE)
-df = engineer_features(df)
-df = prepare_data_for_h2o(df)
+def plot_results(aml, valid, y_col, output_dir):
+    if aml.leader is None:
+        print("No models were trained successfully. Unable to plot results.")
+        return
 
-# Split the data
-train_df, valid_df = train_test_split(df, test_size=0.2, random_state=42, stratify=df['Label'])
+    # Generate predictions and plot ROC curve, PR curve, and confusion matrix
+    valid_pred = aml.leader.predict(valid)
+    valid_pred = valid_pred.as_data_frame()['p1']
+    valid_true = valid[y_col].as_data_frame().values.ravel()
 
-# Convert to H2OFrame
-train_h2o = h2o.H2OFrame(train_df)
-valid_h2o = h2o.H2OFrame(valid_df)
+    # ROC curve
+    fpr, tpr, _ = roc_curve(valid_true, valid_pred)
+    roc_auc = auc(fpr, tpr)
+    plt.figure(figsize=(10, 6))
+    plt.plot(fpr, tpr, color='blue', lw=2, label=f'ROC curve (AUC = {roc_auc:.2f})')
+    plt.plot([0, 1], [0, 1], color='red', lw=2, linestyle='--')
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.title('Receiver Operating Characteristic (ROC) Curve')
+    plt.legend(loc='lower right')
+    plt.savefig(os.path.join(output_dir, 'roc_curve.png'))
+    plt.close()
 
-# Define features and target
-y_col = 'Label'
-X_cols = [col for col in train_h2o.columns if col != y_col]
+    # Precision-Recall curve
+    precision, recall, _ = precision_recall_curve(valid_true, valid_pred)
+    plt.figure(figsize=(10, 6))
+    plt.plot(recall, precision, color='green', lw=2)
+    plt.xlabel('Recall')
+    plt.ylabel('Precision')
+    plt.title('Precision-Recall Curve')
+    plt.savefig(os.path.join(output_dir, 'precision_recall_curve.png'))
+    plt.close()
 
-# Define the AutoML model
-aml = H2OAutoML(
-    max_models=50,
-    seed=42,
-    balance_classes=True,
-    max_runtime_secs=7200,  # 2 hours runtime
-    stopping_metric="AUC",
-    sort_metric="AUC",
-    exclude_algos=["DeepLearning"],  # Exclude deep learning for faster training
-)
+    # Confusion Matrix
+    conf_matrix = confusion_matrix(valid_true, (valid_pred > 0.5).astype(int))
+    plt.figure(figsize=(8, 6))
+    sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', cbar=False,
+                xticklabels=['Non-Malware', 'Malware'],
+                yticklabels=['Non-Malware', 'Malware'])
+    plt.xlabel('Predicted Label')
+    plt.ylabel('True Label')
+    plt.title('Confusion Matrix')
+    plt.savefig(os.path.join(output_dir, 'confusion_matrix.png'))
+    plt.close()
 
-# Train the model
-print("Training the model...")
-aml.train(x=X_cols, y=y_col, training_frame=train_h2o, validation_frame=valid_h2o)
+def export_model_to_tensorflow(aml, train_h2o, y_col, output_dir):
+    """
+    Exports the best H2O model to TensorFlow for further use.
+    """
+    if aml.leader is not None:
+        print(f"Leader model: {aml.leader.model_id}")
 
-# Print the leaderboard
-print("Model Training Complete. Leaderboard:")
-leaderboard = aml.leaderboard
-print(leaderboard.head(rows=leaderboard.nrows))
+        # Extract the original training data used for AutoML
+        features = train_h2o.columns[:-1]  # All columns except the label (last column)
+        X_train = train_h2o[features].as_data_frame(use_pandas=True).values
+        y_train = train_h2o[y_col].as_data_frame(use_pandas=True).values
 
-# Get the best model
-best_model = aml.leader
-print(f"\nBest Model: {best_model}")
+        # Build equivalent TensorFlow model
+        tf_model = tf.keras.Sequential([
+            tf.keras.layers.Input(shape=(X_train.shape[1],)),
+            tf.keras.layers.Dense(64, activation='relu'),
+            tf.keras.layers.Dense(32, activation='relu'),
+            tf.keras.layers.Dense(1, activation='sigmoid')  # Binary classification
+        ])
 
-# Make predictions on the validation set
-print("\nMaking predictions on validation set...")
-predictions = best_model.predict(valid_h2o)
-print(predictions.head())
+        # Compile the TensorFlow model
+        tf_model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
-# Evaluate the model
-print("\nModel Performance:")
-performance = best_model.model_performance(valid_h2o)
-print(performance)
+        # Train the TensorFlow model on the H2O data
+        tf_model.fit(X_train, y_train, epochs=10, batch_size=32)
 
-# Save the model
-model_path = h2o.save_model(model=best_model, path="C:/Users/26dwi/ENTRYL/src-ai/ai-training/models", force=True)
-print(f"\nModel saved to: {model_path}")
+        # Save the TensorFlow model
+        tf_model.save(os.path.join(output_dir, 'tensorflow_model.h5'))
+        print(f"TensorFlow model saved to: {os.path.join(output_dir, 'tensorflow_model.h5')}")
+    else:
+        print("No leader model available for export.")
 
-# Shutdown H2O
-h2o.shutdown(prompt=False)
+
+def main():
+    df = load_data(DATA_FILE)
+    df = preprocess_data(df)
+    df = engineer_features(df)
+
+    train_df, valid_df = train_test_split(df, test_size=0.2, random_state=42, stratify=df['Label'])
+
+    train_h2o = prepare_data_for_h2o(train_df)
+    valid_h2o = prepare_data_for_h2o(valid_df)
+
+    y_col = 'Label'
+    X_cols = [col for col in train_h2o.columns if col != y_col]
+
+    # Convert Label column to categorical
+    train_h2o[y_col] = train_h2o[y_col].asfactor()
+    valid_h2o[y_col] = valid_h2o[y_col].asfactor()
+
+    aml = train_model(train_h2o, valid_h2o, y_col, X_cols)
+
+    save_model_and_results(aml, valid_h2o, OUTPUT_DIR)
+    plot_results(aml, valid_h2o, y_col, OUTPUT_DIR)
+
+    # Call the export function, now passing `train_h2o` and `y_col`
+    export_model_to_tensorflow(aml, train_h2o, y_col, OUTPUT_DIR)
+
+    if aml.leaderboard is not None:
+        print(aml.leaderboard.head(rows=10))
+    else:
+        print("No leaderboard available. AutoML may have failed to train any models.")
+
+
+if __name__ == "__main__":
+    main()
