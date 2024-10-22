@@ -128,22 +128,34 @@ const Dashboard = () => {
       multiple: false,
     });
 
+
     if (selectedDirectory) {
       setScanStatus("Scanning... Please wait.");
       try {
+        // Invoke the Rust command and explicitly type the response
         const results = await invoke<PredictionResult[]>("scan_and_get_results");
         
-        const hasMalware = results.some(result => result.prediction === "malware");
-        
-        setAlertTitle(hasMalware ? "WARNING" : "GOOD");
-        setAlertMessage(
-          hasMalware
-            ? `Malicious files detected:\n${results
-                .filter(result => result.prediction === "malware")
-                .map(result => result.sha256)
-                .join("\n")}`
-            : "No malicious files found. Your system is clean!"
+        // Check for malware, case-insensitive comparison
+        const hasMalware = results.some(
+          result => result.prediction.toLowerCase() === "malware"
         );
+        
+        // Set alert title with emoji
+        setAlertTitle(hasMalware ? "⚠️ WARNING" : "✅ GOOD");
+        
+        // Create detailed alert message
+        if (hasMalware) {
+          const malwareFiles = results
+            .filter(result => result.prediction.toLowerCase() === "malware")
+            .map(result => `SHA256: ${result.sha256}`)
+            .join("\n");
+            
+          setAlertMessage(
+            `Malicious files detected:\n\n${malwareFiles}\n\nPlease review these files carefully and consider removing them.`
+          );
+        } else {
+          setAlertMessage("No malicious files found. Your system is clean!");
+        }
         
         setIsAlertOpen(true);
         setScanStatus("Scan completed.");

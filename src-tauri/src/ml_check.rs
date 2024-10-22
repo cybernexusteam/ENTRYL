@@ -4,11 +4,18 @@ use std::io::{self, Read};
 use std::process::{Command, Stdio};
 use std::path::PathBuf;
 
-// Make the struct public and use snake_case for fields
+// Public struct for frontend communication using snake_case
 #[derive(Serialize, Deserialize, Debug)]
 pub struct PredictionResult {
-    sha256: String,
-    prediction: String,
+    pub sha256: String,
+    pub prediction: String,
+}
+
+// Private struct to match JSON file format
+#[derive(Deserialize)]
+struct RawResult {
+    SHA256: String,
+    Prediction: String,
 }
 
 // Function to run the Python script
@@ -24,11 +31,10 @@ fn run_python_script() -> io::Result<()> {
         .stdout(Stdio::inherit())
         .stderr(Stdio::inherit())
         .status()?;
-
     Ok(())
 }
 
-// Function to read the results from the temp directory, extracting sha256 and prediction
+// Function to read the results from the temp directory
 fn read_ml_results() -> Result<Vec<PredictionResult>, Box<dyn std::error::Error>> {
     // Define the path to the results.json file
     let temp_dir = std::env::var("PROGRAMDATA").unwrap_or_else(|_| "C:/ProgramData".to_string());
@@ -39,12 +45,22 @@ fn read_ml_results() -> Result<Vec<PredictionResult>, Box<dyn std::error::Error>
     let mut data = String::new();
     file.read_to_string(&mut data)?;
     
-    // Deserialize the JSON data into a vector of PredictionResult
-    let results: Vec<PredictionResult> = serde_json::from_str(&mut data)?;
+    // Deserialize the JSON data into a vector of RawResult first
+    let raw_results: Vec<RawResult> = serde_json::from_str(&data)?;
+    
+    // Convert RawResult into PredictionResult
+    let results = raw_results
+        .into_iter()
+        .map(|raw| PredictionResult {
+            sha256: raw.SHA256,
+            prediction: raw.Prediction,
+        })
+        .collect();
+    
     Ok(results)
 }
 
-// Tauri command to run the Python script, then read and pass the results to the frontend
+// Tauri command to run the Python script and get results
 #[tauri::command]
 pub fn scan_and_get_results() -> Result<Vec<PredictionResult>, String> {
     // Step 1: Run the Python script to generate results.json
@@ -52,12 +68,9 @@ pub fn scan_and_get_results() -> Result<Vec<PredictionResult>, String> {
         return Err(format!("Error running Python script: {:?}", e));
     }
 
-    // Step 2: Read the results.json file
+    // Step 2: Read and return the results
     match read_ml_results() {
-        Ok(results) => {
-            // Step 3: Return the results (which includes sha256 and prediction for each file)
-            Ok(results)
-        }
+        Ok(results) => Ok(results),
         Err(e) => Err(format!("Error reading results: {:?}", e)),
     }
 }
