@@ -24,38 +24,34 @@ import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { open } from "@tauri-apps/api/dialog"; // Import the open dialog function
+import { open } from "@tauri-apps/api/dialog";
 import {
   AlertDialog,
   AlertDialogTitle,
   AlertDialogDescription,
   AlertDialogAction,
   AlertDialogCancel,
-  AlertDialogTrigger,
   AlertDialogContent,
   AlertDialogHeader,
   AlertDialogFooter,
-} from "@/components/ui/alert"; // Adjust this import based on your project structure
-import {
-  Area,
-  Legend,
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  Tooltip,
-  YAxis,
-} from "recharts";
+} 
+from "@/components/ui/alert";
+import { Area, Legend, Line, LineChart, ResponsiveContainer, Tooltip, YAxis } from "recharts";
 import { Process } from "tauri-plugin-system-info-api";
 import { SignOutButton, useAuth, UserButton, useUser } from "@clerk/clerk-react";
 import { set } from "zod";
 import { currentUser } from '@clerk/nextjs/server'
 
 
-// Define the SystemInfo type
 type SystemInfo = {
   total_memory: number;
   used_memory: number;
   cpu_usage: number;
+};
+
+type PredictionResult = {
+  sha256: string;
+  prediction: string;
 };
 
 const Dashboard = () => {
@@ -63,26 +59,20 @@ const Dashboard = () => {
   const [systemInfo, setSystemInfo] = useState<SystemInfo | null>(null);
   const [processes, setProcesses] = useState<Process[]>([]);
   const [cpuData, setCpuData] = useState<{ time: string; usage: number }[]>([]);
-  const [memoryData, setMemoryData] = useState<
-    { time: string; usage: number }[]
-  >([]);
+  const [memoryData, setMemoryData] = useState<{ time: string; usage: number }[]>([]);
   const [scanStatus, setScanStatus] = useState<string | null>(null);
   const [storedUsername, setStoredUsername] = useState<string | null>(null);
-  const welcome = ["Hi"];
-
   const [showContent, setShowContent] = useState(true);
-  const router = useRouter();
-  // Alert dialog states
   const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [alertTitle, setAlertTitle] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
-  const [redirectTo, setRedirectTo] = useState<string | null>(null);
-  const { user } = useUser()
+  const router = useRouter();
 
   useEffect(() => {
     
     const username = localStorage.getItem("username");
     setStoredUsername(username);
-
+    
     const fetchSystemInfo = async () => {
       try {
         const info = await invoke<string>("get_system_info");
@@ -125,10 +115,7 @@ const Dashboard = () => {
       second: "2-digit",
       fractionalSecondDigits: 3,
     });
-    setCpuData((prevData) => [
-      ...prevData.slice(-40),
-      { time: currentTime, usage: cpuUsage },
-    ]);
+    setCpuData((prevData) => [...prevData.slice(-40), { time: currentTime, usage: cpuUsage }]);
   };
 
   const updateMemoryData = (usedMemory: number, totalMemory: number) => {
@@ -140,10 +127,53 @@ const Dashboard = () => {
       fractionalSecondDigits: 3,
     });
     const memoryUsage = (usedMemory / totalMemory) * 100;
-    setMemoryData((prevData) => [
-      ...prevData.slice(-40),
-      { time: currentTime, usage: memoryUsage },
-    ]);
+    setMemoryData((prevData) => [...prevData.slice(-40), { time: currentTime, usage: memoryUsage }]);
+  };
+
+  const handleScanClick = async () => {
+    const selectedDirectory = await open({
+      directory: true,
+      multiple: false,
+    });
+
+
+    if (selectedDirectory) {
+      setScanStatus("Scanning... Please wait.");
+      try {
+        // Invoke the Rust command and explicitly type the response
+        const results = await invoke<PredictionResult[]>("scan_and_get_results");
+        
+        // Check for malware, case-insensitive comparison
+        const hasMalware = results.some(
+          result => result.prediction.toLowerCase() === "malware"
+        );
+        
+        // Set alert title with emoji
+        setAlertTitle(hasMalware ? "⚠️ WARNING" : "✅ GOOD");
+        
+        // Create detailed alert message
+        if (hasMalware) {
+          const malwareFiles = results
+            .filter(result => result.prediction.toLowerCase() === "malware")
+            .map(result => `SHA256: ${result.sha256}`)
+            .join("\n");
+            
+          setAlertMessage(
+            `Malicious files detected:\n\n${malwareFiles}\n\nPlease review these files carefully and consider removing them.`
+          );
+        } else {
+          setAlertMessage("No malicious files found. Your system is clean!");
+        }
+        
+        setIsAlertOpen(true);
+        setScanStatus("Scan completed.");
+      } catch (error) {
+        console.error("Error during scan:", error);
+        setScanStatus(`Error: ${error}`);
+      }
+    } else {
+      setScanStatus("No directory selected.");
+    }
   };
 
   const items = [
@@ -159,13 +189,11 @@ const Dashboard = () => {
       title: "Top Processes",
       description: (
         <ul className="list-disc list-inside">
-          {processes.length > 0
-            ? processes.slice(0, 5).map((p) => (
-                <li key={p.pid}>
-                  {p.name}: {p.cpu_usage.toFixed(2)}%
-                </li>
-              ))
-            : "Loading..."}
+          {processes.slice(0, 5).map((p) => (
+            <li key={p.pid}>
+              {p.name}: {p.cpu_usage.toFixed(2)}%
+            </li>
+          ))}
         </ul>
       ),
       icon: <IconCpu className="h-4 w-4 text-neutral-500" />,
@@ -173,64 +201,6 @@ const Dashboard = () => {
     },
   ];
 
-  useEffect(() => {
-    if (redirectTo) {
-      const timeoutId = setTimeout(() => {
-        router.push(redirectTo);
-        setShowContent(true); // Reset showContent after redirection
-        setRedirectTo(null); // Reset redirectTo after redirection
-      }, 2000); // Set a timeout to match the animation duration
-
-      return () => clearTimeout(timeoutId);
-    }
-  }, [redirectTo, router]);
-
-  const handleButtonClick = (href: string) => {
-    setShowContent(false); // Trigger exit animation on button click
-    setRedirectTo(href); // Set the redirection target
-  };
-
-
-  // Function to handle scan button click
-  const handleScanClick = async () => {
-    const selectedDirectory = await open({
-      directory: true,
-      multiple: false,
-    });
-
-    if (selectedDirectory) {
-      setScanStatus("Scanning... Please wait.");
-      try {
-        await invoke("run_ml_check", { directory: selectedDirectory });
-        const results = await invoke("get_results"); // Fetch results after running the check
-
-        // Process the results
-        const parsedResults = JSON.parse(results as string);
-        const maliciousFiles = parsedResults.filter(
-          (item: { status: string }) => item.status === "malicious"
-        );
-
-        if (maliciousFiles.length > 0) {
-          setAlertMessage(
-            `Malicious files detected:\n${maliciousFiles
-              .map((file: { file_name: string }) => file.file_name)
-              .join(", ")}`
-          );
-        } else {
-          setAlertMessage("No malicious files found. All files are clean.");
-        }
-
-        // Open the alert dialog
-        setIsAlertOpen(true);
-        setScanStatus("Scan completed.");
-      } catch (error) {
-        console.error("Error during scan:", error);
-        setScanStatus(`Error: ${error}`);
-      }
-    } else {
-      setScanStatus("No directory selected.");
-    }
-  };
   const links = [
     {
       label: "Dashboard",
@@ -254,6 +224,7 @@ const Dashboard = () => {
       ),
     },
   ];
+
   return (
     <AnimatePresence mode="wait">
       {showContent && (
@@ -262,28 +233,18 @@ const Dashboard = () => {
             className="h-screen"
           >
             <Sidebar open={isSidebarOpen} setOpen={setIsSidebarOpen}>
-              <SidebarBody className="justify-between gap-10 ">
+              <SidebarBody className="justify-between gap-10">
                 <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden mt-3">
-                  <Link
-                    href="#"
-                    className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20"
-                  >
+                  <Link href="#" className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20">
                     <Image src={LetterLogo} alt="logo" />
-                    <motion.span
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="font-medium text-text0 dark:text-white whitespace-pre"
-                    >
+                    <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-medium text-text0 dark:text-white whitespace-pre">
                       ENTRYL
                     </motion.span>
                   </Link>
                   <div className="mt-8 flex flex-col gap-2">
                     {links.map((link, idx) => (
-                      <Button
-                        key={idx}
-                        onClick={() => handleButtonClick(link.href)}
-                        className="bg-surface1"
-                      >
+
+                      <Button key={idx} onClick={() => link.href === "/" && router.push("/")} className="bg-surface1">
                         <SidebarLink link={link} />
                       </Button>
                     ))}
@@ -307,11 +268,13 @@ const Dashboard = () => {
                       </Button>
                     </SignOutButton>
                   </div>
+
                 </div>
                 <div>
                   <SidebarLink
                     link={{
                       label: user?.fullName || "Not Signed In",
+
                       href: "#",
                       icon: <UserButton />,
                     }}
@@ -334,6 +297,7 @@ const Dashboard = () => {
                 Hi, {user?.fullName}
               </span>
             </motion.div>
+
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -373,27 +337,16 @@ const Dashboard = () => {
                       <motion.h1 className="text-text0 font-bold my-3">
                         CPU Usage:
                         <span className="text-text0 dark:text-white font-normal">
-                          {" "}
-                          {systemInfo
-                            ? `${systemInfo.cpu_usage.toFixed(2)}%`
-                            : "Loading..."}
+                          {systemInfo ? ` ${systemInfo.cpu_usage.toFixed(2)}%` : " Loading..."}
                         </span>
                       </motion.h1>
-                      <ChartContainer
-                        config={{ cpu: { label: "CPU Usage" } }}
-                        className="h-[25vh]"
-                      >
+                      <ChartContainer config={{ cpu: { label: "CPU Usage" } }} className="h-[25vh]">
                         <ResponsiveContainer width="100%" height="100%">
                           <LineChart data={cpuData}>
                             <YAxis domain={[0, 100]} />
                             <Tooltip content={<ChartTooltipContent />} />
                             <Legend content={<ChartLegendContent />} />
-                            <Line
-                              type="monotone"
-                              dataKey="usage"
-                              stroke="#8884d8"
-                              dot={false}
-                            />
+                            <Line type="monotone" dataKey="usage" stroke="#8884d8" dot={false} />
                             <Area
                               name="CPU Usage"
                               type="monotone"
@@ -406,34 +359,24 @@ const Dashboard = () => {
                         </ResponsiveContainer>
                       </ChartContainer>
                     </div>
+                    
                     <div className="w-full h-full p-5 bg-opacity-20 bg-surface0 border-2 border-opacity-20 border-text0 rounded-xl">
                       <motion.h1 className="text-text0 font-bold my-3">
                         Memory Usage:
                         <span className="text-text0 dark:text-white font-normal">
                           {systemInfo
-                            ? `${(
-                                (systemInfo.used_memory /
-                                  systemInfo.total_memory) *
-                                100
-                              ).toFixed(2)}%`
-                            : "Loading..."}
+                            ? ` ${((systemInfo.used_memory / systemInfo.total_memory) * 100).toFixed(2)}%`
+                            : " Loading..."}
                         </span>
                       </motion.h1>
-                      <ChartContainer
-                        config={{ memory: { label: "Memory Usage" } }}
-                        className="h-[25vh]"
-                      >
+
+                      <ChartContainer config={{ memory: { label: "Memory Usage" } }} className="h-[25vh]">
                         <ResponsiveContainer width="100%" height="100%">
                           <LineChart data={memoryData}>
                             <YAxis domain={[0, 100]} />
                             <Tooltip content={<ChartTooltipContent />} />
                             <Legend content={<ChartLegendContent />} />
-                            <Line
-                              type="monotone"
-                              dataKey="usage"
-                              stroke="#82ca9d"
-                              dot={false}
-                            />
+                            <Line type="monotone" dataKey="usage" stroke="#82ca9d" dot={false} />
                           </LineChart>
                         </ResponsiveContainer>
                       </ChartContainer>
@@ -444,20 +387,17 @@ const Dashboard = () => {
             </motion.div>
           </div>
 
-          {/* Alert Dialog for Malicious Files */}
           <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Scan Results</AlertDialogTitle>
-                <AlertDialogDescription>{alertMessage}</AlertDialogDescription>
+                <AlertDialogTitle>{alertTitle}</AlertDialogTitle>
+                <AlertDialogDescription className="whitespace-pre-line">
+                  {alertMessage}
+                  </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel onClick={() => setIsAlertOpen(false)}>
-                  Close
-                </AlertDialogCancel>
-                <AlertDialogAction onClick={() => setIsAlertOpen(false)}>
-                  Okay
-                </AlertDialogAction>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction>Continue</AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
@@ -466,36 +406,5 @@ const Dashboard = () => {
     </AnimatePresence>
   );
 };
-
-const links = [
-  {
-    label: "Dashboard",
-    href: "#",
-    icon: (
-      <IconBrandTabler className="text-text0 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-    ),
-  },
-  {
-    label: "Profile",
-    href: "#",
-    icon: (
-      <IconUserBolt className="text-text0 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-    ),
-  },
-  {
-    label: "Settings",
-    href: "#",
-    icon: (
-      <IconSettings className="text-text0 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-    ),
-  },
-  {
-    label: "Logout",
-    href: "/",
-    icon: (
-      <IconArrowLeft className="text-text0 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-    ),
-  },
-];
 
 export default Dashboard;

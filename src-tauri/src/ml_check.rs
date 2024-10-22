@@ -1,47 +1,76 @@
-use std::process::Command;
-use std::fs;
-use std::collections::HashMap;
-use serde_json;
-use tauri::command;
+use serde::{Deserialize, Serialize};
+use std::fs::File;
+use std::io::{self, Read};
+use std::process::{Command, Stdio};
+use std::path::PathBuf;
 
-#[command] 
-pub async fn run_ml_check(directory: String) -> Result<bool, String> {
-    // Construct and run the command to invoke the Python script
-    let output = Command::new("python")
-        .arg("C:/Users/26dwi/ENTRYL/src-ai/runmlchck.py")
-        .arg(&directory)
-        .output();
+// Public struct for frontend communication using snake_case
+#[derive(Serialize, Deserialize, Debug)]
+pub struct PredictionResult {
+    pub sha256: String,
+    pub prediction: String,
+}
 
-    match output {
-        Ok(output) => {
-            if output.status.success() {
-                let json_file_path = "results.json";
-                match fs::read_to_string(json_file_path) {
-                    Ok(content) => {
-                        // Parse the JSON content
-                        let results: HashMap<String, String> = serde_json::from_str(&content)
-                            .map_err(|e| format!("Failed to parse JSON: {}", e))?;
+// Private struct to match JSON file format
+#[derive(Deserialize)]
+struct RawResult {
+    SHA256: String,
+    Prediction: String,
+}
 
-                        // Check if any file is marked as malicious
-                        let is_malicious = results.values().any(|status| status == "malicious");
+// Function to run the Python script
+fn run_python_script() -> io::Result<()> {
+    // Define the path to the Python executable and the script
+    let python_executable = "python"; // Adjust if needed to match your Python installation
+    let script_path = "C:/Users/26dwi/ENTRYL/src-ai/runmlchck.py"; // Change to the actual path of your Python script
+    
+    // Run the command to execute the Python script
+    Command::new(python_executable)
+        .arg(script_path)
+        .stdin(Stdio::inherit())
+        .stdout(Stdio::inherit())
+        .stderr(Stdio::inherit())
+        .status()?;
+    Ok(())
+}
 
-                        // Return true if malicious, false otherwise
-                        return Ok(is_malicious);
-                    }
-                    Err(err) => {
-                        // Handle errors reading the JSON file
-                        return Err(format!("Failed to read results.json: {}", err));
-                    }
-                }
-            } else {
-                // Handle the case where the Python script returned an error
-                let error = String::from_utf8_lossy(&output.stderr).to_string();
-                return Err(format!("Python script failed: {}", error));
-            }
-        }
-        Err(err) => {
-            // Handle any errors that occurred while trying to run the command
-            return Err(format!("Failed to execute Python script: {}", err));
-        }
+// Function to read the results from the temp directory
+fn read_ml_results() -> Result<Vec<PredictionResult>, Box<dyn std::error::Error>> {
+    // Define the path to the results.json file
+    let temp_dir = std::env::var("PROGRAMDATA").unwrap_or_else(|_| "C:/ProgramData".to_string());
+    let results_path = PathBuf::from(temp_dir).join("ENTRYL/temp/results.json");
+    
+    // Read the file
+    let mut file = File::open(results_path)?;
+    let mut data = String::new();
+    file.read_to_string(&mut data)?;
+    
+    // Deserialize the JSON data into a vector of RawResult first
+    let raw_results: Vec<RawResult> = serde_json::from_str(&data)?;
+    
+    // Convert RawResult into PredictionResult
+    let results = raw_results
+        .into_iter()
+        .map(|raw| PredictionResult {
+            sha256: raw.SHA256,
+            prediction: raw.Prediction,
+        })
+        .collect();
+    
+    Ok(results)
+}
+
+// Tauri command to run the Python script and get results
+#[tauri::command]
+pub fn scan_and_get_results() -> Result<Vec<PredictionResult>, String> {
+    // Step 1: Run the Python script to generate results.json
+    if let Err(e) = run_python_script() {
+        return Err(format!("Error running Python script: {:?}", e));
+    }
+
+    // Step 2: Read and return the results
+    match read_ml_results() {
+        Ok(results) => Ok(results),
+        Err(e) => Err(format!("Error reading results: {:?}", e)),
     }
 }
