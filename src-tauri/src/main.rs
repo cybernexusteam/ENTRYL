@@ -5,6 +5,8 @@ use sysinfo::System;
 use std::sync::{Arc, Mutex};
 use sysmon::{AppState, get_system_info, get_processes, start_cpu_refresh};
 
+use ml_check::scan_and_get_results;
+
 fn main() {
     let system = Arc::new(Mutex::new(System::new_all()));
     
@@ -13,7 +15,11 @@ fn main() {
 
     tauri::Builder::default()
         .manage(AppState { system })
-        .invoke_handler(tauri::generate_handler![get_system_info, get_processes, ml_check::run_ml_check])
+        .invoke_handler(tauri::generate_handler![
+            get_system_info,
+            get_processes,
+            scan_and_get_results
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
