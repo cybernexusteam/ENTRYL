@@ -1,4 +1,4 @@
-import { calcRisk } from '@/app/utils/calcRisk'
+import { calcRisk } from '@/utils/calcRisk'
 import axios from 'axios'
 import { type NextRequest } from 'next/server'
 import { getDomain } from 'tldts'
@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
         const domain = getDomain(urlToAnalyze)
         const virustotalRes = await axios.get(`https://www.virustotal.com/api/v3/domains/${domain}`, {
             headers: {
-                "x-apikey": process.env.NEXT_PUBLIC_VIRUSTOTAL_API_KEY
+                "x-apikey": process.env.VIRUSTOTAL_API_KEY
             }
         })
         const stats = calcRisk(virustotalRes?.data?.data?.attributes?.last_analysis_stats)
