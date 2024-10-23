@@ -200,8 +200,8 @@ const Dashboard = () => {
       icon: <IconBrandTabler className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />,
     },
     {
-      label: "Profile",
-      href: "#",
+      label: "VirusTotal",
+      href: "/virustotal",
       icon: <IconUserBolt className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />,
     },
     {
@@ -381,7 +381,11 @@ const Dashboard = () => {
         </motion.div>
       )}
     </AnimatePresence>
+    
   );
 };
 
+<div className="flex justify-center items-center w-full py-5 text-white">
+Made with ❤️
+</div>
 export default Dashboard;
