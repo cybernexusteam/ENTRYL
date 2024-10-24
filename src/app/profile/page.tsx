@@ -41,15 +41,15 @@ const Profile = () => {
       ),
     },
     {
-      label: "Profile",
-      href: "../profile",
+      label: "VirusTotal",
+      href: "/virustotal",
       icon: (
         <IconUserBolt className="text-neutral-200 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
       ),
     },
     {
-      label: "Settings",
-      href: "#",
+      label: "Profile",
+      href: "/profile",
       icon: (
         <IconSettings className="text-neutral-200 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
       ),
