@@ -37,6 +37,7 @@ import {
 import { Area, Legend, Line, LineChart, ResponsiveContainer, Tooltip, YAxis } from "recharts";
 import { Process } from "tauri-plugin-system-info-api";
 import { PlaceholdersAndVanishInput } from "@/components/ui/placeholders-and-vanish-input";
+import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 
 
 type SystemInfo = {
@@ -62,6 +63,8 @@ const Dashboard = () => {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [alertTitle, setAlertTitle] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
+  const [assistantResponse, setAssistantResponse] = useState('Welcome! How can I help you today?');
+  const [isProcessing, setIsProcessing] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -320,9 +323,9 @@ const Dashboard = () => {
                           {systemInfo ? ` ${systemInfo.cpu_usage.toFixed(2)}%` : " Loading..."}
                         </span>
                       </motion.h1>
-                      <ChartContainer config={{ cpu: { label: "CPU Usage" } }} className="h-[25vh]">
+                      <ChartContainer config={{ cpu: { label: "CPU Usage" } }} className="h-[25vh] w-full">
                         <ResponsiveContainer width="100%" height="100%">
-                          <LineChart data={cpuData}>
+                        <LineChart data={cpuData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
                             <YAxis domain={[0, 100]} />
                             <Tooltip content={<ChartTooltipContent />} />
                             <Legend content={<ChartLegendContent />} />
@@ -340,45 +343,95 @@ const Dashboard = () => {
                       </ChartContainer>
                     </div>
                     
-                    <div className="w-full h-full p-5 bg-opacity-20 bg-surface0 border-2 border-opacity-20 border-text0 rounded-xl">
-                      <motion.h1 className="text-text0 font-bold my-3">
-                        Memory Usage:
-                        <span className="text-text0 dark:text-white font-normal">
-                          {systemInfo
-                            ? ` ${((systemInfo.used_memory / systemInfo.total_memory) * 100).toFixed(2)}%`
-                            : " Loading..."}
-                        </span>
-                      </motion.h1>
-                      <ChartContainer config={{ memory: { label: "Memory Usage" } }} className="h-[25vh]">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <LineChart data={memoryData}>
-                            <YAxis domain={[0, 100]} />
-                            <Tooltip content={<ChartTooltipContent />} />
-                            <Legend content={<ChartLegendContent />} />
-                            <Line type="monotone" dataKey="usage" stroke="#82ca9d" dot={false} />
-                          </LineChart>
-                        </ResponsiveContainer>
-                      </ChartContainer>
-                    </div>
+                    <div className="w-full h-full p-5 bg-opacity-20 bg-surface0 border-2 border-opacity-20 border-text0 rounded-xl overflow-hidden">
+  <motion.h1 className="text-text0 font-bold my-3">
+    Memory Usage:
+    <span className="text-text0 dark:text-white font-normal">
+      {systemInfo
+        ? ` ${((systemInfo.used_memory / systemInfo.total_memory) * 100).toFixed(2)}%`
+        : " Loading..."}
+    </span>
+  </motion.h1>
+  <ChartContainer config={{ memory: { label: "Memory Usage" } }} className="h-[25vh] w-full">
+    <ResponsiveContainer width="99%" height="100%">
+      <LineChart data={memoryData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
+        <YAxis domain={[0, 100]} />
+        <Tooltip content={<ChartTooltipContent />} />
+        <Legend content={<ChartLegendContent />} />
+        <Line type="monotone" dataKey="usage" stroke="#82ca9d" dot={false} />
+      </LineChart>
+    </ResponsiveContainer>
+  </ChartContainer>
+</div>
                   </div>
                 </div>
               </div>
             </motion.div>
           </div>
-          <div className="w-full h-full p-5 bg-opacity-20 bg-surface0 border-2 border-opacity-20 border-text0 rounded-xl">
-  <motion.h1 className="text-text0 font-extrabold text-4xl mb-4">
-    SEARCH FILES
+          <div className="w-full h-84 p-5 bg-opacity-20 bg-surface0 border-2 border-opacity-20 border-text0 rounded-xl">
+  <motion.h1 
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    className="text-text0 font-extrabold text-4xl mb-4"
+  >
+    AI ASSISTANT
   </motion.h1>
-  <PlaceholdersAndVanishInput 
-    placeholders={[
-      "ENTRYL Assistant is here to help :)",
-    ]}
-    onChange={(e) => console.log(e.target.value)}
-    onSubmit={(e) => {
-      e.preventDefault();
-      console.log("Submitted");
-    }}
-  />
+  <div className="flex flex-col gap-4">
+    <PlaceholdersAndVanishInput 
+      placeholders={[
+        "Ask me about system security...",
+        "Need help with analysis?",
+        "Type your question here..."
+      ]}
+      onChange={(e) => {
+        // Handle change event if needed
+      }}
+      onSubmit={async (e) => {
+        e.preventDefault();
+        const inputElement = e.currentTarget.elements[0] as HTMLInputElement;
+        const userInput = inputElement.value.trim();
+        
+        if (!userInput) return;
+        
+        setIsProcessing(true);
+        try {
+          const res = await fetch('/api/fetchChatResponse', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userInput }),
+          });
+          
+          if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+          }
+          
+          const data = await res.json();
+          setAssistantResponse(data.response || 'I apologize, but I received an empty response.');
+          inputElement.value = ''; // Clear input after successful submission
+        } catch (error) {
+          console.error('Error:', error);
+          setAssistantResponse('Sorry, I encountered an error processing your request. Please try again.');
+        } finally {
+          setIsProcessing(false);
+        }
+      }}
+    />
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="mt-4 p-4 rounded-lg bg-black bg-opacity-50 min-h-[200px] text-text0"
+    >
+      {isProcessing ? (
+        <div className="flex items-center justify-center h-full">
+          <div className="text-text0">Processing your request...</div>
+        </div>
+      ) : (
+        <TextGenerateEffect words={assistantResponse} />
+      )}
+    </motion.div>
+  </div>
 </div>
 
           <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
