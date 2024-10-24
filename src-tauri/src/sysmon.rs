@@ -8,16 +8,29 @@ pub struct AppState {
     pub system: Arc<Mutex<System>>,
 }
 
+// Function to periodically refresh CPU information
 pub fn start_cpu_refresh(system: Arc<Mutex<System>>) {
     thread::spawn(move || {
         loop {
             thread::sleep(Duration::from_millis(1));
             let mut system = system.lock().unwrap();
-            system.refresh_cpu();
+            system.refresh_cpu();  // Refresh CPU information
         }
     });
 }
 
+// Function to periodically refresh process information
+pub fn start_process_refresh(system: Arc<Mutex<System>>) {
+    thread::spawn(move || {
+        loop {
+            thread::sleep(Duration::from_secs(2));  // Refresh processes every 2 seconds
+            let mut system = system.lock().unwrap();
+            system.refresh_processes();  // Refresh process information
+        }
+    });
+}
+
+// Command to retrieve system info (CPU usage, memory, etc.)
 #[tauri::command]
 pub fn get_system_info(state: State<AppState>) -> String {
     let system = state.system.lock().unwrap();
@@ -35,6 +48,7 @@ pub fn get_system_info(state: State<AppState>) -> String {
     }).to_string()
 }
 
+// Command to retrieve the list of processes (with CPU and memory usage)
 #[tauri::command]
 pub fn get_processes(state: State<AppState>) -> String {
     let system = state.system.lock().unwrap();

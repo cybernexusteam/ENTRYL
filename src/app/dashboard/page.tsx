@@ -36,6 +36,8 @@ import {
 } from "@/components/ui/alert";
 import { Area, Legend, Line, LineChart, ResponsiveContainer, Tooltip, YAxis } from "recharts";
 import { Process } from "tauri-plugin-system-info-api";
+import { PlaceholdersAndVanishInput } from "@/components/ui/placeholders-and-vanish-input";
+
 
 type SystemInfo = {
   total_memory: number;
@@ -363,6 +365,21 @@ const Dashboard = () => {
               </div>
             </motion.div>
           </div>
+          <div className="w-full h-full p-5 bg-opacity-20 bg-surface0 border-2 border-opacity-20 border-text0 rounded-xl">
+  <motion.h1 className="text-text0 font-extrabold text-4xl mb-4">
+    SEARCH FILES
+  </motion.h1>
+  <PlaceholdersAndVanishInput 
+    placeholders={[
+      "ENTRYL Assistant is here to help :)",
+    ]}
+    onChange={(e) => console.log(e.target.value)}
+    onSubmit={(e) => {
+      e.preventDefault();
+      console.log("Submitted");
+    }}
+  />
+</div>
 
           <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
             <AlertDialogContent>

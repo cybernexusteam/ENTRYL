@@ -3,7 +3,7 @@ mod ml_check;
 
 use sysinfo::System;
 use std::sync::{Arc, Mutex};
-use sysmon::{AppState, get_system_info, get_processes, start_cpu_refresh};
+use sysmon::{AppState, get_system_info, get_processes, start_cpu_refresh, start_process_refresh};
 
 use ml_check::scan_and_get_results;
 
@@ -12,6 +12,7 @@ fn main() {
     
     // Start the CPU refresh task
     start_cpu_refresh(Arc::clone(&system));
+    start_process_refresh(Arc::clone(&system));
 
     tauri::Builder::default()
         .manage(AppState { system })
