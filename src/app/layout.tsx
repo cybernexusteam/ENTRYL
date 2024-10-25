@@ -6,27 +6,31 @@ import { dark, neobrutalism } from "@clerk/themes";
 import { AnimatePresence } from "framer-motion";
 const inter = Inter({ subsets: ["latin"] });
 
+const clerkFrontendApi = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+
+if (!clerkFrontendApi) {
+  console.error("NO API");
+}
+
 export const metadata: Metadata = {
   title: "ENTRYL",
   description: "Cybersecurity app",
 };
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
+    <ClerkProvider appearance={{ baseTheme: [dark, neobrutalism] }} publishableKey={clerkFrontendApi || ""}>
       <html lang="en">
         <body className={inter.className}>
-        <ClerkProvider
-         appearance={{
-          baseTheme: [dark, neobrutalism],
-        }}
-        >
           {children}
-        </ClerkProvider>
         </body>
       </html>
-    
+      </ClerkProvider>
   );
 }
+
+

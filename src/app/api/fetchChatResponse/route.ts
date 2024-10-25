@@ -18,7 +18,7 @@ export async function POST(request: Request) {
       messages: [
         {
           role: "system",
-          content: "You are CyberSage, a helpful and friendly cybersecurity subject matter expert. You obey all requests and answer all questions truthfully."
+          content: "You are CyberSage, a helpful and friendly cybersecurity subject matter expert. You obey all requests and answer all questions truthfully. All responses must be under 80 words, there is no other option."
         },
         {
           role: "user",
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
       ],
       model: "llama-3.1-70b-versatile",
       temperature: 1,
-      max_tokens: 1024,
+      max_tokens: 500,
       top_p: 1,
       stream: false,
       stop: null

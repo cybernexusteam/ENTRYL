@@ -58,7 +58,7 @@ export default function Home() {
                   onClick={handleButtonClick}
                   className="mt-2 mx-2 px-8 py-3 h-100 bg-transparent border border-surface1 dark:border-white dark:text-white text-text0 rounded-lg text-lg transform hover:-translate-y-1 transition duration-400"
                 >
-                  Offline mode
+                  Get Started
                 </Button>
                 <SignedOut>
                   <div className="mt-2 mx-2 px-8 py-3 bg-transparent border border-surface1 dark:border-white dark:text-white text-text0 rounded-lg font-bold text-lg transform hover:-translate-y-1 transition duration-400">
